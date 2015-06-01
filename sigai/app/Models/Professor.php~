@@ -1,0 +1,31 @@
+<?php namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Professor extends Model {
+
+	protected $table = 'alunos';
+
+    public function usuario()
+    {
+        return $this->belongsTo('App\Models\User', 'id');
+    }
+
+    public function chamadas()
+    {
+        return $this->hasMany('App\Models\Chamada', 'aluno_id');
+    }
+    
+    public function cursos()
+    {
+        return $this->belongsToMany('App\Models\Curso', 'cursos_alunos',
+                                    'aluno_id', 'curso_id');
+    }
+    
+    public function turmas()
+    {
+        return $this->belongsToMany('App\Models\Turma', 'alunos_turmas',
+                                    'aluno_id', 'turma_id');
+    }
+
+}

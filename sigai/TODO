@@ -1,0 +1,54 @@
+
+
+
+- Criar botão no calendário (ao abrir modal da aula) para ir para detalhes da aula
+
+
+- Usar status do botão 'saving...' em operações com ajax 
+
+
+- supervisoa educação e tecnologia: ane lise pereira da costa dalcul
+
+
+- add status do aluno no diário de classe
+
+
+
+----
+
+- Trocar a exception que checa se turma pertence a unidade curricular da url,
+  usar algo como DataMismatchError ao invés de ValidationError.
+  
+- Alternativa: criar um error handler para cada controller, dá catch apenas em
+  RepositoryException e manda para $this->errorHandler($e);
+----
+
+
+
+
+Errors:
+
+name                  code
+----                  ----
+not_found             1
+update_error          2
+create_error          3
+remove_error          4
+exists                5
+
+
+
+Para construir a mensagem, a exception recebe:
+
+new Exception($entityName, $errorName, $messageKey = null)
+
+$options = [
+    'entity'   =>
+    'error'    =>
+    'message'  =>
+    '
+]
+
+$entityName = Nome da entidade cujo erro incidiu, use plural
+$errorName  = Nome do erro, de acordo com a lista acima
+$messageKey = Se a mensagem de erro tiver um nome diferente de $errorName, informe-o aqui

@@ -1,0 +1,122 @@
+data_aula,nome_turma,conteudo,obs,ensino_a_distancia,status_aula
+2014-08-05,S049,"Introdução a disciplina. Plano de ensino. Situação do tema banco de dados dentro da computação. Arquivos convencionais, problemas; conceitos de banco de dados (BD) e SGBD: noções gerais de um sistema de BD; arquitetura de SGBD; gerência de bancos funções básicas de SGBD; usuários de BD;",,0,0
+2014-08-12,S049,"Abstração de dados.  Modelo conceitual; modelo lógico; modelo físico. Introdução a modelagem conceitual.  modelo de dados entidade relacionamento (ER)",,0,0
+2014-08-19,S049,"Modelagem conceitual: objetivos; propriedades de um modelo conceitual; notações. Estudo de caso.",NULL,NULL,NULL
+2014-08-26,S049,"modelagem conceitual (mecanismos de abstração; classificação/instanciação; generalização/especialização;). Exercícios de fixação. Descrição do trabalho G1.",NULL,NULL,NULL
+2014-09-02,S049,"Modelagem conceitual (restrições de integridade, construtores, notação diagramática, semelhanças e diferenças entre modelos conceituais).",NULL,NULL,NULL
+2014-09-09,S049,"Projeto de banco de dados (transformação de diagramas  conceituais para modelos de banco de dados I ). Exercícios práticos.",NULL,NULL,NULL
+2014-09-16,S049,"Projeto de banco de dados (transformação de diagramas conceituais para modelos de bancos de dados II). Exercícios práticos.",NULL,NULL,NULL
+2014-09-23,S049,"Apresentação dos trabalhos. Revisão do conteúdo para a avaliação. Exercícios práticos.",NULL,NULL,NULL
+2014-09-30,S049,"Avaliação teórica/prática grau 1.",NULL,NULL,NULL
+2014-10-07,S049,"Entrega das notas e correção da prova. Descrição do trabalho.Introdução à normalização de modelos.",NULL,NULL,NULL
+2014-10-14,S049,"Estudo de caso da normalização de modelos. Linguagem de definição de dados (DDL). Linguagem de modelagem de banco de dados.  Exercícios práticos.",NULL,NULL,NULL
+2014-10-21,S049,"Manipulação de dados (DML). Andamento do trabalho.",NULL,NULL,NULL
+2014-10-28,S049,"Restrições de integridade. Exercícios práticos.",NULL,NULL,NULL
+2014-11-04,S049,,NULL,NULL,NULL
+2014-11-11,S049,,NULL,NULL,NULL
+2014-11-18,S049,,NULL,NULL,NULL
+2014-11-25,S049,,NULL,NULL,NULL
+2014-12-02,S049,,NULL,NULL,NULL
+2014-12-09,S049,,NULL,NULL,NULL
+2014-12-16,S049,,NULL,NULL,NULL
+2014-02-20,S087N,"Introdução aos SO's: Apresentação da disciplina: conteúdo, metodologia de ensino, critérios de avaliação, cronograma, material apoio (livros).",NULL,NULL,NULL
+2014-02-27,S087N,"Introdução aos Sistemas Operacionais: Estudo das definições de sistema operacional (SO), objetivos, visões.",NULL,NULL,NULL
+2014-03-06,S087N,"Gerência de entrada e Saída: controle e gerenciamento realizado pelo sistema operacional: Multiprogramação.",NULL,NULL,NULL
+2014-03-13,S087N,"Estudo dos tipos de sistemas operacionais: monoprogramáveis, multiprogramaveis e sistemas com múltiplos processadores.",NULL,NULL,NULL
+2014-03-20,S087N,"Conceitos de Deadlock, prevenção e tratamento em Sistemas Operacionais.",NULL,NULL,NULL
+2014-03-27,S087N,"Estudo das estruturas de um sistema operacional: sistemas monolíticos, sistemas em camadas e cliente/servidor.",NULL,NULL,NULL
+2014-04-03,S087N,"Estudo dos sistemas multiprogramáveis: definição, conceitos, gerência de filas, tipos (cooperativa e preemptiva), proteção.",NULL,NULL,NULL
+2014-04-10,S087N,"Estudo de processos: modelos de processos, estados de um process, mudanças de estados entre processos, subprocessos e threads.",NULL,NULL,NULL
+2014-04-17,S087N,"Especificação de tarefas e prioridades.",NULL,NULL,NULL
+2014-04-23,S087N,"Introdução a escalonadores",NULL,NULL,NULL
+2014-04-24,S087N,"Atividades extraclasse: exercícios e trabalhos individuais.",NULL,NULL,NULL
+2014-05-08,S087N,"Correção de exercício, revisão de conteúdo.",NULL,NULL,NULL
+2014-05-15,S087N,"Avaliação de grau 1 (G1).",NULL,NULL,NULL
+2014-05-22,S087N,"Analisar os resultados da avaliação G1. Gerência de processos: introdução, descritor de processo, controle de processos, processos de sistema, escalonamento de processos",NULL,NULL,NULL
+2014-05-29,S087N,"Gerência de Memória: introdução, endereços lógicos e fisicos, formas de alicação, swapping.",NULL,NULL,NULL
+2014-06-05,S087N,"Memória virtual: funcionamento da paginação por demanda, substituição de páginas, algoritmos de substituição de páginas, alocação de quadros, trashing.",NULL,NULL,NULL
+2014-06-12,S087N,"Programação concorrente: definição, motivação, especificação de paralelismo, problema da seção crítica, semáforos, mensagens, visão geral e comparação, paralisação (deadlock).",NULL,NULL,NULL
+2014-06-26,S087N,"Elaboração de exercícios e correção.",NULL,NULL,NULL
+2014-07-03,S087N,"Sistema de Arquivos: Introdução, nomes de arquivos, comandos, árvore de diretórios do SO, discos (particionamento e formatação), acesso a arquivos, atributos, controle e gerenciamento.",NULL,NULL,NULL
+2014-07-04,S087N,"Apresentação de trabalhos (estudo de caso) de sistemas operacionais.",NULL,NULL,NULL
+2014-07-10,S087N,"Avaliação Grau 2. Divulgação de resultados parciais, revisão e prova de substituição. ",NULL,NULL,NULL
+2015-02-20,S049N,"Introdução a disciplina. Plano de ensino. Situação do tema banco de dados dentro da computação. Arquivos convencionais, problemas; conceitos de banco de dados (BD) e SGBD: noções gerais de um sistema de BD; ",NULL,NULL,NULL
+2015-02-27,S049N,"Arquitetura de SGBD; gerência de bancos funções básicas de SGBD; usuários de BD; Abstração de dados. modelo lógico; modelo físico.  Introdução a modelagem conceitual.  modelo de dados entidade relacionamento (ER). Processo de projeto e Implementação de BD. ",,0,0
+2015-03-06,S049N,"Modelos de dados; Modelagem conceitual: objetivos; propriedades de um modelo conceitual; notações. Modelo entidade relacionamento (ER); Agregação/Desagregação.  Estudo de caso.",NULL,NULL,NULL
+2015-03-13,S049N,"Modelo de dados orientado a objetos (OO) , Modelagem conceitual (mecanismos de abstração; classificação/instanciação; generalização/especialização;).  Exercícios de fixação.",NULL,NULL,NULL
+2015-03-20,S049N,"Restrições de integridade, Construtores, Notação diagramática, Semelhanças e diferenças entre modelos conceituais).",NULL,NULL,NULL
+2015-03-27,S049N,"Projeto de banco de dados (transformação de diagramas  conceituais para modelos de banco de dados I ). Exercícios práticos.",NULL,NULL,NULL
+2015-04-10,S049N,"Estudo de caso da normalização de modelos.",,0,0
+2015-04-17,S049N,"Revisão do conteúdo para a avaliação. Exercícios práticos.",,0,0
+2015-04-20,S049N,"Atividade Extraclasse:"".Exercícios de normalização e revisão para prova""",,0,0
+2015-04-24,S049N,"Avaliação teórica/prática grau 1.",NULL,NULL,NULL
+2015-05-08,S049N,"Entrega das notas e correção da prova. Descrição do trabalho. Linguagem de definição de dados (DDL). Linguagem de modelagem de banco de dados.",NULL,NULL,NULL
+2015-05-15,S049N,"Linguagem de manipulação de dados (DML)  interativa.",NULL,NULL,NULL
+2015-05-22,S049N,"Restrições de integridade. Exercícios práticos.",NULL,NULL,NULL
+2015-05-29,S049N,"Linguagem de manipulação de dados embutida, restrições de integridade. Exercícios práticos.",NULL,NULL,NULL
+2015-06-05,S049N,"Especificação de gatilhos, asserções e procedimentos. Exercícios práticos.",NULL,NULL,NULL
+2015-06-12,S049N,"Álgebra relacional.",NULL,NULL,NULL
+2015-06-19,S049N,"Revisão para prova G2.",NULL,NULL,NULL
+2015-06-26,S049N,"Avaliação teórica/prática grau 2.",NULL,NULL,NULL
+2015-07-03,S049N,"Entrega das notas e correção da prova.  Revisão para prova de substituição.",NULL,NULL,NULL
+2015-07-10,S049N,"Prova de substituição. Entrega das notas finais e correção da prova.",NULL,NULL,NULL
+2015-02-25,S091N,"Apresentação da disciplina. Introdução às técnicas de programação.",NULL,NULL,NULL
+2015-03-04,S091N,"Orientação para projeto de classes",NULL,NULL,NULL
+2015-03-11,S091N,"Programação por contratos ? parte 1: especificações de interface precisas e verificáveis dos componentes de desenvolvimento de software. Exercícios práticos.",NULL,NULL,NULL
+2015-03-18,S091N,"Programação por contratos ? parte 2: especificações de interface precisas e verificáveis dos componentes de desenvolvimento de software. Exercícios práticos.",NULL,NULL,NULL
+2015-03-25,S091N,"Introdução ao Teste do Software. Exercícios práticos. ",,0,0
+2015-04-01,S091N,"Teste de software: validação de comportamento e unidades de trabalho. Descrição do  trabalho a ser desenvolvido.",,0,0
+2015-04-08,S091N,"Ferramentas de apoio ao teste unitário (Junit). Exercícios práticos. ",,0,0
+2015-04-15,S091N,"Apresentação do trabalho e realização de um simulado referente ao G1.",,0,0
+2015-04-22,S091N,"Avaliação G1",,0,0
+2015-04-29,S091N,"Entrega das avaliações G1. Discussão das questões da prova. Programação concorrente: modelagem, threads, sincronização. Exercícios práticos.",NULL,NULL,NULL
+2015-05-06,S091N,"Aula prática ? programação concorrente.",NULL,NULL,NULL
+2015-05-13,S091N,"Programação concorrente: vivacidade e métodos protegidos. Descrição do trabalho G2.",NULL,NULL,NULL
+2015-05-20,S091N,"Programação concorrente: objeto condição e propriedades de concorrência.",NULL,NULL,NULL
+2015-05-27,S091N,"Arquitetura de Software: componentes do sistema e suas propriedades externas e seus relacionamentos com outros softwares.",NULL,NULL,NULL
+2015-06-03,S091N,"Modelo de desenvolvimento em camadas: domínios.",NULL,NULL,NULL
+2015-06-10,S091N,"Modelo de desenvolvimento em camadas: persistência e apresentação.",NULL,NULL,NULL
+2015-06-17,S091N,"Apresentação do trabalho e revisão para a avaliação  referente ao G2",NULL,NULL,NULL
+2015-06-24,S091N,"Avaliação G2",NULL,NULL,NULL
+2015-07-01,S091N,"Entrega das notas G2. Revisão para prova de substituição. ",NULL,NULL,NULL
+2015-07-08,S091N,"Aplicação da prova de substituição G1 ou G2. Entrega das notas. ",NULL,NULL,NULL
+2015-02-19,S032N,"Plano de aula. Arquitetura de computadores. Conceitos de hardware e software. Sistemas numéricos de representação de dados e conversões. Exercícios",NULL,NULL,NULL
+2015-02-26,S032N,"Álgebra booleana. Contextualização do curso de ADS. Disciplinas que compõem a ciência da computação. Exercícios",NULL,NULL,NULL
+2015-03-05,S032N,"Conceitos e definições dos Sistemas de informação. Tipos de sistemas de informação. Exemplos de sistemas de informação. ",NULL,NULL,NULL
+2015-03-12,S032N,"Introdução  à Abordagem sistêmica I.",NULL,NULL,NULL
+2015-03-19,S032N,"Abordagem sistêmica  I - Aula Prática. ",NULL,NULL,NULL
+2015-03-26,S032N,"Conceitos da Abordagem sistêmica II",NULL,NULL,NULL
+2015-04-02,S032N,"Conceitos da Abordagem sistêmica II ? Aula Prática",NULL,NULL,NULL
+2015-04-09,S032N,"Revisão dos conteúdos (Exercícios).",NULL,NULL,NULL
+2015-04-16,S032N,"Avaliação Teórica ? G1 ? Individual.",NULL,NULL,NULL
+2015-04-23,S032N,"Correção avaliação e divulgação resultados, definição grupos de trabalho.  Estudo da aplicação da tecnologia da informação nas organizações  do papel da modelagem no desenvolvimento de SI.",NULL,NULL,NULL
+2015-04-30,S032N,"Sistemas de computação. Estudo de caso. Exercícios",NULL,NULL,NULL
+2015-05-07,S032N,"Sistema de gerenciamento de transação. ",NULL,NULL,NULL
+2015-05-14,S032N,"Sistema de gerenciamento de transação -  Aula prática ",NULL,NULL,NULL
+2015-05-21,S032N,"Sistemas de informação (Planejamento estratégico de TI), aplicação da tecnologia da informação. ",NULL,NULL,NULL
+2015-05-28,S032N,"Gestão de sistemas de informação",NULL,NULL,NULL
+2015-06-11,S032N,"Modelagem no desenvolvimento de sistemas de informação. ",NULL,NULL,NULL
+2015-06-18,S032N,"Seminários de apresentações. Exercícios de revisão",NULL,NULL,NULL
+2015-06-25,S032N,"Avaliação Teórica / prática ? G2.",NULL,NULL,NULL
+2015-07-02,S032N,"Revisão do conteúdo para a substituição de grau",NULL,NULL,NULL
+2015-07-09,S032N,"Divulgação de resultados parciais, substituição de grau e divulgação de resultados finais.  ",NULL,NULL,NULL
+2014-08-01,S075N,"Descrição do plano de ensino. Introdução à disciplina. Plano de ensino. Introdução a linguagem  SQL",NULL,NULL,NULL
+2014-08-08,S075N,"Consultas (SQL, linguagem de manipulação de dados). Exercícios de fixação",NULL,NULL,NULL
+2014-08-15,S075N,"Consultas (SQL, linguagem de definição de dados). Exercícios de fixação ",NULL,NULL,NULL
+2014-08-22,S075N,"Consultas Avançadas (introdução a subselects).  Exercícios de fixação. Integração do SQL e com o  JAVA.  Exercícios de fixação",NULL,NULL,NULL
+2014-08-29,S075N,"Consultas Avançadas (subselects, group by).  Exercícios de fixação",NULL,NULL,NULL
+2014-09-05,S075N,"Triggers e Store. Exercícios de fixação ",NULL,NULL,NULL
+2014-09-12,S075N,"Procedures. Exercícios de fixação",NULL,NULL,NULL
+2014-09-19,S075N,"Revisão para prova G1. Simulado",NULL,NULL,NULL
+2014-09-26,S075N,"Avaliação teórica prática referente ao G1",NULL,NULL,NULL
+2014-10-03,S075N,"Correção da prova. Cursores",NULL,NULL,NULL
+2014-10-10,S075N,"Cursores e Introdução a Transações",NULL,NULL,NULL
+2014-10-17,S075N,"Transação  (Recuperação de falhas, concorrência). Andamento do trabalho. ",NULL,NULL,NULL
+2014-10-24,S075N,"Arquitetura de  Banco de Dados  Distribuídos; Gerência de Objetos;",NULL,NULL,NULL
+2014-10-31,S075N,"Semana acadêmica",NULL,NULL,NULL
+2014-11-07,S075N,"Otimização de Consultas.",NULL,NULL,NULL
+2014-11-14,S075N,"Introdução a  Data Warehouse  e Bussiness  Intelligence (Aplicações emergentes de banco de dados.)",NULL,NULL,NULL
+2014-11-21,S075N,"Apresentação do trabalho e revisão para prova G2",NULL,NULL,NULL
+2014-11-28,S075N,"Prova G2",NULL,NULL,NULL
+2014-12-05,S075N,"Revisão do conteúdo para substituição",NULL,NULL,NULL
+2014-12-12,S075N,"Prova de substituição",NULL,NULL,NULL
