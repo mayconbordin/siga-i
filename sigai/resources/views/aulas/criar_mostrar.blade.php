@@ -122,16 +122,24 @@ $(document).ready(function($) {
 
 
 @section('content')
-<div class="col-xs-12 col-sm-9">
+<div class="col-xs-12">
 
     @include('utils.alerts')
     
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
+        
+        @if (Auth::user()->hasRole('coordenador'))
         <li><a href="{{ url('/unidades_curriculares') }}">@lang('unidades_curriculares.title')</a></li>
         <li><a href="{{ url('/unidades_curriculares', ['id' => $aula->turma->unidadeCurricular->id]) }}"
             >{{ $aula->turma->unidadeCurricular->nome }}</a>
         </li>
+        @else
+        <li>@lang('unidades_curriculares.title')</li>
+        <li>{{ $aula->turma->unidadeCurricular->nome }}</li>
+        @endif
+        
+        
         <li><a href="{{ url('/unidades_curriculares/'.$aula->turma->unidadeCurricular->id.'/turmas/'.$aula->turma->id) }}"
             >@lang('turmas.single_title') {{ $aula->turma->nome }}</a>
         </li>

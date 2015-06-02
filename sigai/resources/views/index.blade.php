@@ -7,7 +7,7 @@
     @include('home.professor')
 @else
 
-<div class="col-xs-12 col-sm-9">
+<div class="col-xs-12">
 	<div class="panel panel-default">
 		<div class="panel-heading">Home</div>
 

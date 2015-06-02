@@ -254,7 +254,7 @@ $(document).ready(function($) {
 @endsection
 
 @section('content')
-<div class="col-xs-12 col-sm-9">
+<div class="col-xs-12">
 
     @include('utils.alerts')
     

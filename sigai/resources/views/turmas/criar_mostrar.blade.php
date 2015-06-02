@@ -619,16 +619,22 @@ $(document).ready(function() {
 @endsection
 
 @section('content')
-<div class="col-xs-12 col-sm-9">
+<div class="col-xs-12">
 
     @include('utils.alerts')
     
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
+
+        @if (Auth::user()->hasRole('coordenador'))
         <li><a href="{{ url('/unidades_curriculares') }}">@lang('unidades_curriculares.title')</a></li>
         <li><a href="{{ url('/unidades_curriculares', ['id' => $unidadeCurricular->id]) }}">
             {{ $unidadeCurricular->nome }}</a>
         </li>
+        @else
+        <li>@lang('unidades_curriculares.title')</li>
+        <li>{{ $unidadeCurricular->nome }}</li>
+        @endif
         
         <li class="active">
         @if (isset($turma))

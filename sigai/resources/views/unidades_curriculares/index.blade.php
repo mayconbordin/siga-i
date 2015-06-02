@@ -33,7 +33,7 @@ $(document).ready(function($) {
 @endsection
 
 @section('content')
-<div class="col-xs-12 col-sm-9">
+<div class="col-xs-12">
     @include('utils.alerts')
     
     <ol class="breadcrumb">
@@ -75,7 +75,7 @@ $(document).ready(function($) {
         </tbody>
     </table>
     
-    <div class="pagination-container">
+    <div class="pagination-container text-center">
         <?php echo $unidadesCurriculares->render(); ?>
     </div>
 

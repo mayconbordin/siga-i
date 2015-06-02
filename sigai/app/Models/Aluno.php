@@ -17,7 +17,7 @@ class Aluno extends Model {
 
 	protected $table   = 'alunos';
 	protected $hidden  = ['password', 'remember_token'];
-	protected $appends = ['matricula'];
+	//protected $appends = ['matricula'];
 
     public function usuario()
     {

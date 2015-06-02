@@ -54,22 +54,42 @@
                 
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="{{ url('/') }}">Home</a></li>
-
+                        <li class="{{ (Request::is('/')) ? 'active' : '' }}"><a href="{{ url('/') }}">Home</a></li>
+                        
+                        @if (Auth::guest())
+                        @elseif (Auth::user()->hasRole('coordenador'))
+                        <li class="{{ (Request::is('alunos*')) ? 'active' : '' }}">
+                            <a href="{{ url('/alunos') }}">@choice('alunos.title', 2)</a>
+                        </li>
+                        
+                        <li class="{{ (Request::is('professores*')) ? 'active' : '' }}">
+                            <a href="{{ url('/professores') }}">@choice('professores.title', 2)</a>
+                        </li>
+                        
+                        <li class="{{ (Request::is('unidades_curriculares*')) ? 'active' : '' }}">
+                            <a href="{{ url('/unidades_curriculares') }}">@lang('unidades_curriculares.title')</a>
+                        </li>
+                        
+                        <li class="{{ (Request::is('cursos*')) ? 'active' : '' }}">
+                            <a href="{{ url('/cursos') }}">@lang('cursos.title')</a>
+                        </li>
+                        @elseif (Auth::user()->hasRole('professor'))
+                        
+                        @endif
                     </ul>
                     
                     
                     <ul class="nav navbar-nav navbar-nav-right">
                         @if (Auth::guest())
-					    <li><a href="{{ url('/auth/login') }}">@lang('login.login')</a></li>
-					    <li><a href="{{ url('/auth/register') }}">@lang('login.register')</a></li>
+					    <li><a href="{{ url('/auth/login') }}"><i class="fa fa-sign-in"></i> @lang('login.login')</a></li>
 					    @else
 					    <li class="dropdown">
 						    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-						        <i class="fa fa-user"></i> <span class="caret"></span>
+						        <i class="fa fa-user"></i> {{ Auth::user()->nome }} <span class="caret"></span>
 					        </a>
 						    <ul class="dropdown-menu" role="menu">
-							    <li><a href="{{ url('/auth/logout') }}">@lang('login.logout')</a></li>
+						        <!--<li class="divider"></li>-->
+							    <li><a href="{{ url('/auth/logout') }}"><i class="fa fa-sign-out"></i> @lang('login.logout')</a></li>
 						    </ul>
 					    </li>
 					    @endif
@@ -83,29 +103,10 @@
             <div class="row row-offcanvas row-offcanvas-right">
                 
                 @yield('content')
-            
-                <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
-                    <div class="list-group">
-                        <a href="{{ url('/alunos') }}" class="list-group-item {{ (Request::is('alunos*')) ? 'active' : '' }}">
-                            @choice('alunos.title', 2)
-                        </a>
-                        
-                        <a href="{{ url('/professores') }}" class="list-group-item {{ (Request::is('professores*')) ? 'active' : '' }}">
-                            @choice('professores.title', 2)
-                        </a>
-                        
-                        <a href="{{ url('/unidades_curriculares') }}" class="list-group-item {{ (Request::is('unidades_curriculares*')) ? 'active' : '' }}">
-                            @lang('unidades_curriculares.title')
-                        </a>
-                        
-                        <a href="{{ url('/cursos') }}" class="list-group-item {{ (Request::is('cursos*')) ? 'active' : '' }}">
-                            @lang('cursos.title')
-                        </a>
-
-                    </div>
-                </div><!--/.sidebar-offcanvas-->
+                
             </div><!--/row-->
         </div><!--/container-->
+
 
         <!-- Bootstrap core JavaScript
         ================================================== -->

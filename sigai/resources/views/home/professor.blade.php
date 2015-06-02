@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="col-xs-12 col-sm-9">
+<div class="col-xs-12">
 
     @if ($daysEndMonth < 5)
     <div class="alert alert-warning alert-dismissible fade in" role="alert">
