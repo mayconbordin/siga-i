@@ -108,6 +108,12 @@
         </div><!--/container-->
 
 
+        <footer class="footer">
+            <div class="container">
+                <img src="{{ asset('img/faculdade_senai.jpg') }}">
+            </div>
+        </footer>
+
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
