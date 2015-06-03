@@ -35,6 +35,20 @@ class TurmaRepository extends Repository
 	    return $turma;
     }
     
+    public static function findByNomeAndData($nome, $dataInicio, $dataFim)
+    {
+        $turma = Turma::where('nome', $nome)
+                      ->where('data_inicio', $dataInicio)
+                      ->where('data_fim', $dataFim)
+                      ->first();
+	    
+	    if ($turma == null) {
+	        throw new NotFoundError(Lang::get('turmas.not_found'));
+	    }
+	    
+	    return $turma;
+    }
+    
     public static function findByIdWith($id, $unidadeCurricularId, array $relations)
     {
         $turma = Turma::where('id', $id)->with($relations)->first();
@@ -96,14 +110,14 @@ class TurmaRepository extends Repository
         return $turma;
     }
     
-    public static function insert(array $data, $ucId)
+    public static function insert(array $data, $ucId, $dateFormat = 'd/m/Y')
     {
         $turma = new Turma;
 	    $uc    = UnidadeCurricularRepository::findById($ucId);
 	    
 	    $turma->nome        = self::get($data['nome']);
-	    $turma->data_inicio = Carbon::createFromFormat('d/m/Y', self::get($data['data_inicio']));
-	    $turma->data_fim    = Carbon::createFromFormat('d/m/Y', self::get($data['data_fim']));
+	    $turma->data_inicio = Carbon::createFromFormat($dateFormat, self::get($data['data_inicio']));
+	    $turma->data_fim    = Carbon::createFromFormat($dateFormat, self::get($data['data_fim']));
 	    
 	    $turma->unidadeCurricular()->associate($uc);
 
@@ -130,7 +144,8 @@ class TurmaRepository extends Repository
 	        $turma->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
-	        throw new ServerError(Lang::get('turmas.remove_error'));
+	        Log::error($e->getMessage(), ['exception' => $e]);
+	        throw $e;
 	    }
 	    
 	    DB::commit();

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -37,5 +38,48 @@ class AuthController extends Controller {
 
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
+	
+	/**
+	 * Handle a login request to the application.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function postLogin(Request $request)
+	{
+		$this->validate($request, [
+			'email'    => 'required',
+			'password' => 'required',
+		]);
+		
+		$credentials = $request->only('email', 'password');
+		
+		if ($this->auth->attempt($credentials, $request->has('remember')))
+		{
+			return redirect()->intended($this->redirectPath());
+		}
+		else if ($this->auth->attempt([
+		    'matricula' => $request->email,
+		    'password' => $request->password], $request->has('remember')))
+		{
+			return redirect()->intended($this->redirectPath());
+		}
+		
+		
+		return redirect($this->loginPath())
+					->withInput($request->only('email', 'remember'))
+					->withErrors([
+						'email' => $this->getFailedLoginMessage(),
+					]);
+	}
 
+    public function getRegister()
+    {
+        return redirect('/');
+    }
+     
+    public function postRegister()
+    {
+        return redirect('/');
+    }
 }

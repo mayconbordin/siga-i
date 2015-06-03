@@ -22,6 +22,17 @@ class CursoRepository extends Repository {
 	    return $curso;
     }
     
+    public static function findByNome($nome)
+    {
+        $curso = Curso::where('nome', $nome)->first();
+	    
+	    if ($curso == null) {
+	        throw new NotFoundError(Lang::get('cursos.not_found'));
+	    }
+
+	    return $curso;
+    }
+    
     public static function searchByName($query)
     {
         $cursos = Curso::where('nome', 'LIKE', $query.'%')->get();

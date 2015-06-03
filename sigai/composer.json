@@ -21,6 +21,7 @@
 			"app/Repositories",
 			"app/Exceptions",
 			"app/Exporters",
+			"app/Importers",
             "vendor/utils"
 		],
 		"psr-4": {

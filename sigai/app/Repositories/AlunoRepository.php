@@ -117,6 +117,7 @@ class AlunoRepository extends Repository {
         }
         
         $aluno->usuario = $usuario;
+        $aluno->id = $usuario->id;
         
         return $aluno;
     }

@@ -14,7 +14,7 @@
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
+							<strong>Whoops!</strong> @lang('login.error_msg').<br><br>
 							<ul>
 								@foreach ($errors->all() as $error)
 									<li>{{ $error }}</li>
@@ -29,7 +29,7 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">@lang('login.email')</label>
 							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
+								<input type="text" class="form-control" name="email" value="{{ old('email') }}">
 							</div>
 						</div>
 

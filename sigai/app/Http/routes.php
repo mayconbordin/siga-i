@@ -14,19 +14,25 @@
 Route::get('/', 'IndexController@index');
 
 
-// teste
-//Route::get('/exportar', 'TurmaController@exportar');
 
 // Alunos
 // -----------------------------------------------------------------------------
-Route::group(['prefix' => 'alunos'], function()
+Route::group(['prefix' => 'importar', 'roles' => 'coordenador'], function()
+{
+    Route::get ('/', 'ImportController@index');
+    Route::post('/', 'ImportController@processar');
+});
+
+// Alunos
+// -----------------------------------------------------------------------------
+Route::group(['prefix' => 'alunos', 'roles' => 'coordenador'], function()
 {
     Route::get('/', 'AlunoController@listar');
 });
 
 // Professores
 // -----------------------------------------------------------------------------
-Route::group(['prefix' => 'professores'], function()
+Route::group(['prefix' => 'professores', 'roles' => 'coordenador'], function()
 {
     Route::get ('/'    , 'ProfessorController@listar');
 });
@@ -34,7 +40,7 @@ Route::group(['prefix' => 'professores'], function()
 
 // Cursos
 // -----------------------------------------------------------------------------
-Route::group(['prefix' => 'cursos'], function()
+Route::group(['prefix' => 'cursos', 'roles' => 'coordenador'], function()
 {
     Route::get ('/'    , 'CursoController@listar');
 });

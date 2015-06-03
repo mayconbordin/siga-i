@@ -35,6 +35,17 @@ class UnidadeCurricularRepository extends Repository {
 	    return $uc;
     }
     
+    public static function findByNome($nome)
+    {
+        $uc = UnidadeCurricular::where('nome', $nome)->first();
+	    
+	    if ($uc == null) {
+	        throw new NotFoundError(Lang::get('unidades_curriculares.not_found'));
+	    }
+
+	    return $uc;
+    }
+    
     public static function listAll()
     {
         return UnidadeCurricular::all();

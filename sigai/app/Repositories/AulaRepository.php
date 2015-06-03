@@ -123,16 +123,16 @@ class AulaRepository extends Repository
 	    DB::commit();
     }
     
-    public static function insert(array $data, $ucId, $turmaId)
+    public static function insert(array $data, $ucId, $turmaId, $dateFormat = 'd/m/Y')
     {
         $aula  = new Aula;
         $turma = TurmaRepository::findById($turmaId, $ucId);
         
-        $aula->data               = Carbon::createFromFormat('d/m/Y', self::get($data['data']));
-        $aula->status             = self::get($data['status'], 0);
-        $aula->conteudo           = self::get($data['conteudo']);
-        $aula->obs                = self::get($data['obs']);
-        $aula->ensino_a_distancia = self::get($data['ensino_a_distancia']);
+        $aula->data               = Carbon::createFromFormat($dateFormat, array_get($data, 'data'));
+        $aula->status             = array_get($data, 'status', 0);
+        $aula->conteudo           = array_get($data, 'conteudo');
+        $aula->obs                = array_get($data, 'obs');
+        $aula->ensino_a_distancia = array_get($data, 'ensino_a_distancia', false);
         
         if (!$aula->data->between($turma->data_inicio, $turma->data_fim)) {
             throw new ValidationError([
@@ -157,11 +157,11 @@ class AulaRepository extends Repository
     {
         $aula = self::findByData($date, $turmaId, $ucId);
 	    
-	    $aula->data               = Carbon::createFromFormat('d/m/Y', self::get($data['data']));
-        $aula->status             = self::get($data['status'], 0);
-        $aula->conteudo           = self::get($data['conteudo']);
-        $aula->obs                = self::get($data['obs']);
-        $aula->ensino_a_distancia = self::get($data['ensino_a_distancia']);
+	    $aula->data               = Carbon::createFromFormat('d/m/Y', array_get($data, 'data'));
+        $aula->status             = array_get($data, 'status', 0);
+        $aula->conteudo           = array_get($data, 'conteudo');
+        $aula->obs                = array_get($data, 'obs');
+        $aula->ensino_a_distancia = array_get($data, 'ensino_a_distancia', false);
         
         if (!$aula->data->between($aula->turma->data_inicio, $aula->turma->data_fim)) {
             throw new ValidationError([
