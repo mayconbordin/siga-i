@@ -15,9 +15,9 @@ Route::get('/', 'IndexController@index');
 
 
 
-// Alunos
+// Importar
 // -----------------------------------------------------------------------------
-Route::group(['prefix' => 'importar', 'roles' => 'coordenador'], function()
+Route::group(['prefix' => 'importar', 'roles' => ['professor', 'coordenador']], function()
 {
     Route::get ('/', 'ImportController@index');
     Route::post('/', 'ImportController@processar');

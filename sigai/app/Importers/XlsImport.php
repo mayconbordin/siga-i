@@ -46,7 +46,7 @@ class XlsImport
         'D'  => Aluno::STATUS_DISPENSADO
     ];
     
-    public function __construct($fileType, $fileName)
+    public function __construct($fileName)
     {
         if (!file_exists($fileName)) {
 		    throw new \Exception("File does not exists: $fileName.");
@@ -55,8 +55,10 @@ class XlsImport
 	    set_time_limit(0);
 	    ini_set('memory_limit', '-1');
 	    
-        $this->reader = PHPExcel_IOFactory::createReader ( $fileType );
-	    $this->xls    = $this->reader->load ($fileName);
+        $this->reader = PHPExcel_IOFactory::createReaderForFile($fileName);
+        $this->reader->setReadDataOnly(true);
+        
+	    $this->xls = $this->reader->load ($fileName);
     }
     
     public function readAll()

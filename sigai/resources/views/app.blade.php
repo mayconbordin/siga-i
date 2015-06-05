@@ -57,6 +57,7 @@
                         <li class="{{ (Request::is('/')) ? 'active' : '' }}"><a href="{{ url('/') }}">Home</a></li>
                         
                         @if (Auth::guest())
+                        
                         @elseif (Auth::user()->hasRole('coordenador'))
                         <li class="{{ (Request::is('alunos*')) ? 'active' : '' }}">
                             <a href="{{ url('/alunos') }}">@choice('alunos.title', 2)</a>
@@ -75,6 +76,12 @@
                         </li>
                         @elseif (Auth::user()->hasRole('professor'))
                         
+                        @endif
+                        
+                        @if (Auth::check())
+                        <li class="{{ (Request::is('importar*')) ? 'active' : '' }}">
+                            <a href="{{ url('/importar') }}">@lang('importar.menu_title')</a>
+                        </li>
                         @endif
                     </ul>
                     

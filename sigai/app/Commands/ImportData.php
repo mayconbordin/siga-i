@@ -51,17 +51,7 @@ class ImportData extends Command implements SelfHandling {
 		    $this->importTurma($this->data['turma']);
 	        $this->importAulas($this->data['aulas']);
 	        $this->importAlunos($this->data['alunos']);
-	    /*} catch (\Exception $e) {
-	        DB::rollback();
-	        throw $e;
-	    }
-	    
-	    DB::commit();
-	    
-	    
-	    DB::beginTransaction();
-	    
-	    try {*/
+
 	        $this->importFaltasAlunos($this->data['alunos']);
             $this->associateAlunosAulas($this->data['alunos']);
             $this->associateCursosUnidadeCurricular();
@@ -182,14 +172,19 @@ class ImportData extends Command implements SelfHandling {
 	protected function associateCursosUnidadeCurricular()
 	{
 	    foreach ($this->cursos as $curso) {
-	        $curso->unidadesCurriculares()->attach($this->uc);
+	        if ($curso->unidadesCurriculares()->find($this->uc->id) == null) {
+	            $curso->unidadesCurriculares()->attach($this->uc);
+	        }
 	    }
 	}
 	
 	protected function associateProfessorTurma()
 	{
 	    $professor = ProfessorRepository::findById($this->usuario->id);
-	    $this->turma->professores()->attach($professor);
+	    
+	    if ($this->turma->professores()->find($professor->id) == null) {
+	        $this->turma->professores()->attach($professor);
+	    }
 	}
 
 }
