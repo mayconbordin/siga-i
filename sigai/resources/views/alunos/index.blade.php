@@ -27,6 +27,7 @@ var Aluno = (function() {
     });
     
     var isEdit = false;
+    var editMatricula = null;
     
     var Model = {
         getAluno: function(matricula, success, error) {
@@ -52,9 +53,9 @@ var Aluno = (function() {
             });
         },
         
-        updateAluno: function(data, success, error) {
+        updateAluno: function(matricula, data, success, error) {
             $.ajax({
-                url: baseUrl + '/' + data.matricula,
+                url: baseUrl + '/' + matricula,
                 method: 'PUT',
                 data: data
             }).done(function(result) {
@@ -108,7 +109,6 @@ var Aluno = (function() {
         },
         
         onSaveAlunoClick: function() {
-        
             if (isEdit) {
                 var data = updateAlunoForm.getValues();
 
@@ -118,7 +118,7 @@ var Aluno = (function() {
                     return;
                 }
                 
-                Model.updateAluno(data.values, function(result) {
+                Model.updateAluno(editMatricula, data.values, function(result) {
                     $("#newAluno").modal('hide');
                     Modal.success(result.message);
                 }, function(errors) {
@@ -167,10 +167,10 @@ var Aluno = (function() {
         
         onEditAlunoClick: function() {
             var tr = $(this).parent().parent();
-            var matricula = $(tr).data('matricula');
+            editMatricula = $(tr).data('matricula');
             isEdit = true;
             
-            Model.getAluno(matricula, function(result) {
+            Model.getAluno(editMatricula, function(result) {
                 console.log(result);
                 
                 updateAlunoForm.setValues(result);
