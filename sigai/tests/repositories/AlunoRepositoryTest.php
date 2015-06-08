@@ -64,16 +64,13 @@ class AlunoRepositoryTest extends TestCase {
 	public function testFindByAulaWithChamada()
 	{
 	    $alunos = AlunoRepository::findByAulaWithChamada(2, 1);
-	    
+
 	    $this->assertTrue(sizeof($alunos->toArray()) == 26);
 	    
 	    foreach ($alunos as $aluno) {
+	        $this->assertTrue($aluno->id != null);
 	        $this->assertTrue($aluno->status != null);
 		    $this->assertTrue($aluno->curso_origem_id != null);
-		    $this->assertTrue($aluno->p1 != null);
-		    $this->assertTrue($aluno->p2 != null);
-		    $this->assertTrue($aluno->p3 != null);
-		    $this->assertTrue($aluno->p4 != null);
 	    }
 	}
 }
