@@ -96,12 +96,11 @@ class AulaRepository extends Repository
                      ->join('professores_turmas AS pt', 'pt.turma_id', '=', 't.id')
                      ->join('professores AS p', 'p.id', '=', 'pt.professor_id')
                      
-                     ->whereRaw('data > NOW()')
+                     ->whereRaw("data >= DATE_FORMAT(NOW(),'%Y-%m-%d')")
                      ->where('p.id', $professorId)
                      ->orderBy('data')
                      ->take(5)
 	                 ->get();
-	    
 	    return $aulas;
     }
     

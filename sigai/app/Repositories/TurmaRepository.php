@@ -14,6 +14,7 @@ use App\Exceptions\ConflictError;
 
 use \DB;
 use \Lang;
+use \Log;
 
 use Carbon\Carbon;
 
@@ -150,7 +151,12 @@ class TurmaRepository extends Repository
         DB::beginTransaction();
 	    
 	    try {
+	        foreach ($turma->aulas as $aula) {
+	            $aula->chamadas()->delete();
+	        }
+	        
 	        $turma->aulas()->delete();
+	        
 	        $turma->statusDiarios()->delete();
 	        
 	        $turma->alunos()->detach();
