@@ -107,7 +107,7 @@ class AulaRepository extends Repository
     
     public static function deleteByData($data, $turmaId, $unidadeCurricularId)
     {
-        $aula = AulaRepository::findByData($data, $turmaId, $ucId);
+        $aula = AulaRepository::findByData($data, $turmaId, $unidadeCurricularId);
         
         DB::beginTransaction();
 	    
@@ -126,8 +126,15 @@ class AulaRepository extends Repository
     {
         $aula  = new Aula;
         $turma = TurmaRepository::findById($turmaId, $ucId);
+        $date  = Carbon::createFromFormat($dateFormat, array_get($data, 'data'));
+
+        if (self::exists($turmaId, $date)) {
+            throw new ValidationError([
+                'data' => [Lang::get('aulas.already_exists')]
+            ]);
+        }
         
-        $aula->data               = Carbon::createFromFormat($dateFormat, array_get($data, 'data'));
+        $aula->data               = $date;
         $aula->status             = array_get($data, 'status', 0);
         $aula->conteudo           = array_get($data, 'conteudo');
         $aula->obs                = array_get($data, 'obs');
@@ -190,6 +197,16 @@ class AulaRepository extends Repository
         }
         
         return $aula;
+    }
+    
+    public static function exists($turmaId, Carbon $date)
+    {
+        return !is_null(
+            DB::table('aulas')
+              ->where('data', $date->format('Y-m-d'))
+              ->where('turma_id', $turmaId)
+              ->first()
+        );
     }
     
 }
