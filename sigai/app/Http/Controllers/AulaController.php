@@ -48,7 +48,7 @@ class AulaController extends Controller {
         try {
             $aula = AulaRepository::update($request->all(), $ucId, $turmaId, $data);
             
-            return redirect()->action('AulaController@mostrar', [$ucId, $turmaId, $aula->data])
+            return redirect()->action('AulaController@mostrar', [$ucId, $turmaId, $aula->data->format('Y-m-d')])
 	                         ->with('success', Lang::get('turmas.saved'));
         } catch (NotFoundError $e) {
             return redirect()->action('TurmaController@mostrar', [$turmaId])
