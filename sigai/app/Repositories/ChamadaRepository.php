@@ -99,8 +99,6 @@ class ChamadaRepository extends Repository
             ->orderBy(DB::raw('u.nome, year, month'))
             ->get();
             
-        
-            
         $faltas = self::parseFaltaRows($rows);
         $months = self::parsePeriods($faltas);
         
@@ -135,8 +133,11 @@ class ChamadaRepository extends Repository
         }
         
         foreach ($faltas as $f) {
-            //division by zero error
-            $f->pFaltas = ($f->total_faltas * 100)/$f->total_periodos;
+            if ($f->total_periodos == 0) {
+                $f->pFaltas = 0;
+            } else {
+                $f->pFaltas = ($f->total_faltas * 100)/$f->total_periodos;
+            }
         }
 
         return $faltas;
@@ -146,6 +147,8 @@ class ChamadaRepository extends Repository
     {
         $months = [];
         
+        if (sizeof($faltas) == 0) return $months;
+
         foreach (array_values($faltas)[0]->faltas as $data => $v) {
             $months[] = [
                 'key'   => $v->year . '-' . $v->month,
