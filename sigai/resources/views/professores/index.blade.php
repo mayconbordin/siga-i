@@ -29,6 +29,7 @@ var Professor = (function() {
     });
     
     var isEdit = false;
+    var editMatricula = null;
     
     var Model = {
         getProfessor: function(matricula, success, error) {
@@ -54,9 +55,9 @@ var Professor = (function() {
             });
         },
         
-        updateProfessor: function(data, success, error) {
+        updateProfessor: function(matricula, data, success, error) {
             $.ajax({
-                url: baseUrl + '/' + data.matricula,
+                url: baseUrl + '/' + matricula,
                 method: 'PUT',
                 data: data
             }).done(function(result) {
@@ -107,7 +108,6 @@ var Professor = (function() {
         },
         
         onSaveProfessorClick: function() {
-        
             if (isEdit) {
                 var data = updateProfessorForm.getValues();
 
@@ -116,7 +116,7 @@ var Professor = (function() {
                     return;
                 }
                 
-                Model.updateProfessor(data.values, function(result) {
+                Model.updateProfessor(editMatricula, data.values, function(result) {
                     $("#newProfessor").modal('hide');
                     Modal.success(result.message);
                 }, function(errors) {
@@ -165,10 +165,10 @@ var Professor = (function() {
         
         onEditProfessorClick: function() {
             var tr = $(this).parent().parent();
-            var matricula = $(tr).data('matricula');
+            editMatricula = $(tr).data('matricula');
             isEdit = true;
             
-            Model.getProfessor(matricula, function(result) {
+            Model.getProfessor(editMatricula, function(result) {
                 console.log(result);
                 
                 updateProfessorForm.setValues(result);
