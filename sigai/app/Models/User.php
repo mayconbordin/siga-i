@@ -6,10 +6,13 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use App\Transformers\Base\TransformableTrait;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
-	use Authenticatable, CanResetPassword, EntrustUserTrait;
+	use Authenticatable, CanResetPassword, EntrustUserTrait, TransformableTrait;
+	
+	protected $transformer = 'App\Transformers\UsuarioTransformer';
 
 	/**
 	 * The database table used by the model.

@@ -32,6 +32,11 @@ class TurmaController extends Controller {
         $this->middleware('auth');
         $this->middleware('permissions');
     }
+    
+    public function listar()
+    {
+        view('turmas.index');
+    }
 
 	public function mostrar($ucId, $id)
 	{

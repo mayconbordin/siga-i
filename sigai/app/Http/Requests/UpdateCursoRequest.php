@@ -22,8 +22,9 @@ class UpdateCursoRequest extends Request {
 	public function rules()
 	{
 		return [
-			'nome'   => 'required|max:255',
-			'sigla'  => 'required|max:5'
+			'nome'           => 'required|max:255',
+			'sigla'          => 'required|max:5',
+			'coordenador_matricula' => 'required|exists:usuarios,matricula'
 		];
 	}
 

@@ -8,18 +8,14 @@
 @section('js')
 <script>
 
-var Aluno = (function() {
+var Curso = (function() {
 
     var baseUrl = "{{ url('api/cursos') }}";
 
-    var createCursoForm = new Form({
-        nome         : {el: "#newCursoNome"       , required: true},
-        sigla        : {el: "#newCursoSigla"      , required: true},
-    });
-    
-    var updateCursoForm = new Form({
-        nome         : {el: "#newCursoNome"       , required: true},
-        sigla        : {el: "#newCursoSigla"      , required: true}
+    var cursoForm = new Form({
+        nome           : {el: "#newCursoNome"       , required: true},
+        sigla          : {el: "#newCursoSigla"      , required: true},
+        coordenador_matricula : {el: "#newCursoCoordenador", required: true}
     });
     
     var isEdit = false;
@@ -38,6 +34,8 @@ var Aluno = (function() {
         },
     
         createCurso: function(data, success, error) {
+            data = Model.sanitizeCursoData(data);
+            
             $.ajax({
                 url: baseUrl,
                 method: 'POST',
@@ -50,6 +48,8 @@ var Aluno = (function() {
         },
         
         updateCurso: function(id, data, success, error) {
+            data = Model.sanitizeCursoData(data);
+            
             $.ajax({
                 url: baseUrl + '/' + id,
                 method: 'PUT',
@@ -70,23 +70,46 @@ var Aluno = (function() {
             }).fail(function(xhr) {
                 error(xhr.responseJSON, xhr);
             });
+        },
+        
+        sanitizeCursoData: function(data) {
+            data.coordenador_matricula = data.coordenador_matricula.split('|')[0].trim();
+            return data;
         }
     };
     
     return {
         init: function() {
-            $("#openNewCurso").click(this.onOpenNewAlunoModal);
+            $("#openNewCurso").click(this.onOpenNewCursoModal);
             $("#newCurso .save").click(this.onSaveCursoClick);
             $("#cursos .remove").click(this.onRemoveCursoClick);
             $("#cursos .edit").click(this.onEditCursoClick);
             
             $("#newCurso").on('hidden.bs.modal', this.onCloseCursoModal);
+            
+            $("#newCursoCoordenador").typeahead({
+                onSelect: function(item) {
+
+                },
+                ajax: {
+                    url: "{{ url('api/professores') }}",
+                    displayField: "display_name",
+                    valueField: "matricula",
+                    method: "get",
+                    preDispatch: function (query) {
+                        return {
+                            query: query
+                        }
+                    },
+                }
+            });
         },
         
         // utilities -----------------------------------------------------------
         addCursoToTable: function(curso) {
             var html = '<tr data-id="'+curso.id+'"><th scope="row">'
                      + curso.id+'</th><td>'+curso.nome+'</td><td>'+curso.sigla+'</td>'
+                     + '<td>'+curso.coordenador.nome+'</td>'
                      + '<td class="text-center"><button class="btn btn-default btn-xs edit">'
                      + '<i class="fa fa-pencil-square-o"></i> @lang("general.edit")'
                      + '</button><button class="btn btn-danger btn-xs remove">'
@@ -99,42 +122,34 @@ var Aluno = (function() {
         },
         
         // eventos -------------------------------------------------------------
-        onOpenNewAlunoModal: function() {
+        onOpenNewCursoModal: function() {
             isEdit = false;
             $("#newCurso").modal('show');
         },
         
         onSaveCursoClick: function() {
+            var data = cursoForm.getValues();
+
+            if (data.hasErrors) {
+                console.log(data.errors);
+                cursoForm.validate(data.errors);
+                return;
+            }
         
             if (isEdit) {
-                var data = updateCursoForm.getValues();
-
-                if (data.hasErrors) {
-                    console.log(data.errors);
-                    updateCursoForm.validate(data.errors);
-                    return;
-                }
-                
                 Model.updateCurso(editCursoId, data.values, function(result) {
                     $("#newCurso").modal('hide');
                     Modal.success(result.message);
                 }, function(errors) {
-                    updateCursoForm.validate(errors);
+                    cursoForm.validate(errors);
                 });
             } else {
-                var data = createCursoForm.getValues();
-
-                if (data.hasErrors) {
-                    createCursoForm.validate(data.errors);
-                    return;
-                }
-                
                 Model.createCurso(data.values, function(result) {
                     $("#newCurso").modal('hide');
                     Modal.success(result.message);
-                    Aluno.addCursoToTable(result.curso);
+                    Curso.addCursoToTable(result.curso);
                 }, function(errors) {
-                    createCursoForm.validate(errors);
+                    cursoForm.validate(errors);
                 });
             }
         },
@@ -159,7 +174,7 @@ var Aluno = (function() {
         },
         
         onCloseCursoModal: function(e) {
-            createCursoForm.cleanValues();
+            cursoForm.cleanValues();
         },
         
         onEditCursoClick: function() {
@@ -169,9 +184,8 @@ var Aluno = (function() {
             editCursoId = id;
             
             Model.getCurso(id, function(result) {
-                console.log(result);
-                
-                updateCursoForm.setValues(result);
+                result.coordenador_matricula = result.coordenador.display_name;
+                cursoForm.setValues(result);
                 $("#newCurso").modal('show');
             }, function(r) {
                 Modal.error(r.errors.join('<br>'));
@@ -182,7 +196,7 @@ var Aluno = (function() {
 })();
 
 $(document).ready(function($) {
-    Aluno.init();
+    Curso.init();
 });
 </script>
 @endsection
@@ -209,6 +223,7 @@ $(document).ready(function($) {
                 <th>@lang('cursos.id')</th>
                 <th>@lang('cursos.nome')</th>
                 <th>@lang('cursos.sigla')</th>
+                <th>@lang('cursos.coordenador')</th>
                 <th class="text-center">@lang('general.actions')</th>
             </tr>
         </thead>
@@ -218,6 +233,7 @@ $(document).ready(function($) {
                 <th scope="row">{{ $curso->id }}</th>
                 <td>{{ $curso->nome }}</td>
                 <td>{{ $curso->sigla }}</td>
+                <td>{{ $curso->coordenador->nome }}</td>
                 <td class="text-center">
                     <button class="btn btn-default btn-xs edit">
                         <i class="fa fa-pencil-square-o"></i> @lang('general.edit')

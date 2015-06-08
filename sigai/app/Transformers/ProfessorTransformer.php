@@ -7,12 +7,12 @@ class ProfessorTransformer extends Transformer
     public function transform($options = array())
     {
         $data = [
-            'id'           => (int) (empty($this->id) ? $this->usuario->id : $this->id),
-            'matricula'    => $this->usuario->matricula,
-            'nome'         => $this->usuario->nome,
-            'email'        => $this->usuario->email,
-            'display_name' => '(' . $this->usuario->matricula . ') ' 
-                                  . $this->usuario->nome
+            'id'           => (int) (empty($this->id)  ? $this->usuario->id : $this->id),
+            'matricula'    => ($this->usuario != null) ? $this->usuario->matricula : $this->matricula,
+            'nome'         => ($this->usuario != null) ? $this->usuario->nome : $this->nome,
+            'email'        => ($this->usuario != null) ? $this->usuario->email : $this->email,
+            'display_name' => ($this->usuario != null) ? ($this->usuario->matricula.' | '.$this->usuario->nome)
+                                                       : ($this->matricula.' | '.$this->nome)
         ];
         
         if (in_array('cursoOrigem', $options)) {

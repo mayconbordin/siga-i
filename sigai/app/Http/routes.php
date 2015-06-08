@@ -13,6 +13,8 @@
 
 Route::get('/', 'IndexController@index');
 
+// Conta do Usuário Logado
+// -----------------------------------------------------------------------------
 Route::get('/conta', 'UsuarioController@index');
 Route::post('/conta', 'UsuarioController@salvar');
 
@@ -35,7 +37,7 @@ Route::group(['prefix' => 'alunos', 'roles' => 'coordenador'], function()
 // -----------------------------------------------------------------------------
 Route::group(['prefix' => 'professores', 'roles' => 'coordenador'], function()
 {
-    Route::get ('/'    , 'ProfessorController@listar');
+    Route::get ('/', 'ProfessorController@listar');
 });
 
 
@@ -43,7 +45,14 @@ Route::group(['prefix' => 'professores', 'roles' => 'coordenador'], function()
 // -----------------------------------------------------------------------------
 Route::group(['prefix' => 'cursos', 'roles' => 'coordenador'], function()
 {
-    Route::get ('/'    , 'CursoController@listar');
+    Route::get ('/', 'CursoController@listar');
+});
+
+// Turmas - apenas listagem
+// -----------------------------------------------------------------------------
+Route::group(['prefix' => 'turmas', 'roles' => 'coordenador'], function()
+{
+    Route::get ('/', 'TurmaController@listar');
 });
 
 

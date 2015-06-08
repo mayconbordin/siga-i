@@ -2,6 +2,8 @@
 
 use App\Models\Curso;
 
+use App\Repositories\UsuarioRepository;
+
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
 use App\Exceptions\ServerError;
@@ -13,7 +15,7 @@ class CursoRepository extends Repository {
 
     public static function findById($id)
     {
-        $curso = Curso::find($id);
+        $curso = Curso::with('coordenador')->where('id', $id)->first();
 	    
 	    if ($curso == null) {
 	        throw new NotFoundError(Lang::get('cursos.not_found'));
@@ -24,7 +26,7 @@ class CursoRepository extends Repository {
     
     public static function findByNome($nome)
     {
-        $curso = Curso::where('nome', $nome)->first();
+        $curso = Curso::with('coordenador')->where('nome', $nome)->first();
 	    
 	    if ($curso == null) {
 	        throw new NotFoundError(Lang::get('cursos.not_found'));
@@ -47,7 +49,7 @@ class CursoRepository extends Repository {
     
     public static function paginate($orderBy = 'nome', $perPage = 10)
     {
-        $cursos = Curso::orderBy($orderBy)->paginate($perPage);
+        $cursos = Curso::with('coordenador')->orderBy($orderBy)->paginate($perPage);
 	    return $cursos;
     }
 
@@ -57,6 +59,9 @@ class CursoRepository extends Repository {
 	    
 	    $curso->nome  = array_get($data, 'nome');
 	    $curso->sigla = array_get($data, 'sigla');
+	    
+	    $coordenador = UsuarioRepository::findByMatricula(array_get($data, 'coordenador_matricula'));
+	    $curso->coordenador()->associate($coordenador);
 
 	    if (!$curso->save()) {
             throw new ServerError(Lang::get('cursos.save_error'));
@@ -71,6 +76,9 @@ class CursoRepository extends Repository {
 	    
 	    $curso->nome  = array_get($data, 'nome');
 	    $curso->sigla = array_get($data, 'sigla');
+	    
+	    $coordenador = UsuarioRepository::findByMatricula(array_get($data, 'coordenador_matricula'));
+	    $curso->coordenador()->associate($coordenador);
 
 	    if (!$curso->save()) {
             throw new ServerError(Lang::get('cursos.create_error'));

@@ -28,6 +28,14 @@
                             <label class="control-label hidden"></label>
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="newCursoCoordenador">@lang('cursos.coordenador')</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="newCursoCoordenador" 
+                                   placeholder="@lang('professores.nome') @lang('general.or') @lang('professores.matricula')">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

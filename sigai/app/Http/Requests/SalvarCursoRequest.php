@@ -23,7 +23,8 @@ class SalvarCursoRequest extends Request {
 	{
 		return [
 			'nome'   => 'required|max:255|unique:cursos',
-			'sigla'  => 'required|max:5|unique:cursos'
+			'sigla'  => 'required|max:5|unique:cursos',
+			'coordenador_matricula' => 'required|exists:usuarios,matricula'
 		];
 	}
 

@@ -9,7 +9,8 @@ class CursoTransformer extends Transformer
         return [
             'id'    => (int) $this->id,
             'nome'  => $this->nome,
-            'sigla' => $this->sigla
+            'sigla' => $this->sigla,
+            'coordenador' => $this->coordenador->transform()
         ];
     }
 }

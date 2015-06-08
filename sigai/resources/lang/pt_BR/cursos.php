@@ -8,6 +8,7 @@ return [
     'sigla'      => 'Sigla',
     'add'        => 'Adicionar Curso',
     'remove'     => 'Remover Curso',
+    'coordenador' => 'Coordenador',
     
     'new'        => 'Novo Curso',
     
