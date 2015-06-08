@@ -1,14 +1,47 @@
 @extends('app')
  
 @section('title')
-@choice('cursos.title', 2) ::
+@lang('turmas.title') ::
 @parent
 @stop
 
+@section('css')
+<link href="{{ asset('/css/bootstrap-table.min.css') }}" rel="stylesheet" />
+@endsection
+
 @section('js')
+<script src="{{ asset('/js/bootstrap-table.min.js') }}"></script>
+<script src="{{ asset('/js/bootstrap-table-toolbar.min.js') }}"></script>
+<script src="{{ asset('/js/bootstrap-table-pt-BR.min.js') }}"></script>
+
 <script>
 $(document).ready(function($) {
 });
+
+function parseData(res) {
+    return res.data;
+}
+
+function parseProfessores(professores) {
+    return professores.map(function(p) {
+        return p.usuario.nome;
+    }).join(", ");
+}
+
+function formatData(data) {
+    return data.date.split(" ")[0];
+}
+
+function parseUnidadeCurricular(uc) {
+    return uc.sigla;
+}
+
+function parseQueryParams(params) {
+    params.page = (params.offset / params.limit) + 1;
+    
+    console.log(params);
+    return params;
+}
 </script>
 @endsection
 
@@ -18,47 +51,71 @@ $(document).ready(function($) {
     
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
-        <li class="active">@choice('cursos.title', 2)</li>
+        <li class="active">@lang('turmas.title')</li>
     </ol>
     
-    <button type="button" class="btn btn-primary" id="openNewCurso">
-        <i class="fa fa-plus"></i> @lang('cursos.new')
-    </button>
-    
-    @include('cursos.criar_modal')
+    <div id="turmaToolbar">
+        <form class="form-inline">
+            <select class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </form>
+    </div>
   
-    <!-- Lista Cursos -->
-    <table class="table" id="cursos">
+    {{-- Lista Turmas --}}
+    <table class="table" id="turmas"
+           data-toggle="table"
+           data-url="{{ url('/api/turmas') }}"
+           data-query-params="parseQueryParams"
+           data-sort-name="id"
+           data-sort-order="asc"
+           data-pagination="true"
+           data-side-pagination="server"
+           data-page-list="[5, 10, 20, 50, 100, 200]"
+           data-search="true"
+           data-toolbar="#turmaToolbar"
+           data-toolbar-align="right"
+           >
         <thead>
             <tr>
-                <th>@lang('cursos.id')</th>
-                <th>@lang('cursos.nome')</th>
-                <th>@lang('cursos.sigla')</th>
+                <th data-field="id"
+                    data-sortable="true">
+                    @lang('turmas.id')
+                </th>
+                <th data-field="nome"
+                    data-sortable="true">
+                    @lang('turmas.nome')
+                </th>
+                <th data-field="data_inicio"
+                    data-formatter="formatData"
+                    data-sortable="true">
+                    @lang('turmas.data_inicio')
+                </th>
+                <th data-field="data_fim"
+                    data-formatter="formatData"
+                    data-sortable="true">
+                    @lang('turmas.data_fim')
+                </th>
+                <th data-field="unidade_curricular"
+                    data-formatter="parseUnidadeCurricular"
+                    data-sortable="true"
+                    data-sort-name="unidadeCurricular.sigla"
+                    class="text-center">
+                    @lang('unidades_curriculares.single_title')
+                </th>
+                <th data-field="professores"
+                    data-formatter="parseProfessores">
+                    @choice('professores.title', 2)
+                </th>
                 <th class="text-center">@lang('general.actions')</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($cursos as $curso)
-            <tr data-id="{{ $curso->id }}">
-                <th scope="row">{{ $curso->id }}</th>
-                <td>{{ $curso->nome }}</td>
-                <td>{{ $curso->sigla }}</td>
-                <td class="text-center">
-                    <button class="btn btn-default btn-xs edit">
-                        <i class="fa fa-pencil-square-o"></i> @lang('general.edit')
-                    </button>
-                    
-                    <button class="btn btn-danger btn-xs remove">
-                        <i class="fa fa-remove"></i> @lang('general.remove')
-                    </button>
-                </td>
-            </tr>
-            @endforeach
         </tbody>
     </table>
-    
-    <div class="pagination-container text-center">
-        <?php echo $cursos->render(); ?>
-    </div>
 </div>
 @endsection

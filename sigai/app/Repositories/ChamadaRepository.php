@@ -135,7 +135,8 @@ class ChamadaRepository extends Repository
         }
         
         foreach ($faltas as $f) {
-            $f->pFaltas = ($f->total_faltas * 100)/$f->total_periodos;;
+            //division by zero error
+            $f->pFaltas = ($f->total_faltas * 100)/$f->total_periodos;
         }
 
         return $faltas;

@@ -90,6 +90,21 @@ class TurmaRepository extends Repository
         return $turma;
     }
     
+    public static function paginate($perPage = 10, $sort = 'turmas.id', $order = 'asc', $search = null)
+    {
+        $query = Turma::select('turmas.*')
+                       ->join('unidades_curriculares as uc', 'uc.id', '=', 'turmas.unidade_curricular_id')
+                       ->with('unidadeCurricular', 'professores', 'professores.usuario');
+                       
+        if ($search != null) {
+            $query->where('turmas.nome', 'LIKE', '%'.$search.'%');
+        }
+                       
+        $turmas = $query->orderBy($sort, $order)->paginate($perPage);
+                       
+        return $turmas;
+    }
+    
     public static function update(array $data, $ucId, $id)
     {
         $turma = self::findById($id, $ucId);

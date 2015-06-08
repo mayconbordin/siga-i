@@ -26,6 +26,27 @@ class TurmaController extends Controller {
         $this->middleware('auth');
         $this->middleware('permissions');
     }
+    
+    public function listar()
+    {
+        $perPage = Input::get('limit');
+        $sort    = Input::get('sort');
+        $order   = Input::get('order');
+        $search  = Input::get('search');
+        
+        if ($sort == "unidade_curricular") {
+            $sort = "uc.sigla";
+        }
+        
+        $turmas = TurmaRepository::paginate($perPage, $sort, $order, $search);
+        
+        $data = $turmas->toArray();
+        $data['rows'] = $data['data'];
+        
+        unset($data['data']);
+        
+        return $this->jsonResponse($data);
+    }
 
 	public function mostrar($ucId, $id)
 	{

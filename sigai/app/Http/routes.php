@@ -148,6 +148,13 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         });
     });
     
+    
+    // Listagem de turmas
+    Route::group(['roles' => 'coordenador'], function()
+    {
+        Route::get('/turmas', 'TurmaController@listar');
+    });
+    
     Route::group(['prefix' => 'cursos'], function()
     {
         Route::get   ('/',                      'CursoController@listar');

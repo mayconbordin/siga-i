@@ -53,7 +53,7 @@ class DbCreate extends Command {
 
 		if ($this->confirm('Do you wish to continue? [yes|no]'))
         {
-            DB::statement("DROP DATABASE $name");
+            DB::statement("DROP DATABASE IF EXISTS $name");
             DB::statement("CREATE DATABASE $name CHARACTER SET $charset COLLATE $collation");
             $this->info("Database created.");
         }
