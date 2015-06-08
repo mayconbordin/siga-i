@@ -96,7 +96,17 @@
 					        </a>
 						    <ul class="dropdown-menu" role="menu">
 						        <!--<li class="divider"></li>-->
-							    <li><a href="{{ url('/auth/logout') }}"><i class="fa fa-sign-out"></i> @lang('login.logout')</a></li>
+						        <li>
+						            <a href="{{ url('/conta') }}">
+						                <i class="fa fa-user"></i> @lang('usuarios.me_title')
+					                </a>
+				                </li>
+				                
+							    <li>
+							        <a href="{{ url('/auth/logout') }}">
+							            <i class="fa fa-sign-out"></i> @lang('login.logout')
+						            </a>
+					            </li>
 						    </ul>
 					    </li>
 					    @endif

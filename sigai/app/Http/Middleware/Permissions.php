@@ -37,6 +37,10 @@ class Permissions {
 		        return $this->response($request, $next, true);
 	        }
 		}
+		
+		if (sizeof($roles) == 0 && sizeof($permissions) == 0) {
+		    return $this->response($request, $next, true);
+		}
 
 		return $this->response($request, $next);
 	}

@@ -13,7 +13,8 @@
 
 Route::get('/', 'IndexController@index');
 
-
+Route::get('/conta', 'UsuarioController@index');
+Route::post('/conta', 'UsuarioController@salvar');
 
 // Importar
 // -----------------------------------------------------------------------------

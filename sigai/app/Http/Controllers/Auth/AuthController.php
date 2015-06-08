@@ -6,6 +6,8 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
+use \Lang;
+
 class AuthController extends Controller {
 
 	/*
@@ -82,4 +84,9 @@ class AuthController extends Controller {
     {
         return redirect('/');
     }
+    
+    protected function getFailedLoginMessage()
+	{
+		return Lang::get('login.failed');
+	}
 }

@@ -39,4 +39,26 @@ class UsuarioRepository extends Repository {
 	    
         return $usuario;
     }
+    
+    public static function updateById(array $data, $id)
+    {
+        $usuario = self::findById($id);
+
+        if (isset($data['matricula']))
+            $usuario->matricula = $data['matricula'];
+        if (isset($data['nome']))
+            $usuario->nome = $data['nome'];
+        if (isset($data['email']))
+            $usuario->email = $data['email'];
+        
+        if (isset($data['password']) && strlen($data['password']) > 0) {
+            $usuario->password = Hash::make($data['password']);
+        }
+
+        if (!$usuario->save()) {
+            throw new ServerError(Lang::get('usuarios.save_error'));
+        }
+        
+        return $usuario;
+    }
 }

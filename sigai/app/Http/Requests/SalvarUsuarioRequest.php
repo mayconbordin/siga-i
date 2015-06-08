@@ -2,7 +2,9 @@
 
 use App\Http\Requests\Request;
 
-class UpdateAlunoRequest extends Request {
+use \Auth;
+
+class SalvarUsuarioRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -22,10 +24,9 @@ class UpdateAlunoRequest extends Request {
 	public function rules()
 	{
 		return [
-		    'matricula'       => 'required|max:30',
-			'nome'            => 'required|max:255',
-			'email'           => 'required|email|max:255',
-			'password'        => 'string',
+			'nome'     => 'required|max:255',
+			'email'    => 'required|email|max:255|unique:usuarios,email,' . Auth::user()->id,
+			'password' => 'string|min:3'
 		];
 	}
 
