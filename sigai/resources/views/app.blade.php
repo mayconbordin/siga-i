@@ -74,6 +74,10 @@
                         <li class="{{ (Request::is('cursos*')) ? 'active' : '' }}">
                             <a href="{{ url('/cursos') }}">@lang('cursos.title')</a>
                         </li>
+                        
+                        <li class="{{ (Request::is('turmas*')) ? 'active' : '' }}">
+                            <a href="{{ url('/turmas') }}">@lang('turmas.title')</a>
+                        </li>
                         @elseif (Auth::user()->hasRole('professor'))
                         
                         @endif
