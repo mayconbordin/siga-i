@@ -47,7 +47,7 @@ var Aula = (function() {
         
             $("#switchChamadas").click(this.onSwitchChamadasClick);
             $("#chamada .checkRow input[type=checkbox]").change(this.onCheckRowClick);
-            $("#saveChamada").click(this.onSaveChamadaClick);
+            $(".saveChamada").click(this.onSaveChamadaClick);
         },
         
         onClickEdit: function() {
@@ -196,7 +196,7 @@ $(document).ready(function($) {
                 
                 <div class="tab-actions row">
                     <div class="col-sm-6 tab-actions-left">
-                        <button id="saveChamada" class="btn btn-success"
+                        <button class="saveChamada btn btn-success"
                                 data-loading-text="@lang('general.saving')...">
                             @lang('general.save')</button>
                     </div>
@@ -272,6 +272,14 @@ $(document).ready(function($) {
                         @endforeach
                     </tbody>
                 </table>
+                
+                <div class="tab-actions row">
+                    <div class="col-sm-6 tab-actions-left">
+                        <button class="saveChamada btn btn-success"
+                                data-loading-text="@lang('general.saving')...">
+                            @lang('general.save')</button>
+                    </div>
+                </div>
                 
             </div>
             
