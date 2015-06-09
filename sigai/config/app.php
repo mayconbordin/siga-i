@@ -28,6 +28,17 @@ return [
 
 	'url' => 'http://localhost',
 	//'url' => 'http://localhost/siga-i/v2/sigai/public/',
+	
+	
+	/*
+	|--------------------------------------------------------------------------
+	| URL do Grupo
+	|--------------------------------------------------------------------------
+	|
+	| URL utilizada no rodapé do sistema, apontando para o site do grupo.
+	|
+	*/
+	'group_url' => '/gppdi',
 
 	/*
 	|--------------------------------------------------------------------------
