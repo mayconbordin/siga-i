@@ -131,7 +131,14 @@
 
         <footer class="footer">
             <div class="container">
-                <img src="{{ asset('img/faculdade_senai.jpg') }}">
+            
+                <div class="pull-left"><img src="{{ asset('img/faculdade_senai.jpg') }}"></div>
+                <div class="pull-right">
+                    <p class="author">
+                        <a href="{{ Config::get('app.group_url') }}" title="">Desenvolvido por GPPDi</a>
+                    </p>
+                </div>
+                
             </div>
         </footer>
 
