@@ -187,8 +187,11 @@ class XlsImport
 			    $value = $objWorksheet->getCellByColumnAndRow($col, $row)->getCalculatedValue();
 			
 			    $curso = $objWorksheet->getCellByColumnAndRow(1, $row)->getCalculatedValue();
-			    $aluno['curso'] = $this->getNomeCurso($curso);
-			
+			    
+			    if ($curso != null && strlen($curso) > 0) {
+			        $aluno['curso'] = $this->getNomeCurso($curso);
+			    }
+			    
 			    if (($col == 0) && ($value == 'No')) {
 				    $flag = true;
 				    $row++;
@@ -209,7 +212,7 @@ class XlsImport
 				
 				    if ($col == 3)
 				    {
-				        if (($value == 0) || ($value == null)) {
+				        if (($value == 0) || ($value == null) || strlen(trim($value)) == 0) {
 							throw new \Exception("Faltam informações na aba produção referente aos alunos.");
 						}
 						
@@ -218,6 +221,10 @@ class XlsImport
 					    $this->alunos[$aluno['nome']] = $aluno;
 				    }
 			    }
+		    }
+		    
+		    if (sizeof($this->alunos) > 0 && sizeof($aluno) == 0) {
+		        break;
 		    }
 	    }
     }

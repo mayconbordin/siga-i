@@ -22,7 +22,8 @@ class ImportarXlsRequest extends Request {
 	public function rules()
 	{
 		return [
-			'planilha' => 'required|mimes:xls,xlsx,xlsm,xlsb'
+			//'planilha' => 'required|mimes:xls,xlsx,xlsm,xlsb,application/vnd.ms-office,application/vnd.ms-excel'
+			'planilha' => 'required|excel'
 		];
 	}
 

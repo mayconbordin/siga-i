@@ -34,7 +34,7 @@ class ImportController extends Controller {
         }
         
         $file = $request->file('planilha');
-        
+
         if (!$file->isValid()) {
             return response()->json(['errors' => [Lang::get('importar.invalid')]], 422);
         }

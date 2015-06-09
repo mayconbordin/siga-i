@@ -38,7 +38,20 @@ $(document).ready(function($) {
     });
     
     $('#fileInput').on('fileuploaderror filebatchuploaderror', function(event, data) {
-        var msg = data.jqXHR.responseJSON.errors.join('<br>');
+        var response = data.jqXHR.responseJSON;
+        var errors = [];
+        
+        if (typeof(response) == "undefined") {
+            errors.push("Erro desconhecido");
+        } else if ("errors" in response) {
+            errors = response.errors;
+        } else {
+            for (attr in response)
+                errors.push(response[attr]);
+        }
+        
+        var msg = errors.join('<br>');
+        
         $("#alertMessage").toggleClass("alert-danger alert-success hidden")
                           .find(".message").html(msg);
     });

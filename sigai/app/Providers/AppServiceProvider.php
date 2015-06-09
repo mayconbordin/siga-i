@@ -3,6 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 
 use App\Services\DateValidation;
+use App\Services\ExcelValidation;
 
 use Validator;
 
@@ -17,6 +18,10 @@ class AppServiceProvider extends ServiceProvider {
 	{
 		Validator::resolver(function($translator, $data, $rules, $messages) {
             return new DateValidation($translator, $data, $rules, $messages);
+        });
+        
+        Validator::resolver(function($translator, $data, $rules, $messages) {
+            return new ExcelValidation($translator, $data, $rules, $messages);
         });
 	}
 
