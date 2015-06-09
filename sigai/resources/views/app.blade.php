@@ -102,7 +102,7 @@
 						        <!--<li class="divider"></li>-->
 						        <li>
 						            <a href="{{ url('/conta') }}">
-						                <i class="fa fa-user"></i> @lang('usuarios.me_title')
+						                <i class="fa fa-gear"></i> @lang('usuarios.me_title')
 					                </a>
 				                </li>
 				                

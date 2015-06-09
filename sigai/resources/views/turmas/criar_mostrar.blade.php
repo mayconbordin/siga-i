@@ -12,6 +12,7 @@
 
 @section('css')
 <link href="{{ asset('/css/fullcalendar.css') }}" rel='stylesheet' />
+<link href="{{ asset('/css/jquery.qtip.min.css') }}" rel='stylesheet' />
 @endsection
 
 
@@ -19,6 +20,7 @@
 <script src="{{ asset('/js/moment.min.js') }}"></script>
 <script src="{{ asset('/js/fullcalendar.min.js') }}"></script>
 <script src="{{ asset('/js/fullcalendar.pt-br.js') }}"></script>
+<script src="{{ asset('/js/jquery.qtip.min.js') }}"></script>
 
 <script>
 
@@ -56,6 +58,21 @@ var Turma = (function() {
             error: function(err) {
                 console.log(err);
             }
+        },
+        eventRender: function(event, element) {
+            element.qtip({ // Grab some elements to apply the tooltip to
+                content: {
+                    text: 'Ir para a aula do dia ' + event.start.format('DD/MM')
+                },
+                position: {
+                    my: 'top center',  // Position my top left...
+                    at: 'bottom center', // at the bottom right of...
+                    target: element
+                },
+                style: {
+                    classes: 'qtip-tipsy'
+                }
+            })
         }
     };
     
@@ -418,14 +435,9 @@ var Turma = (function() {
         },
         
         onEventClick: function(event) {
-            aulaForm.cleanValues();
-            $("#newAula").modal("show");
-            
-            Model.getAula(event.start.format(), function(result) {
-                aulaForm.setValues(result);
-            }, function(error) {
-                console.log(error);
-            });
+            // redireciona para página da aula
+            window.location = "{{ url('unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}"
+                            + "/aulas/" + event.start.format();
         },
         
         onEventDrop: function(event, delta, revertFunc) {
