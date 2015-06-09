@@ -83,7 +83,7 @@ class ChamadaRepository extends Repository
             ->selectRaw('u.matricula, u.nome, YEAR(au.data) as year, MONTH(au.data) as month, atu.status,'.
                 '( SUM(IF(c.p1 = 0, 1, 0)) + SUM(IF(c.p2 = 0, 1, 0)) + '.
                 'SUM(IF(c.p3 = 0, 1, 0)) + SUM(IF(c.p4 = 0, 1, 0)) ) AS total_faltas,'.
-                '(select count(*) * 4 from aulas where turma_id = 2) as total_periodos'
+                "(select count(*) * 4 from aulas where turma_id = $turmaId) as total_periodos"
             )
             ->join('alunos_turmas AS atu', 'atu.turma_id', '=', 'au.turma_id')
             ->join('alunos as a', 'a.id', '=', 'atu.aluno_id')
