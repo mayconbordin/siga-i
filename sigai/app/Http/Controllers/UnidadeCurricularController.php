@@ -18,7 +18,7 @@ class UnidadeCurricularController extends Controller {
 
 	public function listar()
 	{
-        $ucs = UnidadeCurricularRepository::paginate();
+        $ucs = UnidadeCurricularRepository::paginateWith(['turmas']);
 	
 		return view('unidades_curriculares.index', [
 		    'unidadesCurriculares' => $ucs

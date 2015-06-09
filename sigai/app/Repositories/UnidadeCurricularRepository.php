@@ -57,6 +57,11 @@ class UnidadeCurricularRepository extends Repository {
         return UnidadeCurricular::paginate($perPage);
     }
     
+    public static function paginateWith(array $relations, $perPage = 10)
+    {
+        return UnidadeCurricular::with($relations)->paginate($perPage);
+    }
+    
     public static function attachCurso($id, $cursoId)
     {
         $uc    = self::findById($id);
