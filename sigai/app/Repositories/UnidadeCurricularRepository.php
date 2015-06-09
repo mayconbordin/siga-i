@@ -3,6 +3,7 @@
 use App\Models\UnidadeCurricular;
 
 use App\Repositories\CursoRepository;
+use App\Repositories\TurmaRepository;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
@@ -111,7 +112,10 @@ class UnidadeCurricularRepository extends Repository {
         DB::beginTransaction();
 	    
 	    try {
-	        $uc->turmas()->delete();
+	        foreach ($uc->turmas as $turma) {
+	            TurmaRepository::deleteById($turma->id, $id);
+	        }
+
 	        $uc->cursos()->detach();
 	        $uc->delete();
 	    } catch (\Exception $e) {
