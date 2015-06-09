@@ -74,7 +74,7 @@ class ImportData extends Command implements SelfHandling {
 		        $this->cursos[$curso['nome']] = CursoRepository::findByNome($curso['nome']);
 		    } catch (NotFoundError $e) {
 		        $c = CursoRepository::insert($curso);
-		        $c->unidadesCurriculares()->attach($this->uc);
+		        //$c->unidadesCurriculares()->attach($this->uc);
 		        
 		        $this->cursos[$curso['nome']] = $c;
 		    }
@@ -118,10 +118,13 @@ class ImportData extends Command implements SelfHandling {
 	protected function importAlunos($alunos)
 	{
 	    $this->alunos = [];
+	    $this->cursosUC = [];
 	    
 	    $role = Role::where('name', 'aluno')->first();
 	    
 	    foreach ($alunos as $aluno) {
+	        $this->cursosUC[$aluno['curso']] = true;
+	    
 	        try {
 	            $this->alunos[$aluno['matricula']] = AlunoRepository::findByMatricula($aluno['matricula']);
 	        } catch (NotFoundError $e) {
@@ -171,7 +174,9 @@ class ImportData extends Command implements SelfHandling {
 	
 	protected function associateCursosUnidadeCurricular()
 	{
-	    foreach ($this->cursos as $curso) {
+	    foreach ($this->cursosUC as $curso => $v) {
+	        $curso = CursoRepository::findByNome($curso);
+	        
 	        if ($curso->unidadesCurriculares()->find($this->uc->id) == null) {
 	            $curso->unidadesCurriculares()->attach($this->uc);
 	        }
