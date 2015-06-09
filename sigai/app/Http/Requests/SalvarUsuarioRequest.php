@@ -26,7 +26,10 @@ class SalvarUsuarioRequest extends Request {
 		return [
 			'nome'     => 'required|max:255',
 			'email'    => 'required|email|max:255|unique:usuarios,email,' . Auth::user()->id,
-			'password' => 'string|min:3'
+			'password' => 'string|required|min:3',
+			
+			'new_password'              => 'string|min:3|confirmed',
+			'new_password_confirmation' => 'string|min:3'
 		];
 	}
 

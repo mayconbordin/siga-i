@@ -3,6 +3,9 @@
 use App\Repositories\UsuarioRepository;
 use App\Http\Requests\SalvarUsuarioRequest;
 
+use App\Exceptions\NotFoundError;
+use App\Exceptions\ServerError;
+
 use \Auth;
 use \Hash;
 use \Lang;
@@ -26,11 +29,23 @@ class UsuarioController extends Controller
 
     public function salvar(SalvarUsuarioRequest $request)
 	{
+	    if (!Hash::check($request->get('password'), $this->usuario->password)) {
+            return redirect('conta')->withErrors([
+                'password' => [Lang::get('usuarios.invalid_password')]
+            ]);
+        }
+	    
 	    try {
-	        UsuarioRepository::updateById($request->all(), $this->usuario->id);
+	        $data = $request->all();
+	        $data['password'] = $request->get('new_password');
+	        
+	        UsuarioRepository::updateById($data, $this->usuario->id);
+	        
 	        return redirect()->action('UsuarioController@index')
 	                         ->with('success', Lang::get('usuarios.save_success'));
         } catch (ServerError $e) {
+            return redirect('conta')->with('error', $e->getMessage());
+        } catch (NotFoundError $e) {
             return redirect('conta')->with('error', $e->getMessage());
         }
 	}

@@ -40,6 +40,18 @@ class UsuarioRepository extends Repository {
         return $usuario;
     }
     
+    public static function isPasswordValid($id, $password)
+    {
+        $pwd = Hash::make($password);
+        $usuario = User::where('id', $id)->where('password', $pwd)->first();
+                      
+        if ($usuario == null) {
+	        return false;
+	    }
+	    
+        return true;
+    }
+    
     public static function updateById(array $data, $id)
     {
         $usuario = self::findById($id);

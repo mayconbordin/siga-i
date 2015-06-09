@@ -11,7 +11,7 @@
 $(document).ready(function($) {
     var options = {};
     options.ui = {
-        container: "#passwordFormGroup",
+        container: "#newPasswordFormGroup",
         showVerdictsInsideProgressBar: true,
         viewports: {
             progress: ".pwstrength_viewport_progress"
@@ -23,7 +23,7 @@ $(document).ready(function($) {
             "@lang('login.password_strength.strong')",
             "@lang('login.password_strength.very_strong')"]
     };
-    $('#usuarioPassword').pwstrength(options);
+    $('#usuarioNewPassword').pwstrength(options);
 });
 </script>
 @endsection
@@ -70,14 +70,39 @@ $(document).ready(function($) {
                 {{-- Senha --}}
                 <div id="passwordFormGroup" class="form-group {{{ $errors->has('password') ? 'has-error' : '' }}}">
                     <label for="usuarioPassword" class="col-sm-2 control-label">
-                        @lang('login.password')
+                        @lang('usuarios.current_password')
                     </label>
                     <div class="col-sm-6">
                         <input type="password" class="form-control" id="usuarioPassword" name="password"
-                               placeholder="@lang('login.password')"
+                               placeholder="@lang('usuarios.current_password')"
                                value="{{{ Input::old('password', null) }}}">
                         {!!$errors->first('password', '<label class="control-label">:message</label>')!!}
                     </div>
+                    <div class="col-sm-4" style="padding-top: 5px;">
+                        <div class="pwstrength_viewport_progress"></div>
+                    </div>
+                </div>
+                
+                {{-- Senha Nova --}}
+                <div id="newPasswordFormGroup" class="form-group {{{ $errors->has('new_password') ? 'has-error' : '' }}}">
+                    <label for="usuarioNewPassword" class="col-sm-2 control-label">
+                        @lang('usuarios.new_password')
+                    </label>
+                    
+                    <div class="col-sm-3">
+                        <input type="password" class="form-control" id="usuarioNewPassword" name="new_password"
+                               placeholder="@lang('usuarios.new_password')"
+                               value="{{{ Input::old('new_password', null) }}}">
+                        {!!$errors->first('new_password', '<label class="control-label">:message</label>')!!}
+                    </div>
+                    
+                    <div class="col-sm-3">
+                        <input type="password" class="form-control" id="usuarioNewPasswordRepeat" name="new_password_confirmation"
+                               placeholder="@lang('usuarios.new_password_repeat')"
+                               value="{{{ Input::old('new_password_repeat', null) }}}">
+                        {!!$errors->first('new_password_repeat', '<label class="control-label">:message</label>')!!}
+                    </div>
+                    
                     <div class="col-sm-4" style="padding-top: 5px;">
                         <div class="pwstrength_viewport_progress"></div>
                     </div>
