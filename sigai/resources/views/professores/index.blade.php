@@ -93,12 +93,15 @@ var Professor = (function() {
         addProfessorToTable: function(p) {
             var html = '<tr data-matricula="'+p.matricula+'"><th scope="row">'
                      + p.matricula+'</th><td>'+p.nome+'</td><td>'+p.cursoOrigem.nome+'</td>'
-                     + '<td class="text-center"><button class="btn btn-default btn-xs remove">'
+                     + '<td class="text-center"><button class="btn btn-default btn-xs edit">'
+                     + '<i class="fa fa-pencil-square-o"></i> @lang("general.edit")'
+                     + '</button><button class="btn btn-danger btn-xs remove">'
                      + '<i class="fa fa-remove"></i> @lang("general.remove")</button>'
                      + '</td></tr>';
                      
             $("#professores tbody").append(html);
             $("#professores .remove").click(this.onRemoveProfessorClick);
+            $("#professores .edit").click(this.onEditProfessorClick);
         },
         
         // eventos -------------------------------------------------------------
