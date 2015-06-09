@@ -16,6 +16,13 @@
 
 <script>
 $(document).ready(function($) {
+
+    // vai para página da turma ao clicar no registro
+    $("#turmas").on("click-row.bs.table", function(row, el) {
+        window.location = "{{ url('/unidades_curriculares') }}/" + el.unidade_curricular_id
+                        + "/turmas/" + el.id;
+    });
+
 });
 
 function parseData(res) {
@@ -37,7 +44,8 @@ function parseUnidadeCurricular(uc) {
 }
 
 function parseQueryParams(params) {
-    params.page = (params.offset / params.limit) + 1;
+    params.page  = (params.offset / params.limit) + 1;
+    params.field = $("#searchField").val();
     
     console.log(params);
     return params;
@@ -54,20 +62,20 @@ function parseQueryParams(params) {
         <li class="active">@lang('turmas.title')</li>
     </ol>
     
-    <div id="turmaToolbar">
+    <div id="turmaToolbar" class="table-toolbar">
         <form class="form-inline">
-            <select class="form-control">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+            <select id="searchField" class="form-control">
+                <option value="nome">Nome</option>
+                <option value="data_inicio">Data de Início</option>
+                <option value="data_fim">Data de Fim</option>
+                <option value="unidade_curricular">Unidade Curricular</option>
+                <option value="professores">Professores</option>
             </select>
         </form>
     </div>
   
     {{-- Lista Turmas --}}
-    <table class="table" id="turmas"
+    <table class="table table-clickable" id="turmas"
            data-toggle="table"
            data-url="{{ url('/api/turmas') }}"
            data-query-params="parseQueryParams"

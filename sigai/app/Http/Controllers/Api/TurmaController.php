@@ -33,12 +33,13 @@ class TurmaController extends Controller {
         $sort    = Input::get('sort');
         $order   = Input::get('order');
         $search  = Input::get('search');
+        $field   = Input::get('field');
         
         if ($sort == "unidade_curricular") {
             $sort = "uc.sigla";
         }
         
-        $turmas = TurmaRepository::paginate($perPage, $sort, $order, $search);
+        $turmas = TurmaRepository::search($perPage, $sort, $order, $search, $field);
         
         $data = $turmas->toArray();
         $data['rows'] = $data['data'];

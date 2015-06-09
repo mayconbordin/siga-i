@@ -24,6 +24,8 @@ return [
     
     'wrong_turma'  => 'Esta aula não pertence a turma informada',
     
+    'already_exists' => 'Já existe uma aula nesta data',
+    
     'remove_message' => 'Deseja realmente remover esta aula?',
     'remove_error'   => 'Ocorreu um erro ao remover a aula',
     'remove_success' => 'Aula removida com sucesso'

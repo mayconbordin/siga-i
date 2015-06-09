@@ -149,3 +149,11 @@ body {
     float: right;
 }
 
+.table-clickable tbody tr {
+    cursor: pointer;
+}
+
+.table-toolbar {
+    margin-left: 10px;
+    margin-top: -1px;
+}

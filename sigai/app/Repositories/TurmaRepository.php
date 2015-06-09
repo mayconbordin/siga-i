@@ -91,14 +91,38 @@ class TurmaRepository extends Repository
         return $turma;
     }
     
-    public static function paginate($perPage = 10, $sort = 'turmas.id', $order = 'asc', $search = null)
+    public static function search($perPage = 10, $sort = 'turmas.id', $order = 'asc', $search = null, $field = null)
     {
-        $query = Turma::select('turmas.*')
+        $query = Turma::distinct()->select('turmas.*')
                        ->join('unidades_curriculares as uc', 'uc.id', '=', 'turmas.unidade_curricular_id')
                        ->with('unidadeCurricular', 'professores', 'professores.usuario');
                        
         if ($search != null) {
-            $query->where('turmas.nome', 'LIKE', '%'.$search.'%');
+            if ($field == 'nome') {
+                $query->where('turmas.nome', 'LIKE', '%'.$search.'%');
+            }
+                            
+            if ($field == 'data_inicio' || $field == 'data_fim') {
+                if (strlen($search) == 4)
+                    $mask = '%Y';
+                else if (strlen($search) == 7)
+                    $mask = '%Y-%m';
+                else if (strlen($search) == 10)
+                    $mask = '%Y-%m-%d';
+                    
+                if (isset($mask))
+                    $query->whereRaw("DATE_FORMAT(turmas.$field, '$mask') = '$search'");
+            }
+            
+            if ($field == 'unidade_curricular') {
+                $query->where('uc.nome', 'LIKE', '%'.$search.'%');
+            }
+            
+            if ($field == 'professores') {
+                $query->join('professores_turmas as pt', 'pt.turma_id', '=', 'turmas.id')
+                      ->join('usuarios as uu', 'uu.id', '=', 'pt.professor_id')
+                      ->where('uu.nome', 'LIKE', '%'.$search.'%');
+            }
         }
                        
         $turmas = $query->orderBy($sort, $order)->paginate($perPage);
