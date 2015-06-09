@@ -33,7 +33,13 @@ class Turma extends Model {
         else
             return Carbon::createFromFormat('Y-m-d', $value);
     }
-
+    
+    public function isActive()
+    {
+        $now = Carbon::now();
+        return $now->between($this->data_inicio, $this->data_fim);
+    }
+    
     public function unidadeCurricular()
     {
         return $this->belongsTo('App\Models\UnidadeCurricular', 'unidade_curricular_id');

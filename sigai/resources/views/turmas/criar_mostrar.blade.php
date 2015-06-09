@@ -222,7 +222,8 @@ var Turma = (function() {
     };
 
     return {
-        startDate: moment('{{ $turma->data_inicio->format("d/m/Y") }}', 'DD/MM/YYYY'),
+        startDate: moment('{{ $turma->isActive() ? Carbon\Carbon::now()->format("d/m/Y") 
+                                : $turma->data_inicio->format("d/m/Y") }}', 'DD/MM/YYYY'),
         
         init: function() {
             var self = this;
