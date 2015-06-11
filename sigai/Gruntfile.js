@@ -144,5 +144,4 @@ module.exports = function(grunt) {
   
     grunt.registerTask('default', ['bower_concat', 'uglify', 'cssmin', 'copy']);
 
-
 };

@@ -17,8 +17,7 @@
         <meta name="description" content="@lang('general.site_description')">
         
         <!-- Stylesheets -->
-        <link href="{{ asset('/css/libraries.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('/css/main.css') }}" rel="stylesheet">
+        <link href="{{ asset('/css/app.min.css') }}" rel="stylesheet">
         
         @yield('css')
 
@@ -144,8 +143,7 @@
         -->
         <script>window.jQuery || document.write('<script src="{{ asset("/js/jquery.min.js") }}"><\/script>')</script>
         
-        <script src="{{ asset('/js/libraries.min.js') }}"></script>
-        <script src="{{ asset('/js/app.js') }}"></script>
+        <script src="{{ asset('/js/app.min.js') }}"></script>
         
         @yield('js')
 
