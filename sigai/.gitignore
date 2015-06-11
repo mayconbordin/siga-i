@@ -4,6 +4,8 @@
 /public
 !/public/index.php
 !/public/robots.txt
+!/public/favicon.ico
+!/public/.htaccess
 .env
 !/vendor/utils/
 !/vendor/utils/*
