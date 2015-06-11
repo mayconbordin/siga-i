@@ -15,15 +15,9 @@
             @show
         </title>
         <meta name="description" content="@lang('general.site_description')">
-
-        <!-- Bootstrap core CSS -->
-        <link href="{{ asset('/css/bootstrap.min.css') }}" rel="stylesheet">
         
-        <!-- Plug-ins CSS -->
-        <link href="{{ asset('/css/font-awesome.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('/css/bootstrap-datepicker.min.css') }}" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
+        <!-- Stylesheets -->
+        <link href="{{ asset('/css/libraries.min.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/main.css') }}" rel="stylesheet">
         
         @yield('css')
@@ -148,12 +142,9 @@
         <!--
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         -->
-        <script>window.jQuery || document.write('<script src="{{ asset("/js/jquery-1.11.2.min.js") }}"><\/script>')</script>
+        <script>window.jQuery || document.write('<script src="{{ asset("/js/jquery.min.js") }}"><\/script>')</script>
         
-        <script src="{{ asset('/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('/js/bootstrap-datepicker.min.js') }}"></script>
-        <script src="{{ asset('/js/bootstrap-typeahead.min.js') }}"></script>
-        <script src="{{ asset('/js/bootbox.min.js') }}"></script>
+        <script src="{{ asset('/js/libraries.min.js') }}"></script>
         <script src="{{ asset('/js/app.js') }}"></script>
         
         @yield('js')

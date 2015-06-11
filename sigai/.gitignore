@@ -1,5 +1,9 @@
 /vendor
 /node_modules
+/bower_components
+/public
+!/public/index.php
+!/public/robots.txt
 .env
 !/vendor/utils/
 !/vendor/utils/*

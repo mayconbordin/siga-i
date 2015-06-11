@@ -10,14 +10,7 @@
 @parent
 @stop
 
-@section('css')
-<link href="{{ asset('/css/bootstrap-toggle.min.css') }}" rel="stylesheet">
-@endsection
-
-
 @section('js')
-<script src="{{ asset('/js/bootstrap-toggle.min.js') }}"></script>
-
 <script>
 
 var Aula = (function() {

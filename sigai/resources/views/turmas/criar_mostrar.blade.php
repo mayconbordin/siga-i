@@ -10,18 +10,7 @@
 @parent
 @stop
 
-@section('css')
-<link href="{{ asset('/css/fullcalendar.css') }}" rel='stylesheet' />
-<link href="{{ asset('/css/jquery.qtip.min.css') }}" rel='stylesheet' />
-@endsection
-
-
 @section('js')
-<script src="{{ asset('/js/moment.min.js') }}"></script>
-<script src="{{ asset('/js/fullcalendar.min.js') }}"></script>
-<script src="{{ asset('/js/fullcalendar.pt-br.js') }}"></script>
-<script src="{{ asset('/js/jquery.qtip.min.js') }}"></script>
-
 <script>
 
 var Turma = (function() {

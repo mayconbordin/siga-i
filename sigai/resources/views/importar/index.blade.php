@@ -5,14 +5,7 @@
 @parent
 @stop
 
-@section('css')
-<link href="{{ asset('/css/fileinput.min.css') }}" rel="stylesheet" />
-@endsection
-
 @section('js')
-<script src="{{ asset('/js/fileinput.min.js') }}"></script>
-<script src="{{ asset('/js/fileinput_locale_pt-BR.js') }}"></script>
-
 <script>
 $(document).ready(function($) {
     $("#fileInput").fileinput({

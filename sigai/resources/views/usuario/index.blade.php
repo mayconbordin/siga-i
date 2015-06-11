@@ -6,7 +6,6 @@
 @stop
 
 @section('js')
-<script src="{{ asset('/js/pwstrength-bootstrap-1.2.7.min.js') }}"></script>
 <script>
 $(document).ready(function($) {
     var options = {};

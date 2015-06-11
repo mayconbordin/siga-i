@@ -5,15 +5,7 @@
 @parent
 @stop
 
-@section('css')
-<link href="{{ asset('/css/bootstrap-table.min.css') }}" rel="stylesheet" />
-@endsection
-
 @section('js')
-<script src="{{ asset('/js/bootstrap-table.min.js') }}"></script>
-<script src="{{ asset('/js/bootstrap-table-toolbar.min.js') }}"></script>
-<script src="{{ asset('/js/bootstrap-table-pt-BR.min.js') }}"></script>
-
 <script>
 $(document).ready(function($) {
 
