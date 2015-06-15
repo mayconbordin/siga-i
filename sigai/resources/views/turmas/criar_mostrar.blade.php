@@ -894,8 +894,10 @@ $(document).ready(function() {
                             <td class="text-center">{{ $f->total_faltas }}</td>
                             
                             {{-- porcentagem de faltas --}}
-                            @if ($f->pFaltas > 25)
-                            <td class="text-center text-danger">{{ number_format((float)$f->pFaltas, 1, '.', '') }}%</td>
+                            @if ($f->pFaltas >= 25)
+                            <td class="text-center chamada-failed">{{ number_format((float)$f->pFaltas, 1, '.', '') }}%</td>
+                            @elseif ($f->pFaltas < 25 && $f->pFaltas >= 20)
+                            <td class="text-center chamada-warning">{{ number_format((float)$f->pFaltas, 1, '.', '') }}%</td>
                             @else
                             <td class="text-center">{{ number_format((float)$f->pFaltas, 1, '.', '') }}%</td>
                             @endif

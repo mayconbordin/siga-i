@@ -134,6 +134,16 @@ body {
     color: red;
 }
 
+.chamada-failed {
+    color: #EC0C08;
+    font-weight: bold;
+}
+
+.chamada-warning {
+      color: #FFAE00;
+    font-weight: bold;
+}
+
 .calendar {
     margin-top: 15px;
 }
