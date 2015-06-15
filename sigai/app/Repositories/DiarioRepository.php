@@ -19,24 +19,20 @@ use Carbon\Carbon;
 
 class DiarioRepository extends Repository
 {
-    public static function insert($month, $ucId, $turmaId, Professor $professor)
+    public static function insert($month, $turma, Professor $professor)
     {
         $today = Carbon::now();
-        
-        if (self::exists($turmaId, $month)) {
+
+        // verifica se já existe        
+        if (self::exists($turma->id, $month)) {
             throw new ConflictError(Lang::get('diarios.already_exists'));
         }
 
-        if ($month != ((int) $today->format('m'))) {
+        // se a turma estiver ativa, não deixa fechar diário de mês superior ao atual
+        if ($month > $today->month && $turma->isActive()) {
             throw new BadRequest(Lang::get('diarios.not_current_month'));
         }
 
-        $turma = TurmaRepository::findById($turmaId, $ucId);
-        
-        if (!$today->between($turma->data_inicio, $turma->data_fim)) {
-            throw new BadRequest(Lang::get('diarios.already_over'));
-        }
-        
         $diario = new StatusDiario;
         $diario->status = 1;
         $diario->mes = $month;
@@ -65,6 +61,42 @@ class DiarioRepository extends Repository
                      ->whereRaw('sd.id IS NULL')
                      ->whereRaw("pt.professor_id = $professorId")
 	                 ->get();
+
+	    return $diarios;
+    }
+    
+    public static function findDiariosToCloseByTurma(Turma $turma)
+    {
+        $currDate  = Carbon::now();
+        $startDate = $turma->data_inicio;
+        $endDate   = $turma->data_fim;
+
+        $diarios = DB::table('turmas AS t')
+                     ->selectRaw('sd.mes')
+                     ->leftJoin('status_diarios AS sd', function($join) {
+                            $join->on('sd.turma_id', '=', 't.id');
+                     })
+                     ->where("t.id", $turma->id)
+	                 ->get();
+        
+        // pega apenas lista de meses com diários fechados
+        $months = array_map(function($row) {
+            return (int) $row->mes;
+        }, $diarios);
+        
+        $allMonths = [];
+        
+        // pega todos os meses do começo da turma até a data atual (ou fim da turma)
+        for ($month = $startDate->month; $month <= $endDate->month; $month++) {
+            $allMonths[] = $month;
+            
+            if ($month == $currDate->month && $startDate->year == $currDate->year) break;
+        }
+        
+        // remove os meses que já tem diários
+        $diarios = array_filter($allMonths, function($m) use ($months) {
+            return !in_array($m, $months);
+        });
 
 	    return $diarios;
     }

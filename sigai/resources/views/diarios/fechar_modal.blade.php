@@ -10,17 +10,17 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
-                <fieldset disabled>
+                <fieldset>
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="closeDiarioMes">@lang('diarios.month')</label>
                         <div class="col-sm-10">
                             <select class="form-control" id="closeDiarioMes">
                                 
-                                @for ($i=1; $i<=12; $i++)
-                                <option value="{{ $i }}" {{ (((int) Carbon\Carbon::now()->format('m')) == $i) ? 'selected' : '' }}>
-                                    {{ \Lang::get('months.'.$i) }}
+                                @foreach ($months as $month)
+                                <option value="{{ $month }}" {{ (((int) Carbon\Carbon::now()->format('m')) == $month) ? 'selected' : '' }}>
+                                    {{ \Lang::get('months.'.$month) }}
                                 </option>
-                                @endfor
+                                @endforeach
                                 
                             </select>
                             <label class="control-label hidden"></label>
@@ -30,6 +30,10 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <button id="closeDiarioPreview" type="button" class="btn btn-danger">
+                    <i class="fa fa-file-pdf-o"></i> @lang('diarios.preview')
+                </button>
+            
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     @lang('general.cancel')
                 </button>

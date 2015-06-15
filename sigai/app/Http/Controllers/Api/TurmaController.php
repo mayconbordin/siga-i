@@ -12,10 +12,12 @@ use App\Repositories\DiarioRepository;
 use App\Repositories\ProfessorRepository;
 
 use App\Exceptions\BadRequest;
+use App\Exceptions\ConflictError;
 
 use \DB;
 use \Lang;
 use \Input;
+use \Auth;
 
 use Carbon\Carbon;
 
@@ -147,16 +149,9 @@ class TurmaController extends Controller {
 	
 	public function fecharDiario($ucId, $turmaId, $month)
 	{
-        $currentMonth = ((int) Carbon::now()->format('m'));
-        
-        if ($month != $currentMonth) {
-            throw new BadRequest(Lang::get('diarios.not_current_month'));
-        }
-        
-        //pega usuario logado, então o objeto professor
-        $professor = ProfessorRepository::findByMatricula("1234");
-        
-        $diario = DiarioRepository::insert($month, $ucId, $turmaId, $professor);
+        $turma     = TurmaRepository::findById($turmaId, $ucId);
+        $professor = ProfessorRepository::findByMatricula(Auth::user()->matricula);
+        $diario    = DiarioRepository::insert($month, $turma, $professor);
         
         return $this->jsonResponse([
             'message' => Lang::get('diarios.saved'),

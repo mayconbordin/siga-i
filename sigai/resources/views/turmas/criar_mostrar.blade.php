@@ -341,6 +341,8 @@ var Turma = (function() {
             });
             
             $("#closeDiario .save").click(this.onSaveDiarioClick);
+            
+            $("#closeDiarioPreview").click(this.onDiarioPreview);
         },
         
         
@@ -606,6 +608,15 @@ var Turma = (function() {
                 $("#closeDiario").modal('hide');
                 Modal.error(error.errors.join('<br>'));
             });
+        },
+        
+        onDiarioPreview: function() {
+            var data  = diarioForm.getValues();
+            var month = data.values.mes; 
+            
+            var url = "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}";
+            
+            window.open(url + '/' + month, 'diarioPreview');
         }
     };
 })();
@@ -903,9 +914,14 @@ $(document).ready(function() {
                     <a id="closeDiarioBtn" class="btn btn-primary attach" href="#diarios">
                         <i class="fa fa-file-text"></i> @lang('diarios.close')
                     </a>
+                    
+                    <a class="btn btn-default attach pull-right" target="diarioClasseCompleto"
+                       href="{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}">
+                        <i class="fa fa-file-text"></i> @lang('diarios.show_all')
+                    </a>
                 </div>
                 
-                @include('diarios.fechar_modal')
+                @include('diarios.fechar_modal', ['months' => $diariosToClose])
                 
                 <table class="table table-hover">
                     <thead>
@@ -919,7 +935,7 @@ $(document).ready(function() {
                     <tbody>
                         @foreach ($turma->statusDiarios as $d)
                         <tr data-id="{{ $d->id }}">
-                            <td scope="row" class="text-center">{{ $d->mes }}</td>
+                            <td scope="row" class="text-center">{{ \Lang::get('months.'.$d->mes) }}</td>
                             <td>{{ $d->professor->usuario->nome }}</td>
                             <td>{{ $d->created_at }}</td>
                             <td class="text-center">

@@ -13,6 +13,7 @@ use App\Repositories\UsuarioRepository;
 use App\Repositories\TurmaRepository;
 use App\Repositories\ChamadaRepository;
 use App\Repositories\UnidadeCurricularRepository;
+use App\Repositories\DiarioRepository;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
@@ -48,6 +49,9 @@ class TurmaController extends Controller {
             
             $alunos = AlunoRepository::findByTurmaWithPivot($turma->id);
             
+            
+            $diariosToClose = DiarioRepository::findDiariosToCloseByTurma($turma);
+            
             return view('turmas.criar_mostrar', [
 		        'turma'                => $turma,
 		        'unidadeCurricular'    => $turma->unidadeCurricular,
@@ -55,7 +59,8 @@ class TurmaController extends Controller {
 		        'faltas'               => $faltas['faltas'],
 		        'periods'              => $faltas['periods'],
 		        'cursos'               => $cursos,
-		        'alunos'               => $alunos
+		        'alunos'               => $alunos,
+		        'diariosToClose'       => $diariosToClose
 		    ]);
         } catch (NotFoundError $e) {
             return redirect()->action('UnidadeCurricularController@mostrar', [$ucId])
@@ -108,7 +113,7 @@ class TurmaController extends Controller {
 	public function exportar($ucId, $turmaId, $month = null)
 	{
 	    $professor = \Auth::user();
-	    
+
 	    $turma = TurmaRepository::findByIdWith($turmaId, $ucId, [
 	        'unidadeCurricular', 'professores', 'professores.usuario']);
 	    $data = ChamadaRepository::findFaltasByTurmaPerPeriod($turmaId, $month);
