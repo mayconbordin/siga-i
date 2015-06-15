@@ -76,8 +76,8 @@
                         @endif
                         
                         @if (Auth::check())
-                        <li class="{{ (Request::is('importar*')) ? 'active' : '' }}">
-                            <a href="{{ url('/importar') }}">@lang('importar.menu_title')</a>
+                        <li class="navbar-green {{ (Request::is('importar*')) ? 'active' : '' }}">
+                            <a href="{{ url('/importar') }}"><i class="fa fa-arrow-up"></i> @lang('importar.menu_title')</a>
                         </li>
                         @endif
                     </ul>

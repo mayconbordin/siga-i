@@ -156,6 +156,18 @@ body {
     float: right;
 }
 
+li.navbar-green {
+    background: rgb(0, 167, 79);
+}
+
+li.navbar-green:hover {
+  background: #029447;
+}
+
+.nav>li.navbar-green>a {
+    color: white;
+}
+
 .table-clickable tbody tr {
     cursor: pointer;
 }
