@@ -5,7 +5,9 @@ return [
     'title'      => 'Diário|Diários',
     'save'       => 'Salvar Diário',
     'month'      => 'Mês',
-    
+    'archive'    => 'Arquivo',
+    'closed_by'  => 'Fechado por',
+    'closed_at'  => 'Fechado em',
     'close'      => 'Fechar Diário',
 
     'not_found'  => 'O diário não foi encontrado',
@@ -17,5 +19,7 @@ return [
     'not_current_month' => 'O diário só pode ser fechado para o mês atual.',
     
     'already_exists'   => 'O diário deste mês já existe',
-    'already_over'   => 'Esta turma já foi encerrada.'
+    'already_over'   => 'Esta turma já foi encerrada.',
+    
+    
 ];

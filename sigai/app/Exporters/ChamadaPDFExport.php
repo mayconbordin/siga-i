@@ -182,23 +182,28 @@ class ChamadaPDFExport extends TCPDF
 
         // professor
         $this->Ln(8);
-        $this->Cell(285, 5, "Prof.: " . array_get($info, 'professor', ''), 0, 0, 'L', 1);
         
-        $this->Ln();
-        $this->SetX(14);
-        $this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
+        foreach ($info['professores'] as $professor) {
+            $this->Ln(8);
+            $this->Cell(285, 5, "Prof.: " . $professor->nome, 0, 0, 'L', 1);
+            
+            $this->Ln(8);
+            $this->SetX(14);
+            $this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
+        }
         
-        $this->Ln();
-        $this->SetX(14);
-        $this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
+        //$this->Ln();
+        //$this->SetX(14);
+        //$this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
         
+        $this->Ln(-20);
         $this->SetX(90);
         $this->MultiCell(120, 7, "Sup. Educ. e Tec.: " . array_get($info, 'superintendente', ''), 0, 'C', 1, 0, '', '', true, 0, false, true, 0);
         
         
         $this->Ln();
-        $this->SetX(14);
-        $this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
+        //$this->SetX(14);
+        //$this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
         
         $this->SetX(90);
         $this->MultiCell(120, 7, "Coord. Educ. Super.: " . array_get($info, 'coordenador', ''), 0, 'C', 1, 0, '', '', true, 0, false, true, 0);

@@ -135,7 +135,8 @@ class TurmaController extends Controller {
                 $pdf->setConteudoTable($aulas, [
                     'professor'       => $professor->nome,
                     'coordenador'     => $coordenador->nome,
-                    'superintendente' => 'Ane Lise Pereira da Costa Dalcul'
+                    'superintendente' => 'Ane Lise Pereira da Costa Dalcul',
+                    'professores'     => $turma->professores
                 ]);
             }
         }

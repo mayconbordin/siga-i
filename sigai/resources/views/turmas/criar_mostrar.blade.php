@@ -910,10 +910,10 @@ $(document).ready(function() {
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th class="text-center">Mês</th>
-                            <th>Professor</th>
-                            <th>Fechado em</th>
-                            <th class="text-center">Arquivo</th>
+                            <th class="text-center">@lang('diarios.month')</th>
+                            <th>@lang('diarios.closed_by')</th>
+                            <th>@lang('diarios.closed_at')</th>
+                            <th class="text-center">@lang('diarios.archive')</th>
                         </tr>
                     </thead>
                     <tbody>
