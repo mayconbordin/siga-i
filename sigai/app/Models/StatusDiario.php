@@ -19,4 +19,9 @@ class StatusDiario extends Model {
     {
         return $this->belongsTo('App\Models\Professor', 'professor_id');
     }
+    
+    public function envios()
+    {
+        return $this->hasMany('App\Models\DiarioEnvio', 'diario_id');
+    }
 }
