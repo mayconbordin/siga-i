@@ -46,6 +46,16 @@ class DiarioRepository extends Repository
         return $diario;
     }
     
+    public static function findAllByTurma(Turma $turma)
+    {
+        $diarios = StatusDiario::with('envios', 'envios.professor', 'envios.professor.usuario',
+                                      'professor', 'professor.usuario')
+                               ->where('turma_id', $turma->id)
+                               ->get();
+                               
+        return $diarios;
+    }
+    
     public static function findDiariosToClose($professorId)
     {
         $currMonth = ((int) Carbon::now()->format('m'));
