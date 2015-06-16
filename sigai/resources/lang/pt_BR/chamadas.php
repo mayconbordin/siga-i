@@ -14,8 +14,8 @@ return [
                         'ED = Ensino a Distância',
     'tbl_address'    => 'AV. ASSIS BRASIL, 8450 - PORTO ALEGRE - RS',
     'tbl_dias'       => 'Dias',
-    'tbl_conteudo'   => 'Conteúdo/Atividades',
-    'tbl_professor'  => 'Professor',
+    'tbl_conteudo'   => 'Conteúdos/Atividades',
+    'tbl_professor'  => 'Rúbrica',
     
     'new'        => 'Nova Chamada',
     'save_aula'  => 'Salvar Chamada',

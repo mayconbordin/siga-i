@@ -11,6 +11,8 @@ class ChamadaPDFExport extends TCPDF
     private $lineHeight = 3.5;
     private $numPeriods = 4;
 
+    private $turma;
+
     private $headers = [
         'number' => [
             'width' => 10,
@@ -38,15 +40,18 @@ class ChamadaPDFExport extends TCPDF
     private $contentHeaders = [
         'dias' => [
             'width' => 25,
-            'align' => 'C'
+            'align' => 'C',
+            'header_align' => 'C'
         ],
         'conteudo' => [
             'width' => 215,
-            'align' => 'L'
+            'align' => 'L',
+            'header_align' => 'C'
         ],
         'professor' => [
             'width' => 45,
-            'align' => 'C'
+            'align' => 'C',
+            'header_align' => 'C'
         ]
     ];
     
@@ -70,37 +75,57 @@ class ChamadaPDFExport extends TCPDF
     
     public function setInformation($turma)
     {
-        // unidade curricular
-        $uc = Lang::get('unidades_curriculares.single_title') . ": " . 
-              $turma->unidadeCurricular->nome;
-        
-        // período de realização
-        $fromTo = Lang::get('turmas.from_to_title') . ": " . $turma->data_inicio->format('d/m/Y')
-                  . " " . Lang::get('general.to') . " " . $turma->data_fim->format('d/m/Y');
+        $this->turma = $turma;
 
-        // professor(es)
-        $prof = implode(',', array_map(function($p) {
-            return $p['usuario']['nome'];
-        }, $turma->professores->toArray()));
-        $profTitle = Lang::choice('professores.title', sizeof($prof));
+        // Unidade Curricular
+        $this->SetFont("helvetica","B",10);
+        $this->Cell(35, 5, Lang::get('unidades_curriculares.single_title') . ": ", 0, 0, 'L', false);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(120, 5, $turma->unidadeCurricular->nome, 0, 0, 'L', false);
 
-        // carga horária
-        $cargaHor = Lang::get('unidades_curriculares.carga_horaria') . ": " . 
-                    $turma->unidadeCurricular->carga_horaria;
-        
-        // turno
-        $turno = Lang::get('turmas.shift') . ": " . $turma->turno;
-        
-        // nome da turma
-        $turma = Lang::get('turmas.single_title') . ": " . $turma->nome;
-        
-        $this->Ln(1);
-        $this->SetFont("helvetica","",8.000);
-        
-        $this->MultiCell(142, 5, $uc, 0, 'L', 0, 0, '', '', true);
-        $this->MultiCell(142, 5, $fromTo, 0, 'R', 0, 1, '', '', true);
-        $this->MultiCell(142, 5, "$profTitle: $prof", 0, 'L', 0, 0, '', '', true);
-        $this->MultiCell(142, 5, "$cargaHor     $turno    $turma", 0, 'R', 0, 1, '', '', true);
+        // Perído da turma
+        $this->SetX(220);
+        $this->SetFont("helvetica","B",10);
+        $this->Cell(27, 5, Lang::get('turmas.from_to_title') . ": ", 0, 0, 'L', false);
+        $this->SetFont('helvetica', '', 10);
+        $text = $turma->data_inicio->format('d/m/Y') . " " . Lang::get('general.to') . " " . $turma->data_fim->format('d/m/Y');
+        $this->Cell(80, 5, $text, 0, 0, 'L', false);
+
+        $this->Ln();
+
+        // Professores
+        $prof = implode(', ', array_map(function($p) { return $p['usuario']['nome']; }, $turma->professores->toArray()));
+        $this->SetFont("helvetica","B",10);
+        $this->Cell(20, 5, Lang::choice('professores.title', sizeof($prof)) . ": ", 0, 0, 'L', false);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(150, 5, $prof, 0, 0, 'L', false);
+
+        // Carga horária
+        $this->SetX(220);
+        $this->SetFont("helvetica","B",10);
+        $this->Cell(27, 5, Lang::get('unidades_curriculares.carga_horaria') . ": ", 0, 0, 'L', false);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(15, 5, $turma->unidadeCurricular->carga_horaria, 0, 0, 'L', false);
+
+        $this->Ln();
+
+        // Turno
+        $this->SetX(220);
+        $this->SetFont("helvetica","B",10);
+        $this->Cell(27, 5, Lang::get('turmas.shift') . ": ", 0, 0, 'L', false);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(15, 5, $turma->turno, 0, 0, 'L', false);
+
+        $this->Ln();
+
+        // Nome da turma
+        $this->SetX(220);
+        $this->SetFont("helvetica","B",10);
+        $this->Cell(27, 5, Lang::get('turmas.single_title') . ": ", 0, 0, 'L', false);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(15, 5, $turma->nome, 0, 0, 'L', false);
+
+        $this->Ln();
     }
     
     public function setTable($chamada, $datas)
@@ -132,20 +157,26 @@ class ChamadaPDFExport extends TCPDF
     
     public function setConteudoTable($aulas, array $info)
     {
-        $this->createConteudoTableHeader();
+        $this->createConteudoTableHeader($info);
         $this->setConteudoTableData($aulas);
         $this->setConteudoInformation($info);
     }
     
-    protected function createConteudoTableHeader()
+    protected function createConteudoTableHeader(array $info)
     {
         $this->Ln(20);
-        $this->SetFont('helvetica', '', 9);
+
+        if (isset($info['mes'])) {
+            $this->SetFont('helvetica', '', 11);
+            $this->Cell(286, 7, "Mês: " . Lang::get('months.'.$info['mes']), 0, 1, "L");
+        }
+
+        $this->SetFont('helvetica', 'b', 9);
         
         foreach ($this->contentHeaders as $name => $header) {
             $title = Lang::get('chamadas.tbl_'.$name);
             
-            $this->Cell($header['width'], 5, $title, 1, 0, $header['align'], 1);
+            $this->Cell($header['width'], 5, $title, 1, 0, $header['header_align'], 1);
         }
         
         $this->Ln();
@@ -153,6 +184,8 @@ class ChamadaPDFExport extends TCPDF
     
     protected function setConteudoTableData($aulas)
     {
+        $this->SetFont('helvetica', '', 9);
+
         foreach ($aulas as $aula) {
             $h = $this->getStringHeight($this->contentHeaders['conteudo']['width'], $aula->conteudo);
         
@@ -162,7 +195,7 @@ class ChamadaPDFExport extends TCPDF
             $this->MultiCell($this->contentHeaders['conteudo']['width'], $h, $aula->conteudo,
                             1, $this->contentHeaders['conteudo']['align'], 1, 0, '', '', true, 0, false, true, 0);
         
-            $this->MultiCell($this->contentHeaders['professor']['width'], $h, "--",
+            $this->MultiCell($this->contentHeaders['professor']['width'], $h, "",
                             1, $this->contentHeaders['professor']['align'], 1, 0, '', '', true, 0, false, true, 0);
         
             $this->Ln();
@@ -172,6 +205,8 @@ class ChamadaPDFExport extends TCPDF
     protected function setConteudoInformation($info)
     {
         $this->SetFont('helvetica', '', 10);
+        $maxStrLength = 80;
+        $maxWidth = 120;
 
         // observações
         $this->Ln(8);
@@ -185,28 +220,42 @@ class ChamadaPDFExport extends TCPDF
         
         foreach ($info['professores'] as $professor) {
             $this->Ln(8);
-            $this->Cell(285, 5, "Prof.: " . $professor->nome, 0, 0, 'L', 1);
-            
-            $this->Ln(8);
-            $this->SetX(14);
-            $this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
+
+            $text = "Prof.: " . $professor->nome . ' ';
+
+            while (($width = $this->GetStringWidth($text)) < $maxWidth) {
+                $text .= '_';
+            }
+
+            $this->Cell(285, 5, $text, 0, 0, 'L', 1);
+
         }
-        
-        //$this->Ln();
-        //$this->SetX(14);
-        //$this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
-        
-        $this->Ln(-20);
-        $this->SetX(90);
-        $this->MultiCell(120, 7, "Sup. Educ. e Tec.: " . array_get($info, 'superintendente', ''), 0, 'C', 1, 0, '', '', true, 0, false, true, 0);
-        
-        
+
+
+        $goBack = (sizeof($info['professores']) * 8) - 8;
+        $this->Ln(-$goBack);
+
+        // Nome da superintendente ...
+        /*
+        $this->SetX(140);
+        $this->SetFont('helvetica', 'B', 10);
+        $this->Cell(32, 7, "Sup. Educ. e Tec.: ", 0, 0, 'L', 1);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(80, 7, array_get($info, 'superintendente', ''), 0, 0, 'L', 1);
+        */
+
+        // Nome do coordenador
         $this->Ln();
-        //$this->SetX(14);
-        //$this->MultiCell(60, 7, str_repeat('_', 29), 0, 'L', 1, 0, '', '', true, 0, false, true, 0);
-        
-        $this->SetX(90);
-        $this->MultiCell(120, 7, "Coord. Educ. Super.: " . array_get($info, 'coordenador', ''), 0, 'C', 1, 0, '', '', true, 0, false, true, 0);
+        $this->SetX(140);
+        $this->SetFont('helvetica', 'B', 10);
+        $this->Cell(36, 7, "Coord. Educ. Super.: ", 0, 0, 'L', 1);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(80, 7, array_get($info, 'coordenador', ''), 0, 0, 'L', 1);
+
+        $this->Ln();
+        $this->SetX(255);
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(36, 7, "Encerrado em: " . $this->turma->data_fim->format('d/m/Y'), 0, 0, 'R', 1);
     }
     
     protected function createTableHeader()
@@ -305,7 +354,7 @@ class ChamadaPDFExport extends TCPDF
     protected function drawBottomLine($linesUsed)
     {
         $xStart = 5;
-        $yStart = 44.5;
+        $yStart = 53.5;
         
         $xEnd = 275;
         $yEnd = 184.5;
@@ -319,7 +368,7 @@ class ChamadaPDFExport extends TCPDF
     protected function drawRightLine($colsUsed)
     {
         $xStart = 95;
-        $yStart = 44.5;
+        $yStart = 53.5;
         
         $xEnd = 275;
         $yEnd = 184.5;
@@ -332,10 +381,10 @@ class ChamadaPDFExport extends TCPDF
     
     protected function createTableBottom()
     {
-        $this->SetLineWidth(1);
+        $this->SetLineWidth(0.6);
         $this->SetFillColor(255,255,255);
         $this->SetDrawColor(0,0,0);
-        $this->Line(5, 190, 290, 190);
+        $this->Line(5, 198, 290, 198);
         
         $this->Ln(6);
         $this->SetFont("helvetica","",8.000);

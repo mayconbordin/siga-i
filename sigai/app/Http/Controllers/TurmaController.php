@@ -26,12 +26,20 @@ use \Input;
 use \Lang;
 use \DB;
 
+use App\Services\Contracts\DiarioServiceContract;
+
 class TurmaController extends Controller {
 
-    public function __construct()
+    protected $service;
+    
+    public function __construct(DiarioServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+        
+        
+        
+        $this->service = $service;
     }
     
     public function listar()
@@ -46,12 +54,11 @@ class TurmaController extends Controller {
             $ucs    = UnidadeCurricularRepository::listAll();
             $faltas = ChamadaRepository::findFaltasByTurma($turma->id);
             $cursos = CursoRepository::listAll();
-            
             $alunos = AlunoRepository::findByTurmaWithPivot($turma->id);
-            
-            
             $diariosToClose = DiarioRepository::findDiariosToCloseByTurma($turma);
             
+            $diarios = DiarioRepository::findAllByTurma($turma);
+
             return view('turmas.criar_mostrar', [
 		        'turma'                => $turma,
 		        'unidadeCurricular'    => $turma->unidadeCurricular,
@@ -60,7 +67,8 @@ class TurmaController extends Controller {
 		        'periods'              => $faltas['periods'],
 		        'cursos'               => $cursos,
 		        'alunos'               => $alunos,
-		        'diariosToClose'       => $diariosToClose
+		        'diariosToClose'       => $diariosToClose,
+		        'diarios'              => $diarios
 		    ]);
         } catch (NotFoundError $e) {
             return redirect()->action('UnidadeCurricularController@mostrar', [$ucId])
@@ -141,7 +149,8 @@ class TurmaController extends Controller {
                     'professor'       => $professor->nome,
                     'coordenador'     => $coordenador->nome,
                     'superintendente' => 'Ane Lise Pereira da Costa Dalcul',
-                    'professores'     => $turma->professores
+                    'professores'     => $turma->professores,
+                    'mes'             => (int) $date[1]
                 ]);
             }
         }

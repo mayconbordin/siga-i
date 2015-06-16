@@ -10,6 +10,13 @@ return [
     'closed_at'  => 'Fechado em',
     'close'      => 'Fechar Diário',
     'show_all'   => 'Mostrar Diário Completo',
+    'sent_by'    => 'Enviado por',
+    'send_list'  => 'Envios',
+    'send_date'  => 'Data de Envio',
+    'print'      => 'Imprimir',
+    'send'       => 'Enviar',
+    'history'    => 'Histórico',
+    'last_version' => 'Versão Atual',
 
     'not_found'  => 'O diário não foi encontrado',
     
