@@ -26,20 +26,14 @@ use \Input;
 use \Lang;
 use \DB;
 
-use App\Services\Contracts\DiarioServiceContract;
-
 class TurmaController extends Controller {
 
     protected $service;
     
-    public function __construct(DiarioServiceContract $service)
+    public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('permissions');
-        
-        
-        
-        $this->service = $service;
     }
     
     public function listar()
