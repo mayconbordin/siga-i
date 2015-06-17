@@ -47,6 +47,13 @@ return [
 			'driver' => 'local',
 			'root'   => storage_path().'/app',
 		],
+		
+		
+		'diarios' => [
+			'driver' => 'local',
+			'root'   => '/tmp/diarios',
+		],
+		
 
 		's3' => [
 			'driver' => 's3',
