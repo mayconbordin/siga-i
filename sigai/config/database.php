@@ -26,7 +26,7 @@ return [
 	|
 	*/
 
-	'default' => 'mysql',
+	'default' => env('DB_DEFAULT', 'mysql'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -62,7 +62,19 @@ return [
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 			'strict'    => false,
-		]
+		],
+
+        'testing' => [
+            'driver'    => 'mysql',
+            'host'      => env('TEST_DB_HOST', 'localhost'),
+            'database'  => env('TEST_DB_DATABASE', 'sigai_test'),
+            'username'  => env('TEST_DB_USERNAME', 'root'),
+            'password'  => env('TEST_DB_PASSWORD', 'sorrisofresh'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ]
 
 
 	],
