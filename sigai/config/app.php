@@ -26,8 +26,8 @@ return [
 	|
 	*/
 
-	'url' => 'http://localhost',
-	//'url' => 'http://localhost/siga-i/v2/sigai/public/',
+	//'url' => 'http://localhost',
+	'url' => 'http://localhost/siga-i/v2/sigai/public/',
 	
 	
 	/*
@@ -156,6 +156,7 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
+		'App\Providers\RepositoryServiceProvider',
 		
 		
 		/*
