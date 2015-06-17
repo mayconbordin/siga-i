@@ -1,7 +1,9 @@
-<?php namespace App\Repositories;
+<?php namespace App\Repositories\Eloquent;
 
 use App\Models\Aluno;
 use App\Models\Turma;
+use App\Models\Professor;
+use App\Models\UnidadeCurricular;
 
 use App\Repositories\ProfessorRepository;
 use App\Repositories\AlunoRepository;
@@ -12,16 +14,17 @@ use App\Exceptions\ValidationError;
 use App\Exceptions\ServerError;
 use App\Exceptions\ConflictError;
 
+use App\Repositories\Contracts\TurmaRepositoryContract;
+
 use \DB;
 use \Lang;
 use \Log;
 
 use Carbon\Carbon;
 
-class TurmaRepository extends Repository
+class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
 {
-
-    public static function findById($id, $unidadeCurricularId)
+    public function findById($id, $unidadeCurricularId)
     {
         $turma = Turma::find($id);
 	    
@@ -36,7 +39,7 @@ class TurmaRepository extends Repository
 	    return $turma;
     }
     
-    public static function findByNomeAndData($nome, $dataInicio, $dataFim)
+    public function findByNomeAndData($nome, $dataInicio, $dataFim)
     {
         $turma = Turma::where('nome', $nome)
                       ->where('data_inicio', $dataInicio)
@@ -50,7 +53,7 @@ class TurmaRepository extends Repository
 	    return $turma;
     }
     
-    public static function findByIdWith($id, $unidadeCurricularId, array $relations)
+    public function findByIdWith($id, $unidadeCurricularId, array $relations)
     {
         $turma = Turma::where('id', $id)->with($relations)->first();
         
@@ -65,7 +68,7 @@ class TurmaRepository extends Repository
 	    return $turma;
     }
     
-    public static function findByIdWithAll($id, $unidadeCurricularId)
+    public function findByIdWithAll($id, $unidadeCurricularId)
     {
         $turma = Turma::where('id', $id)->with(
             'unidadeCurricular', 'professores',  'professores.usuario', 'aulas'
@@ -90,7 +93,7 @@ class TurmaRepository extends Repository
         return $turma;
     }
     
-    public static function search($perPage = 10, $sort = 'turmas.id', $order = 'asc', $search = null, $field = null)
+    public function search($perPage = 10, $sort = 'turmas.id', $order = 'asc', $search = null, $field = null)
     {
         $query = Turma::distinct()->select('turmas.*')
                        ->join('unidades_curriculares as uc', 'uc.id', '=', 'turmas.unidade_curricular_id')
@@ -129,7 +132,7 @@ class TurmaRepository extends Repository
         return $turmas;
     }
     
-    public static function update(array $data, $ucId, $id)
+    public function update(array $data, $ucId, $id)
     {
         $turma = self::findById($id, $ucId);
 	    
@@ -149,11 +152,10 @@ class TurmaRepository extends Repository
         return $turma;
     }
     
-    public static function insert(array $data, $ucId, $dateFormat = 'd/m/Y')
+    public function insert(array $data, UnidadeCurricular $uc, $dateFormat = 'd/m/Y')
     {
         $turma = new Turma;
-	    $uc    = UnidadeCurricularRepository::findById($ucId);
-	    
+
 	    $turma->nome        = self::get($data['nome']);
 	    $turma->data_inicio = Carbon::createFromFormat($dateFormat, self::get($data['data_inicio']));
 	    $turma->data_fim    = Carbon::createFromFormat($dateFormat, self::get($data['data_fim']));
@@ -167,7 +169,7 @@ class TurmaRepository extends Repository
         return $turma;
     }
     
-    public static function deleteById($id, $unidadeCurricularId)
+    public function deleteById($id, $unidadeCurricularId)
     {
         $turma = self::findById($id, $unidadeCurricularId);
         
@@ -195,10 +197,9 @@ class TurmaRepository extends Repository
 	    DB::commit();
     }
     
-    public static function attachAluno(array $data, $ucId, $turmaId, $matricula)
+    public function attachAluno(array $data, $ucId, $turmaId, Aluno $aluno)
     {
         $turma = self::findById($turmaId, $ucId);
-	    $aluno = AlunoRepository::findByMatricula($matricula);
 	    
 	    if (self::hasAluno($turma->id, $aluno->id)) {
 	        throw new ConflictError(Lang::get('turmas.aluno_exists'));
@@ -212,25 +213,23 @@ class TurmaRepository extends Repository
 	    return ['turma' => $turma, 'aluno' => $aluno];
     }
     
-    public static function detachAluno($ucId, $turmaId, $matricula)
+    public function detachAluno($ucId, $turmaId, Aluno $aluno)
     {
         $turma = self::findById($turmaId, $ucId);
-	    $aluno = AlunoRepository::findByMatricula($matricula);
 	    
 	    $turma->alunos()->detach($aluno);
     }
     
-    public static function updateAluno(array $data, $ucId, $turmaId, $matricula)
+    public function updateAluno(array $data, $ucId, $turmaId, Aluno $aluno)
     {
         $turma = self::findById($turmaId, $ucId);
-	    $aluno = AlunoRepository::findByMatricula($matricula);
 	    
 	    $turma->alunos()->updateExistingPivot($aluno->id, $data);
 	    
 	    return $aluno;
     }
     
-    public static function hasAluno($turmaId, $alunoId)
+    public function hasAluno($turmaId, $alunoId)
     {
         return !is_null(
             DB::table('alunos_turmas')
@@ -240,10 +239,9 @@ class TurmaRepository extends Repository
         );
     }
     
-    public static function attachProfessor($ucId, $turmaId, $matricula)
+    public function attachProfessor($ucId, $turmaId, Professor $professor)
     {
-        $turma     = self::findById($turmaId, $ucId);
-	    $professor = ProfessorRepository::findByMatricula($matricula);
+        $turma = self::findById($turmaId, $ucId);
 	    
 	    if (self::hasProfessor($turma->id, $professor->id)) {
 	        throw new ConflictError(Lang::get('turmas.professor_exists'));
@@ -254,15 +252,13 @@ class TurmaRepository extends Repository
 	    return ['turma' => $turma, 'professor' => $professor];
     }
     
-    public static function detachProfessor($ucId, $turmaId, $matricula)
+    public function detachProfessor($ucId, $turmaId, Professor $professor)
     {
-        $turma     = self::findById($turmaId, $ucId);
-	    $professor = ProfessorRepository::findByMatricula($matricula);
-	    
+        $turma = self::findById($turmaId, $ucId);
 	    $turma->professores()->detach($professor);
     }
     
-    public static function hasProfessor($turmaId, $professorId)
+    public function hasProfessor($turmaId, $professorId)
     {
         return !is_null(
             DB::table('professores_turmas')

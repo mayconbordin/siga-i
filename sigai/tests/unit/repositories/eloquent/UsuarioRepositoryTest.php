@@ -7,7 +7,7 @@ class UsuarioRepositoryTest extends TestCase {
 
 	public function testFindById()
 	{
-	    $usuario = UsuarioRepository::findById(1);
+        $usuario = UsuarioRepository::findById(1);
 	
 		$this->assertEquals($usuario->id, 1);
 		$this->assertEquals($usuario->nome, 'ABNER BORDA FONSECA');
