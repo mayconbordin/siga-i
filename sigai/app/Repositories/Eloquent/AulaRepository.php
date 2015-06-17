@@ -16,16 +16,16 @@ use Carbon\Carbon;
 
 class AulaRepository extends BaseRepository implements AulaRepositoryContract
 {
-    public function findByTurmaBetweenDates($turmaId, $start = null, $end = null)
+    public function findByTurmaBetweenDates($turmaId, Carbon $start = null, Carbon $end = null)
     {
         $query = Aula::where('turma_id', $turmaId);
         
         if ($start != null) {
-            $query->where('data', '>=', $start);
+            $query->where('data', '>=', $start->format('Y-m-d'));
         }
         
         if ($end != null) {
-            $query->where('data', '<=', $end);
+            $query->where('data', '<=', $end->format('Y-m-d'));
         }
         
         return $query->get();
@@ -56,9 +56,9 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
 	    return $aula;
     }
     
-    public function findByData($data, $turmaId, $unidadeCurricularId)
+    public function findByData(Carbon $data, $turmaId, $unidadeCurricularId)
     {
-        $aula = Aula::where('data', $data)->where('turma_id', $turmaId)
+        $aula = Aula::where('data', $data->format('Y-m-d'))->where('turma_id', $turmaId)
 	                ->with('turma', 'turma.unidadeCurricular')->first();
 	    
 	    if ($aula == null) {
@@ -72,9 +72,9 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
 	    return $aula;
     }
     
-    public function findByDataWithAll($data, $turmaId, $unidadeCurricularId)
+    public function findByDataWithAll(Carbon $data, $turmaId, $unidadeCurricularId)
     {
-        $aula = Aula::where('data', $data)->where('turma_id', $turmaId)
+        $aula = Aula::where('data', $data->format('Y-m-d'))->where('turma_id', $turmaId)
 	                ->with('turma', 'turma.unidadeCurricular', 'chamadas',
 	                       'chamadas.aluno', 'chamadas.aluno.usuario')->first();
 	    
@@ -88,27 +88,31 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
 	    
 	    return $aula;
     }
-    
-    
-    public function findNextByProfessor($professorId)
+
+    public function findNextByProfessor($professorId, Carbon $now = null, $limit = 5)
     {
+        if ($now == null) {
+            $now = Carbon::now();
+        }
+
         $aulas = Aula::with('turma', 'turma.professores')
                      ->join('turmas AS t', 't.id', '=', 'aulas.turma_id')
                      ->join('professores_turmas AS pt', 'pt.turma_id', '=', 't.id')
                      ->join('professores AS p', 'p.id', '=', 'pt.professor_id')
                      
-                     ->whereRaw("data >= DATE_FORMAT(NOW(),'%Y-%m-%d')")
+                     ->where("data", ">=", $now->format('Y-m-d'))
                      ->where('p.id', $professorId)
                      ->orderBy('data')
-                     ->take(5)
+                     ->take($limit)
 	                 ->get();
+
 	    return $aulas;
     }
     
     
-    public function deleteByData($data, $turmaId, $unidadeCurricularId)
+    public function deleteByData(Carbon $data, $turmaId, $unidadeCurricularId)
     {
-        $aula = AulaRepository::findByData($data, $turmaId, $unidadeCurricularId);
+        $aula = self::findByData($data, $turmaId, $unidadeCurricularId);
         
         DB::beginTransaction();
 	    
@@ -128,7 +132,7 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
         $aula  = new Aula;
         $date  = array_get($data, 'data');
 
-        if (self::exists($turmaId, $date)) {
+        if (self::exists($turma->id, $date)) {
             throw new ValidationError([
                 'data' => [Lang::get('aulas.already_exists')]
             ]);
@@ -136,8 +140,8 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
         
         $aula->data               = $date;
         $aula->status             = array_get($data, 'status', 0);
-        $aula->conteudo           = array_get($data, 'conteudo');
-        $aula->obs                = array_get($data, 'obs');
+        $aula->conteudo           = array_get($data, 'conteudo', '');
+        $aula->obs                = array_get($data, 'obs', '');
         $aula->ensino_a_distancia = array_get($data, 'ensino_a_distancia', false);
         
         if (!$aula->data->between($turma->data_inicio, $turma->data_fim)) {
@@ -159,14 +163,14 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
         return $aula;
     }
     
-    public function update(array $data, $ucId, $turmaId, $date)
+    public function update(array $data, $ucId, $turmaId, Carbon $date)
     {
         $aula = self::findByData($date, $turmaId, $ucId);
 	    
 	    $aula->data               = array_get($data, 'data');
         $aula->status             = array_get($data, 'status', 0);
-        $aula->conteudo           = array_get($data, 'conteudo');
-        $aula->obs                = array_get($data, 'obs');
+        $aula->conteudo           = array_get($data, 'conteudo', '');
+        $aula->obs                = array_get($data, 'obs', '');
         $aula->ensino_a_distancia = array_get($data, 'ensino_a_distancia', false);
         
         if (!$aula->data->between($aula->turma->data_inicio, $aula->turma->data_fim)) {
@@ -190,7 +194,27 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
     {
         $aula = self::findById($id, $turmaId, $ucId);
 
+        if ($newData->format('Y-m-d') == $aula->data->format('Y-m-d')) {
+            return $aula;
+        }
+
+        if (self::exists($turmaId, $newData)) {
+            throw new ValidationError([
+                'data' => [Lang::get('aulas.already_exists')]
+            ]);
+        }
+
         $aula->data = $newData;
+
+        if (!$aula->data->between($aula->turma->data_inicio, $aula->turma->data_fim)) {
+            throw new ValidationError([
+                'data' => [Lang::get('validation.between.date', [
+                    'attribute' => 'data',
+                    'min' => $aula->turma->data_inicio->format('d/m/Y'),
+                    'max' => $aula->turma->data_fim->format('d/m/Y')
+                ])]
+            ]);
+        }
         
 	    if (!$aula->save()) {
 	        throw new ServerError(Lang::get('aulas.save_error'));
