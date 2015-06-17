@@ -36,7 +36,7 @@ class ChamadaRepository extends BaseRepository implements ChamadaRepositoryContr
         $results = [];
         
         foreach ($chamadas as $chamada) {
-            $results[] = self::insertOrUpdate($chamada['matricula'], $chamada['periods'], $aula);
+            $results[] = self::insertOrUpdate($chamada['aluno'], $chamada['periods'], $aula);
         }
         
         return $results;
@@ -47,7 +47,13 @@ class ChamadaRepository extends BaseRepository implements ChamadaRepositoryContr
         if (sizeof($periods) != 4) {
             throw new ValidationError(['periods' => [Lang::get('chamadas.period_size')]]);
         }
-        
+
+        $sum = array_sum(array_map(function($item) { return is_bool($item) ? 1 : 0; }, $periods));
+
+        if ($sum != 4) {
+            throw new ValidationError(['periods' => [Lang::get('chamadas.boolean_values')]]);
+        }
+
         try {
             $chamada = self::findByAulaAndAluno($aula->id, $aluno->id);
         } catch (NotFoundError $e) {

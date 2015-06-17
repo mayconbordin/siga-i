@@ -30,6 +30,7 @@ return [
     'remove_error'   => 'Ocorreu um erro ao remover a chamada',
     'remove_success' => 'Chamada removida com sucesso',
     
-    'period_size'   => 'A chamada deve conter 4 períodos'
+    'period_size'   => 'A chamada deve conter 4 períodos',
+    'boolean_values' => 'Os perídos da chamada devem ser valores booleanos'
  
 ];
