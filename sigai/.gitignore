@@ -9,3 +9,4 @@
 .env
 !/vendor/utils/
 !/vendor/utils/*
+.idea

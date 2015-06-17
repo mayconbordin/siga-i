@@ -12,7 +12,8 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
-		"phpspec/phpspec": "~2.1"
+		"phpspec/phpspec": "~2.1",
+        "codeception/codeception": "2.0.14"
 	},
 	"autoload": {
 		"classmap": [
@@ -22,6 +23,8 @@
 			"app/Exceptions",
 			"app/Exporters",
 			"app/Importers",
+			"app/Services",
+			"app/Services/Contracts",
             "vendor/utils"
 		],
 		"psr-4": {

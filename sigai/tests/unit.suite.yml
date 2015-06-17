@@ -1,0 +1,17 @@
+# Codeception Test Suite Configuration
+
+# suite for unit (internal) tests.
+class_name: UnitTester
+modules:
+    enabled: [Laravel5, Db, Asserts, UnitHelper]
+    config:
+        Laravel5:
+            environment_file: .env.testing
+            cleanup: true
+        Db:
+            dsn: 'mysql:host=localhost;dbname=sigai_test'
+            user: 'root'
+            password: 'sorrisofresh'
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true
