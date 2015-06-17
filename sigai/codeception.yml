@@ -1,0 +1,20 @@
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    helpers: tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+modules:
+    enabled: [Db, FunctionalHelper]
+    config:
+        Db:
+            dsn: 'mysql:host=localhost;dbname=sigai_test'
+            user: 'root'
+            password: 'sorrisofresh'
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true
