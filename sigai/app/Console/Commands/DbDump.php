@@ -1,28 +1,25 @@
 <?php namespace App\Console\Commands;
 
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
-use \DB;
 use \App;
-use \Config;
 
-use \PDO;
-
-class DbCreate extends DbCommand {
+class DbDump extends DbCommand {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'db:create';
+	protected $name = 'db:dump';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Create a new database';
+	protected $description = 'Dump the database into an SQL file or print on screen.';
 
 	/**
 	 * Create a new command instance.
@@ -42,6 +39,8 @@ class DbCreate extends DbCommand {
 	public function fire()
 	{
         $database = $this->option("database");
+        $out = $this->argument('output');
+
         $db = $this->getDatabaseInfo($database);
 
         // check if database exists on configuration
@@ -56,17 +55,30 @@ class DbCreate extends DbCommand {
         }
 
         $this->info("Running on '".App::environment()."' environment.");
-        $this->info("Creating database '".$db['database']."'.");
+        $this->info("Dumping database '".$db['database']."'.");
 
-        try {
-            $dbh = new PDO("mysql:host=".$db['host'], $db['username'], $db['password']);
-            $cmd = "CREATE DATABASE IF NOT EXISTS ".$db['database']." CHARACTER SET ".$db['charset']." COLLATE ".$db['collation'].";";
-            $dbh->exec($cmd) or die(print_r($dbh->errorInfo(), true));
-        } catch (PDOException $e) {
-            $this->error("DB Error: " . $e->getMessage());
+        $return_var = NULL;
+        $output  = NULL;
+        $command = "mysqldump -h ".$db['host']." -u ".$db['username']." -p".$db['password']." ".$db['database']."";
+
+        exec($command, $output, $return_var);
+
+        if ($return_var != 0) {
+            $this->error("Unable to execute dump on database.");
+            exit;
         }
 
-		$this->info("Database created.");
+        $dump = implode("\n", $output);
+
+        if ($out != null) {
+            $file = fopen($out, "w") or die("Unable to open file '$out'");
+            fwrite($file, $dump);
+            fclose($file);
+
+            $this->info("Dump of database saved.");
+        } else {
+            echo $dump;
+        }
 	}
 
 	/**
@@ -76,7 +88,9 @@ class DbCreate extends DbCommand {
 	 */
 	protected function getArguments()
 	{
-		return [];
+		return [
+            ['output', InputArgument::OPTIONAL, 'Where to dump the SQL.', null],
+		];
 	}
 
 	/**
@@ -87,7 +101,7 @@ class DbCreate extends DbCommand {
 	protected function getOptions()
 	{
 		return [
-            ['database', null, InputOption::VALUE_OPTIONAL, 'The database to be created.', null],
+            ['database', null, InputOption::VALUE_OPTIONAL, 'The database to be dumped.', null],
 		];
 	}
 

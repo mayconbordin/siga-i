@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel {
 	protected $commands = [
 		'App\Console\Commands\Inspire',
 		'App\Console\Commands\DbCreate',
+        'App\Console\Commands\DbDump',
+        'App\Console\Commands\DbDrop',
 	];
 
 	/**
