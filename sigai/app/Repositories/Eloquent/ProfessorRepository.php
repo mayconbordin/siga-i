@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Eloquent;
 
+use App\Models\Curso;
 use App\Models\Professor;
 use App\Models\User;
 
@@ -163,5 +164,15 @@ class ProfessorRepository extends BaseRepository implements ProfessorRepositoryC
 	    }
 	    
 	    DB::commit();
+    }
+
+    public function dissociateCursoOrigem(Curso $cursoOrigem)
+    {
+        $professores = Professor::where('curso_origem_id', $cursoOrigem->id)->get();
+
+        foreach ($professores as $professor) {
+            $professor->cursoOrigem()->dissociate();
+            $professor->save();
+        }
     }
 }

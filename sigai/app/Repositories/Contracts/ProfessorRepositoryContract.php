@@ -1,5 +1,7 @@
 <?php namespace App\Repositories\Contracts;
 
+use App\Models\Curso;
+
 interface ProfessorRepositoryContract
 {
     public static function findById($id);
@@ -19,4 +21,6 @@ interface ProfessorRepositoryContract
     public static function updateByMatricula(array $data, $matricula);
     
     public static function deleteByMatricula($matricula);
+
+    public function dissociateCursoOrigem(Curso $cursoOrigem);
 }

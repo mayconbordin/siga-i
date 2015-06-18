@@ -1,12 +1,11 @@
 <?php namespace App\Repositories\Eloquent;
 
 use App\Models\Aluno;
+use App\Models\Curso;
 use App\Models\Turma;
 use App\Models\Professor;
 use App\Models\UnidadeCurricular;
 
-use App\Repositories\ProfessorRepository;
-use App\Repositories\AlunoRepository;
 use App\Repositories\UnidadeCurricularRepository;
 
 use App\Exceptions\NotFoundError;
@@ -227,6 +226,13 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
 	    $turma->alunos()->updateExistingPivot($aluno->id, $data);
 	    
 	    return $aluno;
+    }
+
+    public function detachAlunosByCursoOrigem(Curso $cursoOrigem)
+    {
+        DB::table('alunos_turmas')
+            ->where('curso_origem_id', $cursoOrigem->id)
+            ->delete();
     }
     
     public function hasAluno($turmaId, $alunoId)

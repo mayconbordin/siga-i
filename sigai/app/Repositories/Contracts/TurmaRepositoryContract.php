@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Contracts;
 
+use App\Models\Curso;
 use App\Models\Turma;
 use App\Models\Professor;
 use App\Models\Aluno;
@@ -28,6 +29,8 @@ interface TurmaRepositoryContract
     public function detachAluno($ucId, $turmaId, Aluno $aluno);
     
     public function updateAluno(array $data, $ucId, $turmaId, Aluno $aluno);
+
+    public function detachAlunosByCursoOrigem(Curso $cursoOrigem);
     
     public function hasAluno($turmaId, $alunoId);
     

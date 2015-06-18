@@ -8,11 +8,23 @@ use App\Repositories\Contracts\CursoRepositoryContract;
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 
+use App\Repositories\Contracts\ProfessorRepositoryContract;
+use App\Repositories\Contracts\TurmaRepositoryContract;
 use \DB;
 use \Lang;
+use \Log;
 
 class CursoRepository extends BaseRepository implements CursoRepositoryContract
 {
+    protected $turmaRepository;
+    protected $professorRepository;
+
+    function __construct(TurmaRepositoryContract $turmaRepository, ProfessorRepositoryContract $professorRepository)
+    {
+        $this->turmaRepository     = $turmaRepository;
+        $this->professorRepository = $professorRepository;
+    }
+
     public function findById($id)
     {
         $curso = Curso::with('coordenador')->where('id', $id)->first();
@@ -87,18 +99,29 @@ class CursoRepository extends BaseRepository implements CursoRepositoryContract
     
     public function deleteById($id)
     {
-        $curso = self::findById($id);
-        
+        $curso = Curso::where('id', $id)->with('alunos', 'unidadesCurriculares', 'professoresOrigem')->first();
+
+        if ($curso == null) {
+            throw new NotFoundError(Lang::get('cursos.not_found'));
+        }
+
         DB::beginTransaction();
 	    
 	    try {
+            // disassocia o curso dos professores
+            $this->professorRepository->dissociateCursoOrigem($curso);
+
+            // remove relacionamento entre alunos e turmas com este curso de origem
+            $this->turmaRepository->detachAlunosByCursoOrigem($curso);
+
 	        $curso->alunos()->detach();
 	        $curso->unidadesCurriculares()->detach();
 	        
 	        $curso->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
-	        throw new ServerError(Lang::get('cursos.remove_error'));
+            Log::error($e->getMessage());
+	        throw new ServerError(Lang::get('cursos.remove_error'), $e->getCode(), $e);
 	    }
 	    
 	    DB::commit();

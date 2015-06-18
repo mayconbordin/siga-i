@@ -377,7 +377,7 @@ CREATE TABLE `professores` (
   `id` int(10) unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `curso_origem_id` int(10) unsigned NOT NULL,
+  `curso_origem_id` int(10) unsigned,
   PRIMARY KEY (`id`),
   KEY `professores_curso_origem_id_foreign` (`curso_origem_id`),
   CONSTRAINT `professores_curso_origem_id_foreign` FOREIGN KEY (`curso_origem_id`) REFERENCES `cursos` (`id`),
