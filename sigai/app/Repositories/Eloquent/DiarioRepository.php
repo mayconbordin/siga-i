@@ -19,9 +19,11 @@ use Carbon\Carbon;
 
 class DiarioRepository extends BaseRepository implements DiarioRepositoryContract
 {
-    public function insert($month, Turma $turma, Professor $professor)
+    public function insert($month, Turma $turma, Professor $professor, Carbon $today = null)
     {
-        $today = Carbon::now();
+        if ($today == null) {
+            $today = Carbon::now();
+        }
 
         // verifica se já existe        
         if (self::exists($turma->id, $month)) {
@@ -48,26 +50,27 @@ class DiarioRepository extends BaseRepository implements DiarioRepositoryContrac
     
     public function findAllByTurma(Turma $turma)
     {
-        $diarios = StatusDiario::with('envios', 'envios.professor', 'envios.professor.usuario',
-                                      'professor', 'professor.usuario')
+        $diarios = StatusDiario::with('envios', 'envios.professor', 'envios.professor.usuario', 'professor', 'professor.usuario')
                                ->where('turma_id', $turma->id)
                                ->get();
                                
         return $diarios;
     }
     
-    public function findDiariosToClose(Professor $professor)
+    public function findDiariosToClose(Professor $professor, Carbon $today = null)
     {
-        $currMonth = Carbon::now()->month;
-        
+        if ($today == null) {
+            $today = Carbon::now();
+        }
+
         $diarios = DB::table('turmas AS t')
                      ->selectRaw('t.id as turma_id, t.nome, t.unidade_curricular_id')
-                     ->leftJoin('status_diarios AS sd', function($join) use ($currMonth) {
+                     ->leftJoin('status_diarios AS sd', function($join) use ($today) {
                             $join->on('sd.turma_id', '=', 't.id')
-                                 ->on('sd.mes', '=', DB::raw($currMonth));
+                                 ->on('sd.mes', '=', DB::raw($today->month));
                      })
                      ->join('professores_turmas AS pt', 'pt.turma_id', '=', 't.id')
-                     ->whereRaw('NOW() between t.data_inicio and t.data_fim')
+                     ->whereRaw("'".$today->format('Y-m-d')."' between t.data_inicio and t.data_fim")
                      ->whereRaw('sd.id IS NULL')
                      ->where("pt.professor_id", $professor->id)
 	                 ->get();
@@ -75,9 +78,12 @@ class DiarioRepository extends BaseRepository implements DiarioRepositoryContrac
 	    return $diarios;
     }
     
-    public function findDiariosToCloseByTurma(Turma $turma)
+    public function findDiariosToCloseByTurma(Turma $turma, Carbon $today = null)
     {
-        $currDate  = Carbon::now();
+        if ($today == null) {
+            $today = Carbon::now();
+        }
+
         $startDate = $turma->data_inicio;
         $endDate   = $turma->data_fim;
 
@@ -100,7 +106,7 @@ class DiarioRepository extends BaseRepository implements DiarioRepositoryContrac
         for ($month = $startDate->month; $month <= $endDate->month; $month++) {
             $allMonths[] = $month;
             
-            if ($month == $currDate->month && $startDate->year == $currDate->year) break;
+            if ($month == $today->month && $startDate->year == $today->year) break;
         }
         
         // remove os meses que já tem diários
