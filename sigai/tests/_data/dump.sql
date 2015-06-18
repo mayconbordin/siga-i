@@ -156,7 +156,7 @@ CREATE TABLE `cursos` (
   `sigla` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `coordenador_id` int(10) unsigned NOT NULL,
+  `coordenador_id` int(10) unsigned,
   PRIMARY KEY (`id`),
   KEY `cursos_coordenador_id_foreign` (`coordenador_id`),
   CONSTRAINT `cursos_coordenador_id_foreign` FOREIGN KEY (`coordenador_id`) REFERENCES `usuarios` (`id`)
