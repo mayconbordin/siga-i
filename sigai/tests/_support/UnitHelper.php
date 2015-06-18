@@ -3,4 +3,8 @@
 // all public methods declared in helper class will be available in $I
 class UnitHelper extends \Codeception\Module
 {
+    function _after(\Codeception\TestCase $test)
+    {
+        \AspectMock\Test::clean();
+    }
 }
