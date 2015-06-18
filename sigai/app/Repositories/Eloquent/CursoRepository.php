@@ -106,24 +106,24 @@ class CursoRepository extends BaseRepository implements CursoRepositoryContract
         }
 
         DB::beginTransaction();
-	    
-	    try {
+
+        try {
             // disassocia o curso dos professores
             $this->professorRepository->dissociateCursoOrigem($curso);
 
             // remove relacionamento entre alunos e turmas com este curso de origem
             $this->turmaRepository->detachAlunosByCursoOrigem($curso);
 
-	        $curso->alunos()->detach();
-	        $curso->unidadesCurriculares()->detach();
-	        
-	        $curso->delete();
-	    } catch (\Exception $e) {
-	        DB::rollback();
+            $curso->alunos()->detach();
+            $curso->unidadesCurriculares()->detach();
+
+            $curso->delete();
+        } catch (\Exception $e) {
+            DB::rollback();
             Log::error($e->getMessage());
-	        throw new ServerError(Lang::get('cursos.remove_error'), $e->getCode(), $e);
-	    }
-	    
-	    DB::commit();
+            throw new ServerError(Lang::get('cursos.remove_error'), $e->getCode(), $e);
+        }
+
+        DB::commit();
     }
 }
