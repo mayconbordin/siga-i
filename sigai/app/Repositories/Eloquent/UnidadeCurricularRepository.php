@@ -4,8 +4,7 @@ use App\Models\Curso;
 use App\Models\UnidadeCurricular;
 
 use App\Repositories\Contracts\TurmaRepositoryContract;
-use App\Repositories\CursoRepository;
-use App\Repositories\TurmaRepository;
+use App\Repositories\Contracts\UnidadeCurricularRepositoryContract;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
@@ -13,16 +12,10 @@ use App\Exceptions\ServerError;
 
 use \DB;
 use \Lang;
-use Repositories\Contracts\UnidadeCurricularRepositoryContract;
 
 class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurricularRepositoryContract
 {
     protected $turmaRepository;
-
-    public function __construct(TurmaRepositoryContract $turmaRepository)
-    {
-        $this->turmaRepository = $turmaRepository;
-    }
 
     public function findById($id)
     {
@@ -136,4 +129,6 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
 
 	    DB::commit();
     }
+
+
 }

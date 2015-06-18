@@ -1,5 +1,4 @@
-<?php namespace Repositories\Contracts;
-
+<?php namespace App\Repositories\Contracts;
 
 use App\Models\Curso;
 

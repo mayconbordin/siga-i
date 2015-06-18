@@ -4,26 +4,21 @@ use App\Models\Curso;
 use App\Models\User;
 
 use App\Repositories\Contracts\CursoRepositoryContract;
+use App\Repositories\Contracts\TurmaRepositoryContract;
+use App\Repositories\Contracts\ProfessorRepositoryContract;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 
-use App\Repositories\Contracts\ProfessorRepositoryContract;
-use App\Repositories\Contracts\TurmaRepositoryContract;
 use \DB;
 use \Lang;
 use \Log;
+use \App;
 
 class CursoRepository extends BaseRepository implements CursoRepositoryContract
 {
     protected $turmaRepository;
     protected $professorRepository;
-
-    function __construct(TurmaRepositoryContract $turmaRepository, ProfessorRepositoryContract $professorRepository)
-    {
-        $this->turmaRepository     = $turmaRepository;
-        $this->professorRepository = $professorRepository;
-    }
 
     public function findById($id)
     {
@@ -109,10 +104,10 @@ class CursoRepository extends BaseRepository implements CursoRepositoryContract
 
         try {
             // disassocia o curso dos professores
-            $this->professorRepository->dissociateCursoOrigem($curso);
+            $this->getProfessorRepository()->dissociateCursoOrigem($curso);
 
             // remove relacionamento entre alunos e turmas com este curso de origem
-            $this->turmaRepository->detachAlunosByCursoOrigem($curso);
+            $this->getTurmaRepository()->detachAlunosByCursoOrigem($curso);
 
             $curso->alunos()->detach();
             $curso->unidadesCurriculares()->detach();
@@ -125,5 +120,31 @@ class CursoRepository extends BaseRepository implements CursoRepositoryContract
         }
 
         DB::commit();
+    }
+
+    public function getTurmaRepository()
+    {
+        if ($this->turmaRepository == null) {
+            $this->turmaRepository = App::getInstance()->make('App\Repositories\Contracts\TurmaRepositoryContract');
+        }
+        return $this->turmaRepository;
+    }
+
+    public function getProfessorRepository()
+    {
+        if ($this->professorRepository == null) {
+            $this->professorRepository = App::getInstance()->make('App\Repositories\Contracts\ProfessorRepositoryContract');
+        }
+        return $this->professorRepository;
+    }
+
+    public function setTurmaRepository(TurmaRepositoryContract $turmaRepository)
+    {
+        $this->turmaRepository = $turmaRepository;
+    }
+
+    public function setProfessorRepository(ProfessorRepositoryContract $professorRepository)
+    {
+        $this->professorRepository = $professorRepository;
     }
 }

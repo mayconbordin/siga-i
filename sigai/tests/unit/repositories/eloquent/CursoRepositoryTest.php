@@ -17,7 +17,9 @@ class CursoRepositoryTest extends TestCase
 
     function __construct()
     {
-        $this->cursoRepository = new CursoRepository(new TurmaRepository(), new ProfessorRepository());
+        $this->cursoRepository = new CursoRepository();
+        $this->cursoRepository->setTurmaRepository(new TurmaRepository());
+        $this->cursoRepository->setProfessorRepository(new ProfessorRepository());
     }
 
     public function testFindById()

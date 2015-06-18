@@ -6,8 +6,6 @@ use App\Models\Turma;
 use App\Models\Professor;
 use App\Models\UnidadeCurricular;
 
-use App\Repositories\UnidadeCurricularRepository;
-
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
 use App\Exceptions\ServerError;
@@ -18,6 +16,7 @@ use App\Repositories\Contracts\TurmaRepositoryContract;
 use \DB;
 use \Lang;
 use \Log;
+use \App;
 
 use Carbon\Carbon;
 
@@ -38,11 +37,11 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
 	    return $turma;
     }
     
-    public function findByNomeAndData($nome, $dataInicio, $dataFim)
+    public function findByNomeAndData($nome, Carbon $dataInicio, Carbon $dataFim)
     {
         $turma = Turma::where('nome', $nome)
-                      ->where('data_inicio', $dataInicio)
-                      ->where('data_fim', $dataFim)
+                      ->where('data_inicio', $dataInicio->format('Y-m-d'))
+                      ->where('data_fim', $dataFim->format('Y-m-d'))
                       ->first();
 	    
 	    if ($turma == null) {
@@ -134,14 +133,20 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
     public function update(array $data, $ucId, $id)
     {
         $turma = self::findById($id, $ucId);
+
+        $dataInicio = array_get($data, 'data_inicio', $turma->data_inicio);
+        $dataFim    = array_get($data, 'data_fim', $turma->data_fim);
+
+        if (!($dataInicio instanceof Carbon) || !($dataFim instanceof Carbon)) {
+            throw new \InvalidArgumentException("Datas devem ser do tipo Carbon");
+        }
 	    
-	    $turma->nome        = self::get($data['nome']);
-	    $turma->data_inicio = Carbon::createFromFormat('d/m/Y', self::get($data['data_inicio']));
-	    $turma->data_fim    = Carbon::createFromFormat('d/m/Y', self::get($data['data_fim']));
+	    $turma->nome        = array_get($data, 'nome', $turma->nome);
+	    $turma->data_inicio = $dataInicio;
+	    $turma->data_fim    = $dataFim;
 	    
-	    if (self::get($data['unidade_curricular_id'], null) != null) {
-	        $uc = UnidadeCurricularRepository::findById(self::get($data['unidade_curricular_id']));
-	        $turma->unidadeCurricular()->associate($uc);
+	    if (isset($data['unidade_curricular']) && $data['unidade_curricular'] instanceof UnidadeCurricular) {
+	        $turma->unidadeCurricular()->associate($data['unidade_curricular']);
 	    }
 	    
 	    if (!$turma->save()) {
@@ -151,13 +156,20 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
         return $turma;
     }
     
-    public function insert(array $data, UnidadeCurricular $uc, $dateFormat = 'd/m/Y')
+    public function insert(array $data, UnidadeCurricular $uc)
     {
+        $dataInicio = array_get($data, 'data_inicio');
+        $dataFim    = array_get($data, 'data_fim');
+
+        if (!($dataInicio instanceof Carbon) || !($dataFim instanceof Carbon)) {
+            throw new \InvalidArgumentException("Datas devem ser do tipo Carbon");
+        }
+
         $turma = new Turma;
 
-	    $turma->nome        = self::get($data['nome']);
-	    $turma->data_inicio = Carbon::createFromFormat($dateFormat, self::get($data['data_inicio']));
-	    $turma->data_fim    = Carbon::createFromFormat($dateFormat, self::get($data['data_fim']));
+	    $turma->nome        = array_get($data, 'nome');
+        $turma->data_inicio = $dataInicio;
+        $turma->data_fim    = $dataFim;
 	    
 	    $turma->unidadeCurricular()->associate($uc);
 
