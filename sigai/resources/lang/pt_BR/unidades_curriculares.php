@@ -21,6 +21,8 @@ return [
     
     
     'not_found'      => 'Unidade curricular inexistente',
+
+    'curso_exists'   => 'Este curso já está vínculado a unidade curricular',
     
     'curso_attached' => 'Curso vínculado a unidade curricular com sucesso',
     'curso_attach_error' => 'Erro ao víncular o curso a unidade curricular',

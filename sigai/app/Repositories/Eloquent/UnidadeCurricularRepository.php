@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Eloquent;
 
+use App\Exceptions\ConflictError;
 use App\Models\Curso;
 use App\Models\UnidadeCurricular;
 
@@ -68,6 +69,11 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
     public function attachCurso($id, Curso $curso)
     {
         $uc = self::findById($id);
+
+        if (self::hasCurso($uc->id, $curso->id)) {
+            throw new ConflictError(Lang::get('unidades_curriculares.curso_exists'));
+        }
+
 	    $uc->cursos()->attach($curso);
 	    
 	    return $curso;
@@ -77,6 +83,16 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
     {
         $uc = self::findById($id);
 	    $uc->cursos()->detach($curso);
+    }
+
+    public function hasCurso($ucId, $cursoId)
+    {
+        return !is_null(
+            DB::table('cursos_unidades_curriculares')
+                ->where('uni_curr_id', $ucId)
+                ->where('curso_id', $cursoId)
+                ->first()
+        );
     }
     
     public function insert(array $data)
@@ -98,9 +114,9 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
     {
         $uc = self::findById($id);
         
-        $uc->nome          = array_get($data, 'nome');
-	    $uc->sigla         = array_get($data, 'sigla');
-	    $uc->carga_horaria = array_get($data, 'carga_horaria');
+        $uc->nome          = array_get($data, 'nome', $uc->nome);
+	    $uc->sigla         = array_get($data, 'sigla', $uc->sigla);
+	    $uc->carga_horaria = array_get($data, 'carga_horaria', $uc->carga_horaria);
 	    
 	    if (!$uc->save()) {
 	        throw new ServerError(Lang::get('unidades_curriculares.save_error'));
@@ -117,7 +133,7 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
 
 	    try {
 	        foreach ($uc->turmas as $turma) {
-                $this->turmaRepository->deleteById($turma->id, $id);
+                $this->getTurmaRepository()->deleteById($turma->id, $id);
 	        }
 
 	        $uc->cursos()->detach();
@@ -130,5 +146,17 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
 	    DB::commit();
     }
 
+    public function getTurmaRepository()
+    {
+        if ($this->turmaRepository == null) {
+            $this->turmaRepository = App::getInstance()->make('App\Repositories\Contracts\TurmaRepositoryContract');
+        }
+        return $this->turmaRepository;
+    }
+
+    public function setTurmaRepository(TurmaRepositoryContract $turmaRepository)
+    {
+        $this->turmaRepository = $turmaRepository;
+    }
 
 }

@@ -20,6 +20,8 @@ interface UnidadeCurricularRepositoryContract
 
     public function detachCurso($id, Curso $curso);
 
+    public function hasCurso($ucId, $cursoId);
+
     public function insert(array $data);
 
     public function update(array $data, $id);
