@@ -38,7 +38,7 @@ return [
 	| URL utilizada no rodapé do sistema, apontando para o site do grupo.
 	|
 	*/
-	'group_url' => '/gppdi',
+	'group_url' => 'http://gppdi.bitbucket.org/',
 
 	/*
 	|--------------------------------------------------------------------------
