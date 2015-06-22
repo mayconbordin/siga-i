@@ -400,7 +400,7 @@ class ChamadaPDFExport extends TCPDF
         $this->SetDrawColor(120,120,120);
     
         // Logo
-        $image_file = public_path() . '/img/faculdade_senai.jpg';
+        $image_file = base_path() . '/resources/assets/img/faculdade_senai.jpg';
         $this->Image($image_file, 5, 3, 50);
         
         $this->Ln(3);

@@ -47,6 +47,17 @@ class DiarioRepository extends BaseRepository implements DiarioRepositoryContrac
         
         return $diario;
     }
+
+    public function findByTurmaAndMonth(Turma $turma, $month)
+    {
+        $diario = StatusDiario::where('turma_id', $turma->id)->where('mes', $month)->first();
+
+        if ($diario == null) {
+            throw new NotFoundError(Lang::get('diarios.not_found'));
+        }
+
+        return $diario;
+    }
     
     public function findAllByTurma(Turma $turma)
     {

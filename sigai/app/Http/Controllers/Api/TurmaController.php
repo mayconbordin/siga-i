@@ -14,6 +14,7 @@ use App\Repositories\ProfessorRepository;
 use App\Exceptions\BadRequest;
 use App\Exceptions\ConflictError;
 
+use App\Services\Contracts\DiarioServiceContract;
 use \DB;
 use \Lang;
 use \Input;
@@ -21,12 +22,17 @@ use \Auth;
 
 use Carbon\Carbon;
 
-class TurmaController extends Controller {
+class TurmaController extends Controller
+{
+    protected $turmaRepository;
+    protected $diarioService;
 
-    public function __construct()
+    public function __construct(DiarioServiceContract $diarioService)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->diarioService = $diarioService;
     }
     
     public function listar()
@@ -149,14 +155,22 @@ class TurmaController extends Controller {
 	
 	public function fecharDiario($ucId, $turmaId, $month)
 	{
-        $turma     = TurmaRepository::findById($turmaId, $ucId);
-        $professor = ProfessorRepository::findByMatricula(Auth::user()->matricula);
-        $diario    = DiarioRepository::insert($month, $turma, $professor);
-        
+        $diario = $this->diarioService->closeDiario($ucId, $turmaId, $month);
+
         return $this->jsonResponse([
             'message' => Lang::get('diarios.saved'),
             'diario'  => $diario
         ], ['professor', 'turma']);
 	}
+
+    public function enviarDiario($ucId, $turmaId, $month)
+    {
+        $envio = $this->diarioService->sendDiario($ucId, $turmaId, $month);
+
+        return $this->jsonResponse([
+            'message' => Lang::get('diarios.sent'),
+            'envio'  => $envio
+        ]);
+    }
 
 }

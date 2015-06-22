@@ -2,6 +2,7 @@
 
 use App\Exceptions\BadRequest;
 use App\Exceptions\ConflictError;
+use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 use App\Models\StatusDiario;
 use App\Models\Turma;
@@ -23,6 +24,15 @@ interface DiarioRepositoryContract
      * @throws ServerError
      */
     public function insert($month, Turma $turma, Professor $professor, Carbon $today = null);
+
+    /**
+     * Retorna o diário da turma e mês especificados.
+     * @param Turma $turma
+     * @param int   $month
+     * @return Turma
+     * @throws NotFoundError Caso não encontre o diário.
+     */
+    public function findByTurmaAndMonth(Turma $turma, $month);
 
     /**
      * Encontra os diários de uma turma.

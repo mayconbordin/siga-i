@@ -224,6 +224,18 @@ var Turma = (function() {
                 var errors = xhr.responseJSON;
                 error(errors, xhr);
             });
+        },
+
+        sendDiario: function(mes, success, error) {
+            $.ajax({
+                url: baseUrl + '/diarios/' + mes + '/enviar',
+                method: 'POST'
+            }).done(function(result) {
+                success(result);
+            }).fail(function(xhr) {
+                var errors = xhr.responseJSON;
+                error(errors, xhr);
+            });
         }
     };
 
@@ -343,6 +355,8 @@ var Turma = (function() {
             $("#closeDiario .save").click(this.onSaveDiarioClick);
             
             $("#closeDiarioPreview").click(this.onDiarioPreview);
+
+            $("#diarios table tbody .send").click(this.onSendDiarioClick);
         },
         
         
@@ -397,13 +411,14 @@ var Turma = (function() {
         addDiarioToTable: function(diario) {
             var url = '{{ url("/unidades_curriculares/".$unidadeCurricular->id."/turmas/".$turma->id."/diarios") }}';
 
-            var html = '<tr data-id="'+diario.id+'"><td scope="row" class="text-center">'+diario.mes+'</td>'
+            var html = '<tr data-id="'+diario.id+'" data-mes="'+diario.mes+'"><td scope="row" class="text-center">'+diario.mes+'</td>'
                      + '<td>'+diario.professor.nome+'</td><td>'+diario.created_at+'</td>'
                      + '<td class="text-center"><a class="btn btn-danger btn-xs" target="diarioClasse"'
                      + 'href="'+url+'/'+diario.mes+'"><i class="fa fa-file-pdf-o"></i> Imprimir'
                      + '</a></td></tr>';
                         
             $("#diarios table tbody").append(html);
+            $("#diarios table tbody .send").click(this.onSendDiarioClick);
         },
 
         // eventos -------------------------------------------------------------
@@ -617,15 +632,26 @@ var Turma = (function() {
             var url = "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}";
             
             window.open(url + '/' + month, 'diarioPreview');
+        },
+
+        onSendDiarioClick: function() {
+            var tr = $(this).parent().parent();
+            var month = tr.data('mes');
+
+            Model.sendDiario(month, function(result) {
+                Modal.success(result.message);
+                console.log(result);
+                //Turma.addDiarioToTable(result.diario);
+            }, function(error) {
+                Modal.error(error.errors.join('<br>'));
+            });
         }
     };
 })();
 
 $(document).ready(function() {
 @if (isset($turma))
-
     Turma.init();
-    
 @endif
 });
 </script>
@@ -931,23 +957,13 @@ $(document).ready(function() {
                             <th class="text-center">@lang('diarios.month')</th>
                             <th>@lang('diarios.closed_by')</th>
                             <th>@lang('diarios.closed_at')</th>
-                            <th class="text-center">@lang('diarios.archive')</th>
+                            <th class="text-center">@lang('diarios.last_version')</th>
+                            <th class="text-center">@lang('diarios.send_list')</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($turma->statusDiarios as $d)
-                        <tr data-id="{{ $d->id }}">
-                            <td scope="row" class="text-center">{{ \Lang::get('months.'.$d->mes) }}</td>
-                            <td>{{ $d->professor->usuario->nome }}</td>
-                            <td>{{ $d->created_at }}</td>
-                            <td class="text-center">
-                                <a class="btn btn-danger btn-xs" target="diarioClasse"
-                                   href="{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'
-                                                .$turma->id.'/diarios/'.$d->mes) }}">
-                                    <i class="fa fa-file-pdf-o"></i> Imprimir
-                                </a>
-                            </td>
-                        </tr>
+                        @foreach ($diarios as $d)
+                        @include('diarios.table-item', ['diario' => $d, 'uc' => $unidadeCurricular, 'turma' => $turma])
                         @endforeach
                     </tbody>
                 </table>

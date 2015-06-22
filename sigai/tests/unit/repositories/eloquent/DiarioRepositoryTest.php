@@ -38,6 +38,22 @@ class DiarioRepositoryTest extends TestCase
         } catch (\App\Exceptions\ConflictError $e) {}
     }
 
+    public function testFindByTurmaAndMonth()
+    {
+        $turma = Turma::where('id', 2)->first();
+        $professor = \App\Models\Professor::where('id', 49)->first();
+
+        for ($month=7; $month<=12; $month++) {
+            $this->diarioRepository->insert($month, $turma, $professor);
+        }
+
+        $diario = $this->diarioRepository->findByTurmaAndMonth($turma, 7);
+
+        $this->assertEquals(7, $diario->mes);
+        $this->assertEquals($turma->id, $diario->turma->id);
+        $this->assertEquals($professor->id, $diario->professor->id);
+    }
+
     public function testInsertAheadOfTime()
     {
         $turmaDouble = Test::double('App\Models\Turma', ['isActive' => true]);

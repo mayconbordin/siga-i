@@ -6,7 +6,9 @@
 !/public/robots.txt
 !/public/favicon.ico
 !/public/.htaccess
+/sigai
 .env
 !/vendor/utils/
 !/vendor/utils/*
 .idea
+/_annotations

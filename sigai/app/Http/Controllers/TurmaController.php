@@ -21,6 +21,7 @@ use App\Exceptions\ServerError;
 
 use App\Exporters\ChamadaPDFExport;
 
+use App\Services\Contracts\DiarioServiceContract;
 use Carbon\Carbon;
 use \Input;
 use \Lang;
@@ -28,12 +29,14 @@ use \DB;
 
 class TurmaController extends Controller {
 
-    protected $service;
+    protected $diarioService;
     
-    public function __construct()
+    public function __construct(DiarioServiceContract $diarioService)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->diarioService = $diarioService;
     }
     
     public function listar()
@@ -97,7 +100,7 @@ class TurmaController extends Controller {
 	    try {
 	        $turma = TurmaRepository::insert($request->all(), $ucId);
 	    
-	        return redirect()->action('TurmaController@mostrar', [$ucId, $id])
+	        return redirect()->action('TurmaController@mostrar', [$ucId, $turma->id])
 	                         ->with('success', Lang::get('turmas.saved'));
 	    } catch (NotFoundError $e) {
             return redirect()->action('UnidadeCurricularController@mostrar', [$ucId])
@@ -114,42 +117,7 @@ class TurmaController extends Controller {
 	
 	public function exportar($ucId, $turmaId, $month = null)
 	{
-	    $professor = \Auth::user();
-
-	    $turma = TurmaRepository::findByIdWith($turmaId, $ucId, [
-	        'unidadeCurricular', 'professores', 'professores.usuario']);
-	    $data = ChamadaRepository::findFaltasByTurmaPerPeriod($turmaId, $month);
-
-	    $pdf = new ChamadaPDFExport('L');
-	    
-	    foreach ($data->cursos as $curso) {
-	        
-	        $coordenador = UsuarioRepository::findById($curso->coordenador_id);
-	    
-	        foreach ($curso->chamada as $period => $faltas) {
-	            $date = explode('-', $period);
-	            $aulas = AulaRepository::findByTurmaInMonth($turmaId, $date[1]);
-	        
-	            $pdf->init();
-                $pdf->setTitle("CURSO SUPERIOR DE TECNOLOGIA EM " . $curso->nome);
-                $pdf->setInformation($turma);
-                $pdf->setTable($faltas, $data->dates[$period]);
-            
-            
-                $pdf->init();
-                
-                
-                $pdf->setConteudoTable($aulas, [
-                    'professor'       => $professor->nome,
-                    'coordenador'     => $coordenador->nome,
-                    'superintendente' => 'Ane Lise Pereira da Costa Dalcul',
-                    'professores'     => $turma->professores,
-                    'mes'             => (int) $date[1]
-                ]);
-            }
-        }
-
-        $pdf->Output();
+        $this->diarioService->showDiario($ucId, $turmaId, $month);
 	}
 
 }

@@ -22,7 +22,8 @@ return [
     
     'preview'    => 'Pré-visualizar',
     
-    'saved'        => 'Diário salvo com sucesso',
+    'saved'      => 'Diário salvo com sucesso',
+    'sent'       => 'Diário enviado com sucesso',
     'create_error' => 'Ocorreu um erro ao criar o diário',
     'save_error'   => 'Ocorreu um erro ao salvar o diário',
     

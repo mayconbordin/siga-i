@@ -3,7 +3,7 @@
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [Laravel5, Db, Asserts, UnitHelper]
+    enabled: [Mockery, Laravel5, Db, Asserts, UnitHelper]
     config:
         Laravel5:
             environment_file: .env.testing

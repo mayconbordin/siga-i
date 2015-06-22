@@ -1,5 +1,6 @@
 <?php namespace App\Services;
 
+use App\Repositories\Contracts\DiarioEnvioRepositoryContract;
 use App\Services\Contracts\DiarioServiceContract;
 use App\Repositories\Contracts\DiarioRepositoryContract;
 use App\Repositories\Contracts\TurmaRepositoryContract;
@@ -12,26 +13,37 @@ use App\Exporters\ChamadaPDFExport;
 
 use Illuminate\Contracts\Auth\Guard;
 use \Storage;
+use Carbon\Carbon;
 
 class DiarioService implements DiarioServiceContract
 {
     protected $auth;
     protected $diarioRepository;
+    protected $turmaRepository;
+    protected $chamadaRepository;
+    protected $usuarioRepository;
+    protected $aulaRepository;
+    protected $professorRepository;
+    protected $diarioEnvioRepository;
+    protected $diskDiarios;
+    protected $diskLocal;
     
     public function __construct(Guard $auth, DiarioRepositoryContract $diarioRepository,
             TurmaRepositoryContract $turmaRepository, ChamadaRepositoryContract $chamadaRepository,
             UsuarioRepositoryContract $usuarioRepository, AulaRepositoryContract $aulaRepository,
-            ProfessorRepositoryContract $professorRepository)
+            ProfessorRepositoryContract $professorRepository, DiarioEnvioRepositoryContract $diarioEnvioRepository)
     {
-        $this->auth = $auth;
-        $this->diarioRepository    = $diarioRepository;
-        $this->turmaRepository     = $turmaRepository;
-        $this->chamadaRepository   = $chamadaRepository;
-        $this->usuarioRepository   = $usuarioRepository;
-        $this->aulaRepository      = $aulaRepository;
-        $this->professorRepository = $professorRepository;
+        $this->auth                  = $auth;
+        $this->diarioRepository      = $diarioRepository;
+        $this->turmaRepository       = $turmaRepository;
+        $this->chamadaRepository     = $chamadaRepository;
+        $this->usuarioRepository     = $usuarioRepository;
+        $this->aulaRepository        = $aulaRepository;
+        $this->professorRepository   = $professorRepository;
+        $this->diarioEnvioRepository = $diarioEnvioRepository;
         
-        $this->diskDiarios = Storage::disk('diarios');
+        $this->diskDiarios           = Storage::disk('diarios');
+        $this->diskLocal             = Storage::disk('local');
     }
     
     
@@ -41,12 +53,44 @@ class DiarioService implements DiarioServiceContract
         $turma     = $this->turmaRepository->findById($turmaId, $ucId);
         $professor = $this->professorRepository->findByMatricula($usuario->matricula);
         $diario    = $this->diarioRepository->insert($month, $turma, $professor);
-        
-        // send the document
+
+        $filename = md5($ucId . '-' . $turmaId . '-' . $month) . '.pdf';
+
         // save a record on the database about it
-        // save it locally
+        $this->diarioEnvioRepository->insert([
+            'filename'  => $filename,
+            'diario'    => $diario,
+            'professor' => $professor
+        ]);
+
+        // save it
+        $this->saveDiario($filename, $ucId, $turmaId, $month);
         
         return $diario;
+    }
+
+    public function sendDiario($ucId, $turmaId, $month)
+    {
+        $now = Carbon::now()->toDateTimeString();
+
+        $usuario   = $this->auth->user();
+        $turma     = $this->turmaRepository->findById($turmaId, $ucId);
+        $professor = $this->professorRepository->findByMatricula($usuario->matricula);
+        $diario    = $this->diarioRepository->findByTurmaAndMonth($turma, $month);
+
+        $filename = md5($ucId . '-' . $turmaId . '-' . $month . '-' . $now) . '.pdf';
+
+        // save a record on the database about it
+        $envio = $this->diarioEnvioRepository->insert([
+            'filename'  => $filename,
+            'diario'    => $diario,
+            'professor' => $professor
+        ]);
+
+        // save it
+        $this->saveDiario($filename, $ucId, $turmaId, $month);
+
+        return $envio;
     }
     
     
@@ -58,10 +102,11 @@ class DiarioService implements DiarioServiceContract
     
     public function saveDiario($filepath, $ucId, $turmaId, $month = null)
     {
-        $pdf = $this->export($ucId, $turmaId, $month);
+        $pdf     = $this->export($ucId, $turmaId, $month);
         $content = $pdf->Output('', 'S');
         
         $this->diskDiarios->put($filepath, $content);
+        $this->diskLocal->put($filepath, $content);
     }
     
     protected function export($ucId, $turmaId, $month = null)
@@ -85,15 +130,13 @@ class DiarioService implements DiarioServiceContract
                 $pdf->setInformation($turma);
                 $pdf->setTable($faltas, $data->dates[$period]);
             
-            
                 $pdf->init();
-                
-                
                 $pdf->setConteudoTable($aulas, [
                     'professor'       => $professor->nome,
                     'coordenador'     => $coordenador->nome,
                     'superintendente' => 'Ane Lise Pereira da Costa Dalcul',
-                    'professores'     => $turma->professores
+                    'professores'     => $turma->professores,
+                    'mes'             => (int) $date[1]
                 ]);
             }
         }
