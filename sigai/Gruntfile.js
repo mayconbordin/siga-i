@@ -16,6 +16,11 @@ module.exports = function(grunt) {
                     'modernizr'
                 ],
                 mainFiles: {
+                    'bootstrap': [
+                        "dist/css/bootstrap.css",
+                        "dist/js/bootstrap.js",
+                    ],
+
                     'bootstrap-datepicker': [
                         "dist/css/bootstrap-datepicker.css",
                         "dist/css/bootstrap-datepicker3.css",
