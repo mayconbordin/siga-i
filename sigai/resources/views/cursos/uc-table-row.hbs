@@ -1,0 +1,12 @@
+<tr data-id="{{curso.id}}">
+    <th scope="row">{{curso.id}}</th>
+    <td>{{curso.nome}}</td>
+    <td>{{curso.sigla}}</td>
+    <td class="text-center">
+        {{#if detach}}
+        <button class="btn btn-default btn-xs detach">
+            <i class="fa fa-chain-broken"></i> {{lang 'general.detach'}}
+        </button>
+        {{/if}}
+    </td>
+</tr>

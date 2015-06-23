@@ -38,7 +38,7 @@ $(document).ready(function($) {
     
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
-        <li class="active">@lang('unidades_curriculares.title')</a></li>
+        <li class="active">@lang('unidades_curriculares.title')</li>
     </ol>
     
     <a class="btn btn-primary" href="{{ url('unidades_curriculares/criar') }}">

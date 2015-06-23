@@ -1,0 +1,17 @@
+<tr data-id="{{turma.id}}">
+    <th scope="row">{{turma.id}}</th>
+    <td>
+        <a href="{{turma.url}}">
+            {{turma.nome}}
+        </a>
+    </td>
+    <td>{{turma.data_inicio}}</td>
+    <td>{{turma.data_fim}}</td>
+    <td class="text-center">
+        {{#if remove}}
+        <button class="btn btn-default btn-xs remove">
+            <i class="fa fa-remove"></i> {{lang 'general.remove'}}
+        </button>
+        {{/if}}
+    </td>
+</tr>

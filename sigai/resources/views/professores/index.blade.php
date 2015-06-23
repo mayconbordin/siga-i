@@ -6,8 +6,11 @@
 @stop
 
 @section('js')
-<script>
+<script id="professor-table-row" type="text/x-handlebars-template">
+    @include('professores.table-row', ['raw' => true])
+</script>
 
+<script>
 var Professor = (function() {
 
     var baseUrl = "{{ url('api/professores') }}";
@@ -30,6 +33,15 @@ var Professor = (function() {
     
     var isEdit = false;
     var editMatricula = null;
+    var editProfessorRow = null;
+
+    var Template = (function() {
+        var professorTableRow = $("#professor-table-row").html();
+
+        return {
+            professorTableRow: Handlebars.compile(professorTableRow)
+        }
+    })();
     
     var Model = {
         getProfessor: function(matricula, success, error) {
@@ -90,16 +102,22 @@ var Professor = (function() {
         },
         
         // utilities -----------------------------------------------------------
-        addProfessorToTable: function(p) {
-            var html = '<tr data-matricula="'+p.matricula+'"><th scope="row">'
-                     + p.matricula+'</th><td>'+p.nome+'</td><td>'+p.cursoOrigem.nome+'</td>'
-                     + '<td class="text-center"><button class="btn btn-default btn-xs edit">'
-                     + '<i class="fa fa-pencil-square-o"></i> @lang("general.edit")'
-                     + '</button><button class="btn btn-danger btn-xs remove">'
-                     + '<i class="fa fa-remove"></i> @lang("general.remove")</button>'
-                     + '</td></tr>';
+        addProfessorToTable: function(professor) {
+            var html = Template.professorTableRow({
+                professor: professor
+            });
                      
             $("#professores tbody").append(html);
+            $("#professores .remove").click(this.onRemoveProfessorClick);
+            $("#professores .edit").click(this.onEditProfessorClick);
+        },
+
+        updateProfessorToTable: function(professor, tr) {
+            var html = Template.professorTableRow({
+                professor: professor
+            });
+
+            $(tr).replaceWith(html);
             $("#professores .remove").click(this.onRemoveProfessorClick);
             $("#professores .edit").click(this.onEditProfessorClick);
         },
@@ -122,6 +140,7 @@ var Professor = (function() {
                 Model.updateProfessor(editMatricula, data.values, function(result) {
                     $("#newProfessor").modal('hide');
                     Modal.success(result.message);
+                    Professor.updateProfessorToTable(result.professor, editProfessorRow);
                 }, function(errors) {
                     updateProfessorForm.validate(errors);
                 });
@@ -167,8 +186,8 @@ var Professor = (function() {
         },
         
         onEditProfessorClick: function() {
-            var tr = $(this).parent().parent();
-            editMatricula = $(tr).data('matricula');
+            editProfessorRow = $($(this).parent().parent());
+            editMatricula = editProfessorRow.data('matricula');
             isEdit = true;
             
             Model.getProfessor(editMatricula, function(result) {
@@ -218,7 +237,7 @@ $(document).ready(function($) {
         <tbody>
             @foreach ($professores as $p)
             <tr data-matricula="{{ $p->usuario->matricula }}">
-                <th scope="row">{{ $p->usuario->matricula }}</th>
+                <td scope="row">{{ $p->usuario->matricula }}</td>
                 <td>{{ $p->usuario->nome }}</td>
                 <td>{{ $p->cursoOrigem->nome }}</td>
                 <td class="text-center">

@@ -7,13 +7,19 @@
 
 
 @section('js')
+<script id="curso-table-row" type="text/x-handlebars-template">
+    @include('cursos.uc-table-row', ['raw' => true])
+</script>
+<script id="turma-table-row" type="text/x-handlebars-template">
+    @include('turmas.table-row', ['raw' => true])
+</script>
+
 <script>
 @if (isset($uc))
-
-
 var UnidadeCurricular = (function() {
 
     var baseUrl = "{{ url('api/unidades_curriculares/'.$uc->id) }}";
+    var ucUrl   = "{{ url('/unidades_curriculares/'.$uc->id) }}";
 
     var turmaForm = new Form({
         nome       : {el: "#newTurmaNome"      , required: true},
@@ -22,6 +28,16 @@ var UnidadeCurricular = (function() {
     });
 
     var selectedCurso = null;
+
+    var Template = (function() {
+        var cursoTableRow = $("#curso-table-row").html();
+        var turmaTableRow = $("#turma-table-row").html();
+
+        return {
+            cursoTableRow: Handlebars.compile(cursoTableRow),
+            turmaTableRow: Handlebars.compile(turmaTableRow)
+        }
+    })();
     
     var Model = {
         getCurso: function(id, success, error) {
@@ -133,26 +149,22 @@ var UnidadeCurricular = (function() {
         // utilities -----------------------------------------------------------
         
         addCursoToTable: function(curso) {
-            var html = '<tr data-id="'+curso.id+'"><th scope="row">'+curso.id+'</th>'
-                     + '<td>'+curso.nome+'</td><td>'+curso.sigla+'</td>'
-                     + '<td class="text-center">'
-                     + '<button class="btn btn-default btn-xs detach">'
-                     + '<i class="fa fa-chain-broken"></i> @lang("general.detach")'
-                     + '</button></td></tr>';
+            var html = Template.cursoTableRow({
+                curso: curso,
+                detach: true
+            });
                      
             $("#cursos table tbody").append(html);
             $("#cursos table .detach").click(this.onDetachCursoClick);
         },
         
         addTurmaToTable: function(turma) {
-            var html = '<tr data-id="'+turma.id+'"><th scope="row">'+turma.id+'</th>'
-                     + '<td><a href="'+baseUrl+'/turmas/'+turma.id+'">'+turma.nome
-                     + '</a></td><td>'+turma.data_inicio+'</td>'
-                     + '<td>'+turma.data_fim+'</td>'
-                     + '<td class="text-center">'
-                     + '<button class="btn btn-default btn-xs remove">'
-                     + '<i class="fa fa-remove"></i> @lang("general.remove")'
-                     + '</button></td></tr>';
+            turma.url = ucUrl + '/turmas/' + turma.id;
+
+            var html = Template.turmaTableRow({
+                turma: turma,
+                remove: true
+            });
                      
             $("#turmas table tbody").append(html);
             $("#turmas table .remove").click(this.onRemoveTurmaClick);
@@ -244,9 +256,7 @@ var UnidadeCurricular = (function() {
     
 
 $(document).ready(function($) {
-    
     UnidadeCurricular.init();
-    
 });
 
 @endif
@@ -304,82 +314,10 @@ $(document).ready(function($) {
             @if (isset($uc))
             
             {{-- Tabela de Cursos vínculados a UC --}}
-            <div role="tabpanel" class="tab-pane" id="cursos">
-                <div class="tab-actions">
-                    <a id="vincularCursoBtn" class="btn btn-primary attach" href="#">
-                        <i class="fa fa-chain"></i> @lang('cursos.attach')
-                    </a>
-                </div>
-                
-                @include('cursos.vincular_modal')
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>@lang('cursos.id')</th>
-                            <th>@lang('cursos.nome')</th>
-                            <th>@lang('cursos.sigla')</th>
-                            <th class="text-center">@lang('general.actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($uc->cursos as $c)
-                        <tr data-id="{{ $c->id }}">
-                            <th scope="row">{{ $c->id }}</th>
-                            <td>{{ $c->nome }}</td>
-                            <td>{{ $c->sigla }}</td>
-                            <td class="text-center">
-                                <button class="btn btn-default btn-xs detach">
-                                    <i class="fa fa-chain-broken"></i> @lang('general.detach')
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @include('unidades_curriculares.tabs.cursos')
             
             {{-- Tabela de Turmas da UC --}}
-            <div role="tabpanel" class="tab-pane" id="turmas">
-                <div class="tab-actions">
-                    <a id="criarTurmaBtn" class="btn btn-primary attach" href="#">
-                        <i class="fa fa-plus"></i> @lang('turmas.create')
-                    </a>
-                </div>
-                
-                @include('turmas.criar_modal')
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>@lang('turmas.id')</th>
-                            <th>@lang('turmas.nome')</th>
-                            <th>@lang('turmas.data_inicio')</th>
-                            <th>@lang('turmas.data_fim')</th>
-                            <th class="text-center">@lang('general.actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($uc->turmas as $t)
-                        <tr data-id="{{ $t->id }}">
-                            <th scope="row">{{ $t->id }}</th>
-                            <td>
-                                <a href="{{ url('/unidades_curriculares/'.$uc->id.'/turmas/'.$t->id) }}">
-                                {{ $t->nome }}
-                                </a>
-                            </td>
-                            <td>{{ $t->data_inicio->format('d/m/Y') }}</td>
-                            <td>{{ $t->data_fim->format('d/m/Y') }}</td>
-                            <td class="text-center">
-                                <button class="btn btn-default btn-xs remove">
-                                    <i class="fa fa-remove"></i> @lang('general.remove')
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @include('unidades_curriculares.tabs.turmas')
             
             @endif
             

@@ -6,6 +6,10 @@
 @stop
 
 @section('js')
+<script id="aluno-table-row" type="text/x-handlebars-template">
+    @include('alunos.table-row', ['raw' => true])
+</script>
+
 <script>
 
 var Aluno = (function() {
@@ -28,6 +32,15 @@ var Aluno = (function() {
     
     var isEdit = false;
     var editMatricula = null;
+    var editAlunoRow = null;
+
+    var Template = (function() {
+        var alunoTableRow = $("#aluno-table-row").html();
+
+        return {
+            alunoTableRow: Handlebars.compile(alunoTableRow)
+        }
+    })();
     
     var Model = {
         getAluno: function(matricula, success, error) {
@@ -88,16 +101,23 @@ var Aluno = (function() {
         },
         
         // utilities -----------------------------------------------------------
-        addAlunoToTable: function(p) {
-            var html = '<tr data-matricula="'+p.matricula+'"><th scope="row">'
-                     + p.matricula+'</th><td>'+p.nome+'</td>'
-                     + '<td class="text-center"><button class="btn btn-default btn-xs edit">'
-                     + '<i class="fa fa-pencil-square-o"></i> @lang("general.edit")'
-                     + '</button><button class="btn btn-default btn-xs remove">'
-                     + '<i class="fa fa-remove"></i> @lang("general.remove")</button>'
-                     + '</td></tr>';
+        addAlunoToTable: function(aluno) {
+            var html = Template.alunoTableRow({
+                aluno: aluno
+            });
                      
             $("#alunos tbody").append(html);
+            $("#alunos .remove").click(this.onRemoveAlunoClick);
+            $("#alunos .edit").click(this.onEditAlunoClick);
+        },
+
+        updateAlunoToTable: function(aluno, tr) {
+            var html = Template.alunoTableRow({
+                aluno: aluno
+            });
+
+            $(tr).replaceWith(html);
+
             $("#alunos .remove").click(this.onRemoveAlunoClick);
             $("#alunos .edit").click(this.onEditAlunoClick);
         },
@@ -121,6 +141,7 @@ var Aluno = (function() {
                 Model.updateAluno(editMatricula, data.values, function(result) {
                     $("#newAluno").modal('hide');
                     Modal.success(result.message);
+                    Aluno.updateAlunoToTable(result.aluno, editAlunoRow);
                 }, function(errors) {
                     updateAlunoForm.validate(errors);
                 });
@@ -166,8 +187,8 @@ var Aluno = (function() {
         },
         
         onEditAlunoClick: function() {
-            var tr = $(this).parent().parent();
-            editMatricula = $(tr).data('matricula');
+            editAlunoRow = $($(this).parent().parent());
+            editMatricula = editAlunoRow.data('matricula');
             isEdit = true;
             
             Model.getAluno(editMatricula, function(result) {
@@ -178,7 +199,7 @@ var Aluno = (function() {
             }, function(r) {
                 Modal.error(r.errors.join('<br>'));
             });
-        },
+        }
     };    
     
 })();
@@ -215,19 +236,7 @@ $(document).ready(function($) {
         </thead>
         <tbody>
             @foreach ($alunos as $aluno)
-            <tr data-matricula="{{ $aluno->usuario->matricula }}">
-                <th scope="row">{{ $aluno->usuario->matricula }}</th>
-                <td>{{ $aluno->usuario->nome }}</td>
-                <td class="text-center">
-                    <button class="btn btn-default btn-xs edit">
-                        <i class="fa fa-pencil-square-o"></i> @lang('general.edit')
-                    </button>
-                    
-                    <button class="btn btn-danger btn-xs remove">
-                        <i class="fa fa-remove"></i> @lang('general.remove')
-                    </button>
-                </td>
-            </tr>
+                @include('alunos.table-row', ['aluno' => $aluno])
             @endforeach
         </tbody>
     </table>

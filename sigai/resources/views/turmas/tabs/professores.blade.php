@@ -20,9 +20,9 @@
         <tbody>
         @foreach ($turma->professores as $p)
             @if (Auth::user()->can('edit-turma'))
-                @include('professores.table-row', ['professor' => $p, 'can_edit' => true])
+                @include('professores.turma-table-row', ['professor' => $p, 'can_edit' => true])
             @else
-                @include('professores.table-row', ['professor' => $p])
+                @include('professores.turma-table-row', ['professor' => $p])
             @endif
         @endforeach
         </tbody>

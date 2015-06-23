@@ -22,9 +22,9 @@
         <tbody>
         @foreach ($alunos as $aluno)
             @if (Auth::user()->can('edit-turma'))
-                @include('alunos.table-row', ['aluno' => $aluno, 'can_edit' => true])
+                @include('alunos.turma-table-row', ['aluno' => $aluno, 'can_edit' => true])
             @else
-                @include('alunos.table-row', ['aluno' => $aluno])
+                @include('alunos.turma-table-row', ['aluno' => $aluno])
             @endif
         @endforeach
         </tbody>

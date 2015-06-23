@@ -6,6 +6,10 @@
 @stop
 
 @section('js')
+<script id="curso-table-row" type="text/x-handlebars-template">
+    @include('cursos.table-row', ['raw' => true])
+</script>
+
 <script>
 
 var Curso = (function() {
@@ -20,6 +24,15 @@ var Curso = (function() {
     
     var isEdit = false;
     var editCursoId = null;
+    var editCursoRow = null;
+
+    var Template = (function() {
+        var cursoTableRow = $("#curso-table-row").html();
+
+        return {
+            cursoTableRow: Handlebars.compile(cursoTableRow)
+        }
+    })();
     
     var Model = {
         getCurso: function(id, success, error) {
@@ -107,16 +120,21 @@ var Curso = (function() {
         
         // utilities -----------------------------------------------------------
         addCursoToTable: function(curso) {
-            var html = '<tr data-id="'+curso.id+'"><th scope="row">'
-                     + curso.id+'</th><td>'+curso.nome+'</td><td>'+curso.sigla+'</td>'
-                     + '<td>'+curso.coordenador.nome+'</td>'
-                     + '<td class="text-center"><button class="btn btn-default btn-xs edit">'
-                     + '<i class="fa fa-pencil-square-o"></i> @lang("general.edit")'
-                     + '</button><button class="btn btn-danger btn-xs remove">'
-                     + '<i class="fa fa-remove"></i> @lang("general.remove")</button>'
-                     + '</td></tr>';
+            var html = Template.cursoTableRow({
+                curso: curso
+            });
                      
             $("#cursos tbody").append(html);
+            $("#cursos .remove").click(this.onRemoveCursoClick);
+            $("#cursos .edit").click(this.onEditCursoClick);
+        },
+
+        updateCursoToTable: function(curso, tr) {
+            var html = Template.cursoTableRow({
+                curso: curso
+            });
+
+            $(tr).replaceWith(html);
             $("#cursos .remove").click(this.onRemoveCursoClick);
             $("#cursos .edit").click(this.onEditCursoClick);
         },
@@ -140,6 +158,7 @@ var Curso = (function() {
                 Model.updateCurso(editCursoId, data.values, function(result) {
                     $("#newCurso").modal('hide');
                     Modal.success(result.message);
+                    Curso.updateCursoToTable(result.curso, editCursoRow);
                 }, function(errors) {
                     cursoForm.validate(errors);
                 });
@@ -153,8 +172,7 @@ var Curso = (function() {
                 });
             }
         },
-        
-        
+
         onRemoveCursoClick: function() {
             var tr = $(this).parent().parent();
             var id = $(tr).data('id');
@@ -178,8 +196,8 @@ var Curso = (function() {
         },
         
         onEditCursoClick: function() {
-            var tr = $(this).parent().parent();
-            var id = $(tr).data('id');
+            editCursoRow = $($(this).parent().parent());
+            var id = editCursoRow.data('id');
             isEdit = true;
             editCursoId = id;
             
@@ -229,21 +247,7 @@ $(document).ready(function($) {
         </thead>
         <tbody>
             @foreach ($cursos as $curso)
-            <tr data-id="{{ $curso->id }}">
-                <th scope="row">{{ $curso->id }}</th>
-                <td>{{ $curso->nome }}</td>
-                <td>{{ $curso->sigla }}</td>
-                <td>{{ $curso->coordenador->nome }}</td>
-                <td class="text-center">
-                    <button class="btn btn-default btn-xs edit">
-                        <i class="fa fa-pencil-square-o"></i> @lang('general.edit')
-                    </button>
-                    
-                    <button class="btn btn-danger btn-xs remove">
-                        <i class="fa fa-remove"></i> @lang('general.remove')
-                    </button>
-                </td>
-            </tr>
+                @include('cursos.table-row', ['curso' => $curso])
             @endforeach
         </tbody>
     </table>

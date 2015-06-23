@@ -18,10 +18,10 @@
     @include('diarios.envio-table-row', ['raw' => true])
 </script>
 <script id="professor-table-row" type="text/x-handlebars-template">
-    @include('professores.table-row', ['raw' => true])
+    @include('professores.turma-table-row', ['raw' => true])
 </script>
 <script id="aluno-table-row" type="text/x-handlebars-template">
-    @include('alunos.table-row', ['raw' => true])
+    @include('alunos.turma-table-row', ['raw' => true])
 </script>
 
 <script>

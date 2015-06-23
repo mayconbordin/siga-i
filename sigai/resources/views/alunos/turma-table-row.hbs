@@ -1,0 +1,22 @@
+<tr data-matricula="{{aluno.matricula}}" data-nome="{{aluno.nome}}"
+    data-status="{{aluno.status}}" data-curso_origem_id="{{aluno.curso_origem_id}}">
+    <td scope="row">{{aluno.matricula}}</td>
+    <td>{{aluno.nome}}</td>
+    <td>{{aluno.curso_origem_sigla}}</td>
+
+    <td class="text-center">
+        <span class="label status-{{aluno.status}}">{{aluno.status}}</span>
+    </td>
+
+    <td class="text-center">
+        {{#if can_edit}}
+        <button class="btn btn-default btn-xs detach">
+            <i class="fa fa-remove"></i> {{lang 'general.detach'}}
+        </button>
+
+        <button class="btn btn-default btn-xs edit">
+            <i class="fa fa-edit"></i> {{lang 'general.edit'}}
+        </button>
+        {{/if}}
+    </td>
+</tr>
