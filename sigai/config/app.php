@@ -26,9 +26,7 @@ return [
 	|
 	*/
 
-	//'url' => 'http://localhost',
-	'url' => 'http://localhost/siga-i/v2/sigai/public/',
-	
+	'url' => 'http://localhost',
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -164,6 +162,7 @@ return [
 		 */
 		'Zizaco\Entrust\EntrustServiceProvider',
         'ProAI\Handlebars\HandlebarsServiceProvider',
+        'Lord\Laroute\LarouteServiceProvider',
 	],
 
 	/*
