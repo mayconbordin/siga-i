@@ -46,6 +46,10 @@ module.exports = function(grunt) {
                         "dist/lang/pt-br.js",
                         "dist/fullcalendar.css"
                     ],
+
+                    'handlebars': [
+                        "handlebars.js"
+                    ],
                     
                     'qtip2': [
 		                "jquery.qtip.js",

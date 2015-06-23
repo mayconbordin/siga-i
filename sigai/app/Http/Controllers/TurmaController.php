@@ -23,6 +23,7 @@ use App\Exporters\ChamadaPDFExport;
 
 use App\Services\Contracts\DiarioServiceContract;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use \Input;
 use \Lang;
 use \DB;
@@ -113,11 +114,19 @@ class TurmaController extends Controller {
 	                          ->with('error', Lang::get('turmas.create_error'));
         }
 	}
-	
-	
+
 	public function exportar($ucId, $turmaId, $month = null)
 	{
         $this->diarioService->showDiario($ucId, $turmaId, $month);
 	}
 
+    public function verEnvio($ucId, $turmaId, $month, $envioId)
+    {
+        $pdf = $this->diarioService->getDiarioEnvio($ucId, $turmaId, $month, $envioId);
+
+        return response($pdf['content'], 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; '.$pdf['name'],
+        ]);
+    }
 }

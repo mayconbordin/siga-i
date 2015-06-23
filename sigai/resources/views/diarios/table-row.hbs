@@ -1,0 +1,48 @@
+<tr data-id="{{diario.id}}" data-mes="{{diario.mes}}">
+    <td scope="row" class="text-center">{{#if mes_nome}}{{mes_nome}}{{else}}{{diario.mes_nome}}{{/if}}</td>
+    <td>{{#if diario.professor.usuario }}
+            {{diario.professor.usuario.nome}}
+        {{else}}
+            {{diario.professor.nome}}
+        {{/if}}
+    </td>
+    <td>{{diario.created_at}}</td>
+    <td class="text-center">
+        <a class="btn btn-danger btn-xs" target="diarioClasse" href="{{print_url}}/{{diario.mes}}">
+            <i class="fa fa-file-pdf-o"></i> {{lang 'diarios.print'}}
+        </a>
+    </td>
+    <td class="text-center">
+        <button class="btn btn-default btn-xs accordion-toggle"
+                data-toggle="collapse" data-target="#diario-{{diario.id}}">
+            <i class="fa fa-history"></i> {{lang 'diarios.history'}}
+        </button>
+
+        <button class="btn btn-success btn-xs send">
+            <i class="fa fa-arrow-circle-o-up"></i> {{lang 'diarios.send'}}
+        </button>
+    </td>
+</tr>
+
+<tr>
+    <td colspan="5" class="hiddenRow">
+        <div class="accordian-body collapse" id="diario-{{diario.id}}">
+
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>{{lang 'diarios.send_date'}}</th>
+                    <th>{{lang 'diarios.sent_by'}}</th>
+                    <th>{{lang 'diarios.archive'}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#diario.envios}}
+                    {{> envio-table-row print_url=../print_url}}
+                {{/diario.envios}}
+                </tbody>
+            </table>
+
+        </div>
+    </td>
+</tr>

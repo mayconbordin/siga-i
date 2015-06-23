@@ -1,0 +1,16 @@
+<tr>
+    <td>{{created_at}}</td>
+    <td>{{#if professor.usuario }}
+            {{professor.usuario.nome}}
+        {{else}}
+            {{professor.nome}}
+        {{/if}}
+    </td>
+    <td>
+
+        <a class="btn btn-danger btn-xs" target="diarioClasseArquivo" href="{{print_url}}/envios/{{id}}">
+            <i class="fa fa-file-pdf-o"></i> {{lang 'diarios.print'}}
+        </a>
+
+    </td>
+</tr>

@@ -14,6 +14,10 @@ class DiarioEnvioTransformer extends Transformer
         if (in_array('diario', $options)) {
            $data['diario'] = $this->diario->transform();
         }
+
+        if (in_array('professor', $options)) {
+            $data['professor'] = $this->professor->transform();
+        }
         
         return $data;
     }

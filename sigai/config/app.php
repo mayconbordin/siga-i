@@ -163,6 +163,7 @@ return [
 		 * Third-party providers
 		 */
 		'Zizaco\Entrust\EntrustServiceProvider',
+        'ProAI\Handlebars\HandlebarsServiceProvider',
 	],
 
 	/*

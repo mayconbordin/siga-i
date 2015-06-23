@@ -76,6 +76,7 @@ Route::group(['prefix' => 'unidades_curriculares'], function()
         Route::get   ('/{ucId}/turmas/{turmaId}', 'TurmaController@mostrar');
         Route::post  ('/{ucId}/turmas/{turmaId}', 'TurmaController@editar');
         Route::get   ('/{ucId}/turmas/{turmaId}/diarios/{month?}', 'TurmaController@exportar');
+        Route::get   ('/{ucId}/turmas/{turmaId}/diarios/{month}/envios/{id}', 'TurmaController@verEnvio');
     });
     
     Route::get   ('/{ucId}/turmas/{turmaId}/aulas/{data}', [

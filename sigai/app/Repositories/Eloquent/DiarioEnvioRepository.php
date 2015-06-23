@@ -20,4 +20,14 @@ class DiarioEnvioRepository extends BaseRepository implements DiarioEnvioReposit
         return $envio;
     }
 
+    public function findById($id)
+    {
+        $envio = DiarioEnvio::find($id);
+
+        if ($envio == null) {
+            throw new NotFoundError(Lang::get('diarios_envio.not_found'));
+        }
+
+        return $envio;
+    }
 }

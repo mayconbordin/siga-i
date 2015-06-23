@@ -4,4 +4,5 @@
 interface DiarioEnvioRepositoryContract
 {
     public function insert(array $data);
+    public function findById($id);
 }

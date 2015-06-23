@@ -34,4 +34,19 @@ abstract class Transformer {
 	 * @return array
 	 */
 	public abstract function transform($options = array());
+
+    protected function getSubOptions($key, array $options)
+    {
+        $subOptions = [];
+
+        foreach ($options as $opt) {
+            $pos = stripos($opt, $key.'.');
+
+            if ($pos !== false && $pos === 0) {
+                $subOptions[] = str_replace($key.'.', '', $opt);
+            }
+        }
+
+        return $subOptions;
+    }
 } 

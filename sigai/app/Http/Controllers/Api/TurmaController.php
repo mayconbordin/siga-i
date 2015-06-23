@@ -160,7 +160,7 @@ class TurmaController extends Controller
         return $this->jsonResponse([
             'message' => Lang::get('diarios.saved'),
             'diario'  => $diario
-        ], ['professor', 'turma']);
+        ], ['professor', 'turma', 'envios', 'envios.professor']);
 	}
 
     public function enviarDiario($ucId, $turmaId, $month)
@@ -170,7 +170,7 @@ class TurmaController extends Controller
         return $this->jsonResponse([
             'message' => Lang::get('diarios.sent'),
             'envio'  => $envio
-        ]);
+        ], ['professor']);
     }
 
 }

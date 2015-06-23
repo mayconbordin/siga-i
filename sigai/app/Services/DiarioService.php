@@ -57,7 +57,7 @@ class DiarioService implements DiarioServiceContract
         $filename = md5($ucId . '-' . $turmaId . '-' . $month) . '.pdf';
 
         // save a record on the database about it
-        $this->diarioEnvioRepository->insert([
+        $envio = $this->diarioEnvioRepository->insert([
             'filename'  => $filename,
             'diario'    => $diario,
             'professor' => $professor
@@ -92,8 +92,7 @@ class DiarioService implements DiarioServiceContract
 
         return $envio;
     }
-    
-    
+
     public function showDiario($ucId, $turmaId, $month = null)
     {
         $pdf = $this->export($ucId, $turmaId, $month);
@@ -107,6 +106,14 @@ class DiarioService implements DiarioServiceContract
         
         $this->diskDiarios->put($filepath, $content);
         $this->diskLocal->put($filepath, $content);
+    }
+
+    public function getDiarioEnvio($ucId, $turmaId, $month, $envioId)
+    {
+        $envio = $this->diarioEnvioRepository->findById($envioId);
+        $pdf   = $this->diskLocal->get($envio->filename);
+
+        return ['name' => $envio->filename, 'content' => $pdf];
     }
     
     protected function export($ucId, $turmaId, $month = null)

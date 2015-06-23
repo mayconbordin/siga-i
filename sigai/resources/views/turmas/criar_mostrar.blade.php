@@ -11,12 +11,20 @@
 @stop
 
 @section('js')
+<script id="diario-table-row" type="text/x-handlebars-template">
+    @include('diarios.table-row', ['raw' => true])
+</script>
+<script id="envio-table-row" type="text/x-handlebars-template">
+    @include('diarios.envio-table-row', ['raw' => true])
+</script>
+
 <script>
 
 var Turma = (function() {
 
     // estado
     var baseUrl = "{{ url('api/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}";
+    var diariosUrl = "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}";
     
     var aulaForm = new Form({
         id                 : {el: "#newAulaId"              , required: false},
@@ -68,8 +76,21 @@ var Turma = (function() {
     var selectedAluno = null;
     var selectedProfessor = null;
     var isEditAluno = false;
-    
-    
+
+
+
+    var Template = (function() {
+        var envioTableRow  = $("#envio-table-row").html();
+        var diarioTableRow = $("#diario-table-row").html();
+
+        Handlebars.registerPartial('envio-table-row', envioTableRow);
+
+        return {
+            diarioTableRow: Handlebars.compile(diarioTableRow),
+            envioTableRow: Handlebars.compile(envioTableRow),
+        }
+    })();
+
     // altera estado
     var Model = {
         getAula: function(date, success, error) {
@@ -342,9 +363,7 @@ var Turma = (function() {
                 $("#professorNomeOrMatricula").parent().removeClass('has-error');
             });
         },
-        
-        
-        
+
         initDiarioEvents: function() {
             var self = this;
             
@@ -353,10 +372,8 @@ var Turma = (function() {
             });
             
             $("#closeDiario .save").click(this.onSaveDiarioClick);
-            
             $("#closeDiarioPreview").click(this.onDiarioPreview);
-
-            $("#diarios table tbody .send").click(this.onSendDiarioClick);
+            $("#diarios-table>tbody .send").click(this.onSendDiarioClick);
         },
         
         
@@ -409,16 +426,21 @@ var Turma = (function() {
         },
         
         addDiarioToTable: function(diario) {
-            var url = '{{ url("/unidades_curriculares/".$unidadeCurricular->id."/turmas/".$turma->id."/diarios") }}';
+            var html = Template.diarioTableRow({
+                diario: diario,
+                print_url: diariosUrl
+            });
 
-            var html = '<tr data-id="'+diario.id+'" data-mes="'+diario.mes+'"><td scope="row" class="text-center">'+diario.mes+'</td>'
-                     + '<td>'+diario.professor.nome+'</td><td>'+diario.created_at+'</td>'
-                     + '<td class="text-center"><a class="btn btn-danger btn-xs" target="diarioClasse"'
-                     + 'href="'+url+'/'+diario.mes+'"><i class="fa fa-file-pdf-o"></i> Imprimir'
-                     + '</a></td></tr>';
-                        
-            $("#diarios table tbody").append(html);
-            $("#diarios table tbody .send").click(this.onSendDiarioClick);
+            $("#diarios-table>tbody").append(html);
+            $("#diarios-table>tbody .send").click(this.onSendDiarioClick);
+        },
+
+
+        addDiarioEnvioToTable: function(envio, diarioId) {
+            envio.print_url = diariosUrl;
+
+            var tableBody = $("#diario-"+diarioId+" table tbody");
+            tableBody.append(Template.envioTableRow(envio));
         },
 
         // eventos -------------------------------------------------------------
@@ -628,20 +650,17 @@ var Turma = (function() {
         onDiarioPreview: function() {
             var data  = diarioForm.getValues();
             var month = data.values.mes; 
-            
-            var url = "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}";
-            
-            window.open(url + '/' + month, 'diarioPreview');
+
+            window.open(diariosUrl + '/' + month, 'diarioPreview');
         },
 
         onSendDiarioClick: function() {
             var tr = $(this).parent().parent();
-            var month = tr.data('mes');
+            var data = tr.data();
 
-            Model.sendDiario(month, function(result) {
+            Model.sendDiario(data.mes, function(result) {
                 Modal.success(result.message);
-                console.log(result);
-                //Turma.addDiarioToTable(result.diario);
+                Turma.addDiarioEnvioToTable(result.envio, data.id);
             }, function(error) {
                 Modal.error(error.errors.join('<br>'));
             });
@@ -661,7 +680,7 @@ $(document).ready(function() {
 <div class="col-xs-12">
 
     @include('utils.alerts')
-    
+
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
 
@@ -683,7 +702,7 @@ $(document).ready(function() {
         @endif
         </li>
     </ol>
-    
+
     {{-- Modal para criar/editar aulas --}}
     @include('aulas.modal')
     
@@ -951,7 +970,7 @@ $(document).ready(function() {
                 
                 @include('diarios.fechar_modal', ['months' => $diariosToClose])
                 
-                <table class="table table-hover">
+                <table id="diarios-table" class="table table-hover">
                     <thead>
                         <tr>
                             <th class="text-center">@lang('diarios.month')</th>
@@ -963,7 +982,11 @@ $(document).ready(function() {
                     </thead>
                     <tbody>
                         @foreach ($diarios as $d)
-                        @include('diarios.table-item', ['diario' => $d, 'uc' => $unidadeCurricular, 'turma' => $turma])
+                            @include('diarios.table-row', [
+                                'diario' => $d,
+                                'mes_nome' => \Lang::get('months.'.$d->mes),
+                                'print_url' => url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios')
+                            ])
                         @endforeach
                     </tbody>
                 </table>
