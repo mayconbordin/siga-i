@@ -13,9 +13,6 @@
 <script>
 
 var Aluno = (function() {
-
-    var baseUrl = "{{ url('api/alunos') }}";
-
     var createAlunoForm = new Form({
         matricula    : {el: "#newAlunoMatricula"  , required: true},
         nome         : {el: "#newAlunoNome"       , required: true},
@@ -45,7 +42,7 @@ var Aluno = (function() {
     var Model = {
         getAluno: function(matricula, success, error) {
             $.ajax({
-                url: baseUrl + "/" + matricula,
+                url: Router.get('base') + "/" + matricula,
                 method: 'GET'
             }).done(function(result) {
                 success(result);
@@ -56,7 +53,7 @@ var Aluno = (function() {
     
         createAluno: function(data, success, error) {
             $.ajax({
-                url: baseUrl,
+                url: Router.get('base'),
                 method: 'POST',
                 data: data
             }).done(function(result) {
@@ -68,7 +65,7 @@ var Aluno = (function() {
         
         updateAluno: function(matricula, data, success, error) {
             $.ajax({
-                url: baseUrl + '/' + matricula,
+                url: Router.get('base') + '/' + matricula,
                 method: 'PUT',
                 data: data
             }).done(function(result) {
@@ -80,7 +77,7 @@ var Aluno = (function() {
         
         removeAluno: function(matricula, success, error) {
             $.ajax({
-                url: baseUrl + '/' + matricula,
+                url: Router.get('base') + '/' + matricula,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -168,7 +165,7 @@ var Aluno = (function() {
             var tr = $(this).parent().parent();
             var matricula = $(tr).data('matricula');
             
-            Modal.confirm("@lang('alunos.remove_message')", function(result) {
+            Modal.confirm(Lang.get('alunos.remove_message'), function(result) {
                 if (result == false) return;
                 
                 Model.removeAluno(matricula, function(result) {
@@ -205,6 +202,8 @@ var Aluno = (function() {
 })();
 
 $(document).ready(function($) {
+    Lang.register('alunos.remove_message', "@lang('alunos.remove_message')");
+    Router.register('base', "{{ url('api/alunos') }}");
     Aluno.init();
 });
 </script>

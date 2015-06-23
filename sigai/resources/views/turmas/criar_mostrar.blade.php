@@ -27,12 +27,6 @@
 <script>
 
 var Turma = (function() {
-
-    // estado
-    var baseUrl    = "{{ url('api/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}";
-    var diariosUrl = "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}";
-    var turmaUrl   = "{{ url('unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}";
-    
     var aulaForm = new Form({
         id                 : {el: "#newAulaId"              , required: false},
         data               : {el: "#newAulaData"            , required: true },
@@ -57,7 +51,7 @@ var Turma = (function() {
         eventStartEditable: true,
         eventDurationEditable: false,
         events: {
-            url: baseUrl + '/aulas',
+            //url: Router.get('base') + '/aulas',
             type: 'GET',
             error: function(err) {
                 console.log(err);
@@ -106,7 +100,7 @@ var Turma = (function() {
     var Model = {
         getAula: function(date, success, error) {
             $.ajax({
-                url: baseUrl + '/aulas/' + date,
+                url: Router.get('base') + '/aulas/' + date,
                 method: 'GET'
             }).done(function(result) {
                 success(result);
@@ -117,7 +111,7 @@ var Turma = (function() {
         
         updateAulaDate: function(id, date, success, error) {
             $.ajax({
-                url: baseUrl + '/aulas/' + id + '/data',
+                url: Router.get('base') + '/aulas/' + id + '/data',
                 method: 'PUT',
                 data: {data: date}
             }).done(function(result) {
@@ -131,7 +125,7 @@ var Turma = (function() {
             data = this.normalizeAulaData(data);
             
             $.ajax({
-                url: baseUrl + '/aulas',
+                url: Router.get('base') + '/aulas',
                 method: 'POST',
                 data: data
             }).done(function(result) {
@@ -146,7 +140,7 @@ var Turma = (function() {
             data = this.normalizeAulaData(data);
             
             $.ajax({
-                url: baseUrl + '/aulas/' + date,
+                url: Router.get('base') + '/aulas/' + date,
                 method: 'PUT',
                 data: data
             }).done(function(result) {
@@ -159,7 +153,7 @@ var Turma = (function() {
         
         removeAula: function(date, success, error) {
             $.ajax({
-                url: baseUrl + '/aulas/' + date,
+                url: Router.get('base') + '/aulas/' + date,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -173,7 +167,7 @@ var Turma = (function() {
             data = this.normalizeAlunoData(data);
             
             $.ajax({
-                url: baseUrl + '/alunos/' + matricula,
+                url: Router.get('base') + '/alunos/' + matricula,
                 method: 'POST',
                 data: data
             }).done(function(result) {
@@ -188,7 +182,7 @@ var Turma = (function() {
             data = this.normalizeAlunoData(data);
             
             $.ajax({
-                url: baseUrl + '/alunos/' + matricula,
+                url: Router.get('base') + '/alunos/' + matricula,
                 method: 'PUT',
                 data: data
             }).done(function(result) {
@@ -201,7 +195,7 @@ var Turma = (function() {
         
         detachAluno: function(matricula, success, error) {
             $.ajax({
-                url: baseUrl + '/alunos/' + matricula,
+                url: Router.get('base') + '/alunos/' + matricula,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -213,7 +207,7 @@ var Turma = (function() {
         
         attachProfessor: function(matricula, success, error) {
             $.ajax({
-                url: baseUrl + '/professores/' + matricula,
+                url: Router.get('base') + '/professores/' + matricula,
                 method: 'PUT'
             }).done(function(result) {
                 success(result);
@@ -225,7 +219,7 @@ var Turma = (function() {
         
         detachProfessor: function(matricula, success, error) {
             $.ajax({
-                url: baseUrl + '/professores/' + matricula,
+                url: Router.get('base') + '/professores/' + matricula,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -248,7 +242,7 @@ var Turma = (function() {
         
         saveDiario: function(mes, success, error) {
             $.ajax({
-                url: baseUrl + '/diarios/' + mes,
+                url: Router.get('base') + '/diarios/' + mes,
                 method: 'PUT'
             }).done(function(result) {
                 success(result);
@@ -260,7 +254,7 @@ var Turma = (function() {
 
         sendDiario: function(mes, success, error) {
             $.ajax({
-                url: baseUrl + '/diarios/' + mes + '/enviar',
+                url: Router.get('base') + '/diarios/' + mes + '/enviar',
                 method: 'POST'
             }).done(function(result) {
                 success(result);
@@ -285,6 +279,8 @@ var Turma = (function() {
             $("#newAula .save").click(this.onSaveAulaForm);
             
             // ativa o calendário
+            calendarOptions.events.url = Router.get('base') + '/aulas';
+
             $('#calendar').fullCalendar($.extend(calendarOptions, {
                 dayClick: self.onDayClick,
                 eventClick: self.onEventClick,
@@ -321,7 +317,7 @@ var Turma = (function() {
             
             $("#alunoNomeOrMatricula").typeahead({
                 ajax: {
-                    url: "{{ url('api/alunos') }}",
+                    url: Router.get('alunos'),
                     displayField: "display_name",
                     valueField: "matricula",
                     method: "get",
@@ -355,7 +351,7 @@ var Turma = (function() {
                     selectedProfessor = item;
                 },
                 ajax: {
-                    url: "{{ url('api/professores') }}",
+                    url: Router.get('professores'),
                     displayField: "display_name",
                     valueField: "matricula",
                     method: "get",
@@ -437,7 +433,7 @@ var Turma = (function() {
         addDiarioToTable: function(diario) {
             var html = Template.diarioTableRow({
                 diario: diario,
-                print_url: diariosUrl
+                print_url: Router.get('diarios')
             });
 
             $("#diarios-table>tbody").append(html);
@@ -446,7 +442,7 @@ var Turma = (function() {
 
 
         addDiarioEnvioToTable: function(envio, diarioId) {
-            envio.print_url = diariosUrl;
+            envio.print_url = Router.get('diarios');
 
             var tableBody = $("#diario-"+diarioId+" table tbody");
             tableBody.append(Template.envioTableRow(envio));
@@ -459,9 +455,9 @@ var Turma = (function() {
             $(this).toggleClass("editing btn-primary btn-danger");
             
             if ($(this).hasClass("editing")) {
-                $(this).html('@lang("general.cancel")');
+                $(this).html(Lang.get("general.cancel"));
             } else {
-                $(this).html('@lang("general.edit")');
+                $(this).html(Lang.get("general.edit"));
             }
         },
         
@@ -473,7 +469,7 @@ var Turma = (function() {
         
         onEventClick: function(event) {
             // redireciona para página da aula
-            window.location = turmaUrl + "/aulas/" + event.start.format();
+            window.location = Router.get('turma') + "/aulas/" + event.start.format();
         },
         
         onEventDrop: function(event, delta, revertFunc) {
@@ -526,7 +522,7 @@ var Turma = (function() {
             var tr = $(e.currentTarget).parent().parent();
             var data = tr.data('data');
             
-            Modal.confirm("@lang('aulas.remove_message')", function(result) {
+            Modal.confirm(Lang.get('aulas.remove_message'), function(result) {
                 if (result == true) {
                     Model.removeAula(data, function(result) {
                         Modal.success(result.message);
@@ -581,7 +577,7 @@ var Turma = (function() {
             var tr = $(this).parent().parent();
             var matricula = tr.data('matricula');
             
-            Modal.confirm("@lang('turmas.aluno_detach')", function(result) {
+            Modal.confirm(Lang.get('turmas.aluno_detach'), function(result) {
                 if (result == false) return;
                 
                 Model.detachAluno(matricula, function(result) {
@@ -629,7 +625,7 @@ var Turma = (function() {
             var tr = $(this).parent().parent();
             var matricula = tr.data('matricula');
             
-            Modal.confirm("@lang('turmas.professor_detach')", function(result) {
+            Modal.confirm(Lang.get('turmas.professor_detach'), function(result) {
                 if (result == false) return;
                 
                 Model.detachProfessor(matricula, function(result) {
@@ -665,7 +661,7 @@ var Turma = (function() {
             var data  = diarioForm.getValues();
             var month = data.values.mes; 
 
-            window.open(diariosUrl + '/' + month, 'diarioPreview');
+            window.open(Router.get('diarios') + '/' + month, 'diarioPreview');
         },
 
         onSendDiarioClick: function() {
@@ -684,6 +680,22 @@ var Turma = (function() {
 
 $(document).ready(function() {
 @if (isset($turma))
+    Router.registerAll({
+        base: "{{ url('api/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}",
+        diarios: "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}",
+        turma: "{{ url('unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}",
+        alunos: "{{ url('api/alunos') }}",
+        professores: "{{ url('api/professores') }}"
+    });
+
+    Lang.registerAll({
+        'turmas.professor_detach': "@lang('turmas.professor_detach')",
+        'turmas.aluno_detach': "@lang('turmas.aluno_detach')",
+        'aulas.remove_message': "@lang('aulas.remove_message')",
+        'general.cancel': "@lang('general.cancel')",
+        'general.edit': "@lang('general.edit')"
+    });
+
     Turma.init();
 @endif
 });

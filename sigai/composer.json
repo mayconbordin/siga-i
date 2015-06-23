@@ -10,8 +10,7 @@
 		"tecnick.com/tcpdf": "6.2.8",
 		"phpoffice/phpexcel": "1.8.*",
 		"doctrine/dbal": "^2.5",
-        "proai/laravel-handlebars": "~1.0@dev",
-        "lord/laroute" : "2.*"
+        "proai/laravel-handlebars": "~1.0@dev"
 	},
 	"require-dev": {
 		"phpspec/phpspec": "~2.1",

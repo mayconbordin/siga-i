@@ -162,7 +162,6 @@ return [
 		 */
 		'Zizaco\Entrust\EntrustServiceProvider',
         'ProAI\Handlebars\HandlebarsServiceProvider',
-        'Lord\Laroute\LarouteServiceProvider',
 	],
 
 	/*

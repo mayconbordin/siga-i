@@ -90,28 +90,15 @@ Form.prototype = {
     validate: function(errors) {
         for (field in this.fields) {
             var el = $(this.fields[field].el);
-            
-            /*if (el.prop('type') == 'checkbox')
-                var formGroup = el.parent().parent();
-            else
-                var formGroup = el.parent();*/
+
             var formGroup = this._getFormGroup(el);
-            
-            //var msgLabel = $(formGroup).find('.control-label');
 
             if (!(field in errors)) {
-                /*$(formGroup).removeClass('has-error');
-                $(msgLabel).addClass('hidden');*/
                 this._cleanErrors(formGroup);
                 continue;
             }
             
             this._setErrors(formGroup, errors[field].join('<br>'));
-
-            /*$(formGroup).addClass('has-error');
-            $(msgLabel).removeClass('hidden');
-            
-            $(msgLabel).html(errors[field].join('<br>'));*/
         }
     },
     
@@ -185,4 +172,50 @@ Form.prototype = {
     }
 };
 
+var Lang = (function() {
+    var data = {};
 
+    return {
+        register: function(k, v) {
+            data[k] = v;
+        },
+
+        registerAll: function(items) {
+            for (attr in items) {
+                data[attr] = items[attr];
+            }
+        },
+
+        get: function(k) {
+            if (k in data) {
+                return data[k];
+            } else {
+                return null;
+            }
+        }
+    };
+})();
+
+var Router = (function() {
+    var data = {};
+
+    return {
+        register: function(k, v) {
+            data[k] = v;
+        },
+
+        registerAll: function(items) {
+            for (attr in items) {
+                data[attr] = items[attr];
+            }
+        },
+
+        get: function(k) {
+            if (k in data) {
+                return data[k];
+            } else {
+                return null;
+            }
+        }
+    };
+})();

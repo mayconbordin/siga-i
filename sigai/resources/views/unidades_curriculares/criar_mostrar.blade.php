@@ -17,10 +17,6 @@
 <script>
 @if (isset($uc))
 var UnidadeCurricular = (function() {
-
-    var baseUrl = "{{ url('api/unidades_curriculares/'.$uc->id) }}";
-    var ucUrl   = "{{ url('/unidades_curriculares/'.$uc->id) }}";
-
     var turmaForm = new Form({
         nome       : {el: "#newTurmaNome"      , required: true},
         data_inicio: {el: "#newTurmaDataInicio", required: true},
@@ -42,7 +38,7 @@ var UnidadeCurricular = (function() {
     var Model = {
         getCurso: function(id, success, error) {
             $.ajax({
-                url: "{{ url('api/cursos') }}/" + id,
+                url: Router.get('curso') + "/" + id,
                 method: 'GET'
             }).done(function(result) {
                 success(result);
@@ -53,7 +49,7 @@ var UnidadeCurricular = (function() {
         
         attachCurso: function(id, success, error) {
             $.ajax({
-                url: baseUrl + '/cursos/' + id,
+                url: Router.get('api.base') + '/cursos/' + id,
                 method: 'PUT'
             }).done(function(result) {
                 success(result);
@@ -64,7 +60,7 @@ var UnidadeCurricular = (function() {
         
         detachCurso: function(id, success, error) {
             $.ajax({
-                url: baseUrl + '/cursos/' + id,
+                url: Router.get('api.base') + '/cursos/' + id,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -75,7 +71,7 @@ var UnidadeCurricular = (function() {
         
         createTurma: function(data, success, error) {
             $.ajax({
-                url: baseUrl + '/turmas',
+                url: Router.get('api.base') + '/turmas',
                 method: 'POST',
                 data: data
             }).done(function(result) {
@@ -87,7 +83,7 @@ var UnidadeCurricular = (function() {
         
         removeTurma: function(id, success, error) {
             $.ajax({
-                url: baseUrl + '/turmas/' + id,
+                url: Router.get('api.base') + '/turmas/' + id,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -119,7 +115,7 @@ var UnidadeCurricular = (function() {
                     selectedCurso = item;
                 },
                 ajax: {
-                    url: "{{ url('api/cursos') }}",
+                    url: Router.get('curso'),
                     displayField: "nome",
                     valueField: "id",
                     method: "get"
@@ -159,7 +155,7 @@ var UnidadeCurricular = (function() {
         },
         
         addTurmaToTable: function(turma) {
-            turma.url = ucUrl + '/turmas/' + turma.id;
+            turma.url = Router.get('base') + '/turmas/' + turma.id;
 
             var html = Template.turmaTableRow({
                 turma: turma,
@@ -176,9 +172,9 @@ var UnidadeCurricular = (function() {
             $(this).toggleClass("editing btn-primary btn-danger");
             
             if ($(this).hasClass("editing")) {
-                $(this).html('@lang("general.cancel")');
+                $(this).html(Lang.get('general.cancel'));
             } else {
-                $(this).html('@lang("general.edit")');
+                $(this).html(Lang.get('general.edit'));
             }
         },
         
@@ -203,7 +199,7 @@ var UnidadeCurricular = (function() {
             var tr = $(this).parent().parent();
             var id = $(tr).data('id');
             
-            Modal.confirm("@lang('unidades_curriculares.curso_detach')", function(result) {
+            Modal.confirm(Lang.get('unidades_curriculares.curso_detach'), function(result) {
                 if (result == false) return;
                 
                 Model.detachCurso(id, function(result) {
@@ -238,7 +234,7 @@ var UnidadeCurricular = (function() {
             var tr = $(this).parent().parent();
             var id = $(tr).data('id');
             
-            Modal.confirm("@lang('turmas.remove_message')", function(result) {
+            Modal.confirm(Lang.get('turmas.remove_message'), function(result) {
                 if (result == false) return;
                 
                 Model.removeTurma(id, function(result) {
@@ -256,6 +252,19 @@ var UnidadeCurricular = (function() {
     
 
 $(document).ready(function($) {
+    Router.registerAll({
+        'api.base': "{{ url('api/unidades_curriculares/'.$uc->id) }}",
+        base: "{{ url('/unidades_curriculares/'.$uc->id) }}",
+        curso: "{{ url('api/cursos') }}"
+    });
+
+    Lang.registerAll({
+        'turmas.remove_message': "@lang('turmas.remove_message')",
+        'unidades_curriculares.curso_detach': "@lang('unidades_curriculares.curso_detach')",
+        'general.cancel': "@lang('general.cancel')",
+        'general.edit': "@lang('general.edit')"
+    });
+
     UnidadeCurricular.init();
 });
 

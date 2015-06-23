@@ -14,18 +14,14 @@
 <script>
 
 var Aula = (function() {
-    
-    var baseUrl = "{{ url('api/unidades_curriculares/'.$aula->turma->unidade_curricular_id.
-                          '/turmas/'.$aula->turma->id.'/aulas/'.$aula->data->format('Y-m-d')) }}";
-
     var Model = {
         saveChamada: function(chamada, success, error) {
             $.ajax({
-                url: baseUrl + '/chamada',
+                url: Router.get('base') + '/chamada',
                 method: 'POST',
                 data: JSON.stringify({ chamada: chamada }),
                 dataType: 'json',
-                contentType: "application/json; charset=utf-8",
+                contentType: "application/json; charset=utf-8"
             }).done(function(result) {
                 success(result);
             }).fail(function(xhr) {
@@ -91,9 +87,7 @@ var Aula = (function() {
                     data.push({matricula: matricula, periods: periods});
                 }
             });
-        
-            console.log(data);
-            
+
             Model.saveChamada(data, function(result) {
                 $btn.button('reset')
             }, function(r) {
@@ -108,6 +102,8 @@ var Aula = (function() {
 
 
 $(document).ready(function($) {
+    Router.register('base', "{{ url('api/unidades_curriculares/'.$aula->turma->unidade_curricular_id.
+                                    '/turmas/'.$aula->turma->id.'/aulas/'.$aula->data->format('Y-m-d')) }}");
     Aula.init();
 });
 </script>

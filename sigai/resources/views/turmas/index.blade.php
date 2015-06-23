@@ -11,8 +11,7 @@ $(document).ready(function($) {
 
     // vai para página da turma ao clicar no registro
     $("#turmas").on("click-row.bs.table", function(row, el) {
-        window.location = "{{ url('/unidades_curriculares') }}/" + el.unidade_curricular_id
-                        + "/turmas/" + el.id;
+        window.location = "{{ url('/unidades_curriculares') }}/" + el.unidade_curricular_id + "/turmas/" + el.id;
     });
 
 });

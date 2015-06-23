@@ -12,23 +12,20 @@
 
 <script>
 var Professor = (function() {
-
-    var baseUrl = "{{ url('api/professores') }}";
-
     var createProfessorForm = new Form({
-        matricula    : {el: "#newProfessorMatricula"  , required: true},
-        nome         : {el: "#newProfessorNome"       , required: true},
+        matricula       : {el: "#newProfessorMatricula"  , required: true},
+        nome            : {el: "#newProfessorNome"       , required: true},
         curso_origem_id : {el: "#newProfessorCursoOrigem", required: true},
-        email        : {el: "#newProfessorEmail"      , required: true},
-        password     : {el: "#newProfessorPassword"   , required: true}
+        email           : {el: "#newProfessorEmail"      , required: true},
+        password        : {el: "#newProfessorPassword"   , required: true}
     });
     
     var updateProfessorForm = new Form({
-        matricula    : {el: "#newProfessorMatricula"  , required: true},
-        nome         : {el: "#newProfessorNome"       , required: true},
+        matricula       : {el: "#newProfessorMatricula"  , required: true},
+        nome            : {el: "#newProfessorNome"       , required: true},
         curso_origem_id : {el: "#newProfessorCursoOrigem", required: true},
-        email        : {el: "#newProfessorEmail"      , required: true},
-        password     : {el: "#newProfessorPassword"   , required: false}
+        email           : {el: "#newProfessorEmail"      , required: true},
+        password        : {el: "#newProfessorPassword"   , required: false}
     });
     
     var isEdit = false;
@@ -46,7 +43,7 @@ var Professor = (function() {
     var Model = {
         getProfessor: function(matricula, success, error) {
             $.ajax({
-                url: baseUrl + "/" + matricula,
+                url: Router.get('base') + "/" + matricula,
                 method: 'GET'
             }).done(function(result) {
                 success(result);
@@ -57,7 +54,7 @@ var Professor = (function() {
     
         createProfessor: function(data, success, error) {
             $.ajax({
-                url: baseUrl,
+                url: Router.get('base'),
                 method: 'POST',
                 data: data
             }).done(function(result) {
@@ -69,7 +66,7 @@ var Professor = (function() {
         
         updateProfessor: function(matricula, data, success, error) {
             $.ajax({
-                url: baseUrl + '/' + matricula,
+                url: Router.get('base') + '/' + matricula,
                 method: 'PUT',
                 data: data
             }).done(function(result) {
@@ -81,7 +78,7 @@ var Professor = (function() {
         
         removeProfessor: function(matricula, success, error) {
             $.ajax({
-                url: baseUrl + '/' + matricula,
+                url: Router.get('base') + '/' + matricula,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -161,13 +158,12 @@ var Professor = (function() {
                 });
             }
         },
-        
-        
+
         onRemoveProfessorClick: function() {
             var tr = $(this).parent().parent();
             var matricula = $(tr).data('matricula');
             
-            Modal.confirm("@lang('professores.remove_message')", function(result) {
+            Modal.confirm(Lang.get('professores.remove_message'), function(result) {
                 if (result == false) return;
                 
                 Model.removeProfessor(matricula, function(result) {
@@ -198,12 +194,15 @@ var Professor = (function() {
             }, function(r) {
                 Modal.error(r.errors.join('<br>'));
             });
-        },
+        }
     };    
     
 })();
 
 $(document).ready(function($) {
+    Router.register('base', "{{ url('api/professores') }}");
+    Lang.register('professores.remove_message', "@lang('professores.remove_message')");
+
     Professor.init();
 });
 </script>

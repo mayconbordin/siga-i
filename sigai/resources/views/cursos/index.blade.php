@@ -13,9 +13,6 @@
 <script>
 
 var Curso = (function() {
-
-    var baseUrl = "{{ url('api/cursos') }}";
-
     var cursoForm = new Form({
         nome           : {el: "#newCursoNome"       , required: true},
         sigla          : {el: "#newCursoSigla"      , required: true},
@@ -37,7 +34,7 @@ var Curso = (function() {
     var Model = {
         getCurso: function(id, success, error) {
             $.ajax({
-                url: baseUrl + "/" + id,
+                url: Router.get('base') + "/" + id,
                 method: 'GET'
             }).done(function(result) {
                 success(result);
@@ -50,7 +47,7 @@ var Curso = (function() {
             data = Model.sanitizeCursoData(data);
             
             $.ajax({
-                url: baseUrl,
+                url: Router.get('base'),
                 method: 'POST',
                 data: data
             }).done(function(result) {
@@ -64,7 +61,7 @@ var Curso = (function() {
             data = Model.sanitizeCursoData(data);
             
             $.ajax({
-                url: baseUrl + '/' + id,
+                url: Router.get('base') + '/' + id,
                 method: 'PUT',
                 data: data
             }).done(function(result) {
@@ -76,7 +73,7 @@ var Curso = (function() {
         
         removeCurso: function(id, success, error) {
             $.ajax({
-                url: baseUrl + '/' + id,
+                url: Router.get('base') + '/' + id,
                 method: 'DELETE'
             }).done(function(result) {
                 success(result);
@@ -105,7 +102,7 @@ var Curso = (function() {
 
                 },
                 ajax: {
-                    url: "{{ url('api/professores') }}",
+                    url: Router.get('professores'),
                     displayField: "display_name",
                     valueField: "matricula",
                     method: "get",
@@ -113,7 +110,7 @@ var Curso = (function() {
                         return {
                             query: query
                         }
-                    },
+                    }
                 }
             });
         },
@@ -177,7 +174,7 @@ var Curso = (function() {
             var tr = $(this).parent().parent();
             var id = $(tr).data('id');
             
-            Modal.confirm("@lang('cursos.remove_message')", function(result) {
+            Modal.confirm(Lang.get('cursos.remove_message'), function(result) {
                 if (result == false) return;
                 
                 Model.removeCurso(id, function(result) {
@@ -208,12 +205,16 @@ var Curso = (function() {
             }, function(r) {
                 Modal.error(r.errors.join('<br>'));
             });
-        },
+        }
     };    
     
 })();
 
 $(document).ready(function($) {
+    Router.register('base', "{{ url('api/cursos') }}");
+    Router.register('professores', "{{ url('api/professores') }}");
+    Lang.register('cursos.remove_message', "@lang('cursos.remove_message')");
+
     Curso.init();
 });
 </script>
