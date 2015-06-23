@@ -1,0 +1,11 @@
+<tr data-matricula="{{#if professor.usuario}}{{professor.usuario.matricula}}{{else}}{{professor.matricula}}{{/if}}">
+    <td scope="row">{{#if professor.usuario}}{{professor.usuario.matricula}}{{else}}{{professor.matricula}}{{/if}}</td>
+    <td>{{#if professor.usuario}}{{professor.usuario.nome}}{{else}}{{professor.nome}}{{/if}}</td>
+    <td class="text-center">
+        {{#if can_edit}}
+        <button class="btn btn-default btn-xs detach">
+            <i class="fa fa-remove"></i> {{lang 'general.detach'}}
+        </button>
+        {{/if}}
+    </td>
+</tr>

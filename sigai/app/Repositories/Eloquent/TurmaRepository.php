@@ -236,6 +236,9 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
         $turma = self::findById($turmaId, $ucId);
 	    
 	    $turma->alunos()->updateExistingPivot($aluno->id, $data);
+
+        // pega o aluno com o pivot
+        $aluno = $turma->alunos()->where('id', '=', $aluno->id)->first();
 	    
 	    return $aluno;
     }

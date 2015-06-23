@@ -126,6 +126,19 @@ body {
     margin-bottom: 15px;
 }
 
+.status-normal {
+    background-color: #777;
+}
+.status-cancelado {
+    background-color: #d9534f;
+}
+.status-transferido,
+.status-dispensado,
+.status-trancamento_matrícula,
+.status-ensino_distancia {
+    background-color: #f0ad4e;
+}
+
 .status.ok {
     color: green;
 }

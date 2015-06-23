@@ -17,14 +17,21 @@
 <script id="envio-table-row" type="text/x-handlebars-template">
     @include('diarios.envio-table-row', ['raw' => true])
 </script>
+<script id="professor-table-row" type="text/x-handlebars-template">
+    @include('professores.table-row', ['raw' => true])
+</script>
+<script id="aluno-table-row" type="text/x-handlebars-template">
+    @include('alunos.table-row', ['raw' => true])
+</script>
 
 <script>
 
 var Turma = (function() {
 
     // estado
-    var baseUrl = "{{ url('api/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}";
+    var baseUrl    = "{{ url('api/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}";
     var diariosUrl = "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}";
+    var turmaUrl   = "{{ url('unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}";
     
     var aulaForm = new Form({
         id                 : {el: "#newAulaId"              , required: false},
@@ -76,18 +83,22 @@ var Turma = (function() {
     var selectedAluno = null;
     var selectedProfessor = null;
     var isEditAluno = false;
-
+    var editAlunoRow = null;
 
 
     var Template = (function() {
-        var envioTableRow  = $("#envio-table-row").html();
-        var diarioTableRow = $("#diario-table-row").html();
+        var envioTableRow     = $("#envio-table-row").html();
+        var diarioTableRow    = $("#diario-table-row").html();
+        var professorTableRow = $("#professor-table-row").html();
+        var alunoTableRow     = $("#aluno-table-row").html();
 
         Handlebars.registerPartial('envio-table-row', envioTableRow);
 
         return {
-            diarioTableRow: Handlebars.compile(diarioTableRow),
-            envioTableRow: Handlebars.compile(envioTableRow),
+            diarioTableRow   : Handlebars.compile(diarioTableRow),
+            envioTableRow    : Handlebars.compile(envioTableRow),
+            professorTableRow: Handlebars.compile(professorTableRow),
+            alunoTableRow    : Handlebars.compile(alunoTableRow),
         }
     })();
 
@@ -390,38 +401,36 @@ var Turma = (function() {
         },
         
         addAlunoToTable: function(aluno) {
-             var html = '<tr data-matricula="'+aluno.matricula+'" data-nome="'+aluno.nome+'"'
-                      + 'data-status="'+aluno.status+'" data-curso_origem_id="'+aluno.curso_origem_id+'">'
-                      + '<td scope="row">'+aluno.matricula+'</td><td>'+aluno.nome+'</td>'
-                      + '<td>'+(aluno.curso_origem_sigla || '--')+'</td>'
-                      + '<td class="text-center">';
-                      
-            if (alunos.status == '{{ App\Models\Aluno::STATUS_NORMAL }}')
-                html += '<span class="label label-default">'+aluno.status+'</span>';
-            else if (alunos.status == '{{ App\Models\Aluno::STATUS_CANCELADO }}')
-                html += '<span class="label label-danger">'+aluno.status+'</span>';
-            else
-                html += '<span class="label label-warning">'+aluno.status+'</span>';
-                                
-            html += '</td><td class="text-center"><button class="btn btn-default btn-xs detach">'
-                  + '<i class="fa fa-remove"></i> @lang("general.detach")</button>'
-                  + '<button class="btn btn-default btn-xs edit">'
-                  + '<i class="fa fa-edit"></i> @lang("general.edit")</button></td></tr>';
+            var html = Template.alunoTableRow({
+                aluno: aluno,
+                can_edit: {{ Auth::user()->can('edit-turma') ? 'true' : 'false' }}
+            });
 
-            $("#alunos table tbody").append(html);
+            $("#alunos table>tbody").append(html);
+            $("#alunos .detach").click(this.onDetachAlunoClick);
+            $("#alunos .edit").click(this.onEditAlunoClick);
+        },
+
+        updateAlunoToTable: function(aluno, tr) {
+            var html = Template.alunoTableRow({
+                aluno: aluno,
+                can_edit: {{ Auth::user()->can('edit-turma') ? 'true' : 'false' }}
+            });
+
+            $(tr).replaceWith(html);
+
             $("#alunos .detach").click(this.onDetachAlunoClick);
             $("#alunos .edit").click(this.onEditAlunoClick);
         },
         
         addProfessorToTable: function(professor) {
-            var html = '<tr data-matricula="'+professor.matricula+'">'
-                     + '<td scope="row">'+professor.matricula+'</td>'
-                     + '<td>'+professor.nome+'</td>'
-                     + '<td class="text-center"><button class="btn btn-default btn-xs detach">'
-                     + '<i class="fa fa-remove"></i> @lang("general.detach")'
-                     + '</button></td></tr>';
+            var html = Template.professorTableRow({
+                professor: professor,
+                can_edit: {{ Auth::user()->can('edit-turma') ? 'true' : 'false' }}
+            });
+
                         
-            $("#professores table tbody").append(html);
+            $("#professores table>tbody").append(html);
             $("#professores .detach").click(this.onDetachProfessorClick);
         },
         
@@ -464,8 +473,7 @@ var Turma = (function() {
         
         onEventClick: function(event) {
             // redireciona para página da aula
-            window.location = "{{ url('unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}"
-                            + "/aulas/" + event.start.format();
+            window.location = turmaUrl + "/aulas/" + event.start.format();
         },
         
         onEventDrop: function(event, delta, revertFunc) {
@@ -542,16 +550,22 @@ var Turma = (function() {
             }
             
             var matricula = data.values.matricula.split('|')[0].trim();
-            
+
+            // Edição do aluno
             if (isEditAluno) {
                 Model.updateAluno(matricula, data.values, function(result) {
                     $("#vincularAluno").modal('hide');
                     Modal.success(result.message);
+                    isEditAluno = false;
+                    Turma.updateAlunoToTable(result.aluno, editAlunoRow);
                 }, function(error) {
                     $("#vincularAluno").modal('hide');
                     Modal.error(error.errors.join('<br>'));
                 });
-            } else {
+            }
+
+            // Criação de novo vínculo
+            else {
                 Model.attachAluno(matricula, data.values, function(result) {
                     $("#vincularAluno").modal('hide');
                     Modal.success(result.message);
@@ -583,9 +597,9 @@ var Turma = (function() {
         
         onEditAlunoClick: function() {
             $("#vincularAluno").modal('show');
-            
-            var tr = $(this).parent().parent();
-            var data = tr.data();
+
+            editAlunoRow = $(this).parent().parent();
+            var data = editAlunoRow.data();
             data.matricula = data.matricula + ' | ' + data.nome;
             delete data.nome;
 
@@ -760,238 +774,19 @@ $(document).ready(function() {
             </div>
         
             {{-- Aba de lista de aulas --}}
-            <div role="tabpanel" class="tab-pane" id="aulas">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>@lang('aulas.data')</th>
-                            <th class="text-center">@lang('aulas.status')</th>
-                            <th class="text-center">@lang('aulas.aula_a_distancia')</th>
-                            <th class="text-center">@lang('general.actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($turma->aulas as $aula)
-                        <tr data-data="{{ $aula->data->format('Y-m-d') }}">
-                            <td scope="row">
-                                <a href="{{ url('unidades_curriculares/' . 
-                                                $unidadeCurricular->id . '/turmas/' .
-                                                $turma->id.'/aulas/' . $aula->data->format('Y-m-d')) }}">
-                                    {{ $aula->data->format('d/m/Y') }}
-                                </a>
-                            </td>
-                            <td class="text-center">{{ $aula->status }}</td>
-                            <td class="text-center">
-                                @if ($aula->aula_a_distancia)
-                                <i class="fa fa-check text-success"></i>
-                                @else
-                                <i class="fa fa-remove text-danger"></i>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                <button class="btn btn-default btn-xs remove">
-                                    <i class="fa fa-remove"></i> @lang('general.remove')
-                                </button>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @include('turmas.tabs.aulas')
             
             {{-- Aba de lista de alunos --}}
-            <div role="tabpanel" class="tab-pane" id="alunos">
-                @if (Auth::user()->can('edit-turma'))
-                <div class="tab-actions">
-                    <a id="vincularAlunoBtn" class="btn btn-primary attach" href="#alunos">
-                        <i class="fa fa-chain"></i> @lang('alunos.attach')
-                    </a>
-                </div>
-                
-                @include('alunos.vincular_modal')
-                @endif
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>@lang('alunos.matricula')</th>
-                            <th>@lang('alunos.nome')</th>
-                            <th>@lang('alunos.curso_origem')</th>
-                            <th class="text-center">@lang('alunos.status')</th>
-                            <th class="text-center">@lang('general.actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($alunos as $aluno)
-                        <tr data-matricula="{{ $aluno->matricula }}" data-nome="{{ $aluno->nome }}"
-                            data-status="{{ $aluno->status }}" data-curso_origem_id="{{ $aluno->curso_origem_id }}">
-                            <td scope="row">{{ $aluno->matricula }}</td>
-                            <td>{{ $aluno->nome }}</td>
-                            <td>{{ $aluno->curso_origem_sigla }}</td>
-
-                            <td class="text-center">
-                                @if ($aluno->status == App\Models\Aluno::STATUS_NORMAL)
-                                <span class="label label-default">{{ $aluno->status }}</span>
-                                @elseif ($aluno->status == App\Models\Aluno::STATUS_CANCELADO)
-                                <span class="label label-danger">{{ $aluno->status }}</span>
-                                @else
-                                <span class="label label-warning">{{ $aluno->status }}</span>
-                                @endif
-                            </td>
-                            
-                            <td class="text-center">
-                                @if (Auth::user()->can('edit-turma'))
-                                <button class="btn btn-default btn-xs detach">
-                                    <i class="fa fa-remove"></i> @lang('general.detach')
-                                </button>
-                                
-                                <button class="btn btn-default btn-xs edit">
-                                    <i class="fa fa-edit"></i> @lang('general.edit')
-                                </button>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+            @include('turmas.tabs.alunos')
             
             {{-- Aba de lista de professores --}}
-            <div role="tabpanel" class="tab-pane" id="professores">
-                @if (Auth::user()->can('edit-turma'))
-                <div class="tab-actions">
-                    <a id="vincularProfessorBtn" class="btn btn-primary attach" href="#professores">
-                        <i class="fa fa-chain"></i> @lang('professores.attach')
-                    </a>
-                </div>
-                
-                @include('professores.vincular_modal')
-                @endif
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>@lang('professores.matricula')</th>
-                            <th>@lang('professores.nome')</th>
-                            <th class="text-center">@lang('general.actions')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($turma->professores as $p)
-                        <tr data-matricula="{{ $p->usuario->matricula }}">
-                            <td scope="row">{{ $p->usuario->matricula }}</td>
-                            <td>{{ $p->usuario->nome }}</td>
-                            <td class="text-center">
-                                @if (Auth::user()->can('edit-turma'))
-                                <button class="btn btn-default btn-xs detach">
-                                    <i class="fa fa-remove"></i> @lang('general.detach')
-                                </button>
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            
-            </div>
-            
-            
+            @include('turmas.tabs.professores')
+
             {{-- Aba de controle de faltas --}}
-            <div role="tabpanel" class="tab-pane" id="controle-faltas">
+            @include('turmas.tabs.controle_faltas')
 
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>@lang('alunos.matricula')</th>
-                            <th>@lang('alunos.nome')</th>
-                            <th class="text-center">@lang('alunos.status')</th>
-                            
-                            @foreach ($periods as $date)
-                            <th class="text-center">{{ $date['year']. '/' . $date['month'] }}</th>
-                            @endforeach
-                            
-                            <th class="text-center">Total</th>
-                            <th class="text-center">%</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($faltas as $f)
-                        <tr data-matricula="{{ $f->matricula }}">
-                            <td scope="row">{{ $f->matricula }}</td>
-                            <td>{{ $f->nome }}</td>
-                            
-                            <td class="text-center">
-                                @if ($f->status == App\Models\Aluno::STATUS_NORMAL)
-                                <span class="label label-default">{{ $f->status }}</span>
-                                @elseif ($f->status == App\Models\Aluno::STATUS_CANCELADO)
-                                <span class="label label-danger">{{ $f->status }}</span>
-                                @else
-                                <span class="label label-warning">{{ $f->status }}</span>
-                                @endif
-                            </td>
-                            
-                            {{-- total de faltas por mês --}}
-                            @foreach ($periods as $date)
-                            <td class="text-center">{{ $f->faltas[$date['key']]->total_faltas }}</td>
-                            @endforeach
-                            
-                            {{-- total de faltas na turma --}}
-                            <td class="text-center">{{ $f->total_faltas }}</td>
-                            
-                            {{-- porcentagem de faltas --}}
-                            @if ($f->pFaltas >= 25)
-                            <td class="text-center chamada-failed">{{ number_format((float)$f->pFaltas, 1, '.', '') }}%</td>
-                            @elseif ($f->pFaltas < 25 && $f->pFaltas >= 20)
-                            <td class="text-center chamada-warning">{{ number_format((float)$f->pFaltas, 1, '.', '') }}%</td>
-                            @else
-                            <td class="text-center">{{ number_format((float)$f->pFaltas, 1, '.', '') }}%</td>
-                            @endif
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            
-            </div>
-            
-            
-             {{-- Aba de diários --}}
-            <div role="tabpanel" class="tab-pane" id="diarios">
-
-                <div class="tab-actions">
-                    <a id="closeDiarioBtn" class="btn btn-primary attach" href="#diarios">
-                        <i class="fa fa-file-text"></i> @lang('diarios.close')
-                    </a>
-                    
-                    <a class="btn btn-default attach pull-right" target="diarioClasseCompleto"
-                       href="{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}">
-                        <i class="fa fa-file-text"></i> @lang('diarios.show_all')
-                    </a>
-                </div>
-                
-                @include('diarios.fechar_modal', ['months' => $diariosToClose])
-                
-                <table id="diarios-table" class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="text-center">@lang('diarios.month')</th>
-                            <th>@lang('diarios.closed_by')</th>
-                            <th>@lang('diarios.closed_at')</th>
-                            <th class="text-center">@lang('diarios.last_version')</th>
-                            <th class="text-center">@lang('diarios.send_list')</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($diarios as $d)
-                            @include('diarios.table-row', [
-                                'diario' => $d,
-                                'mes_nome' => \Lang::get('months.'.$d->mes),
-                                'print_url' => url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios')
-                            ])
-                        @endforeach
-                    </tbody>
-                </table>
-            
-            </div>
+            {{-- Aba de diários --}}
+            @include('turmas.tabs.diarios')
             
             @endif
             

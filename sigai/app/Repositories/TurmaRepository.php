@@ -226,6 +226,8 @@ class TurmaRepository extends Repository
 	    $aluno = AlunoRepository::findByMatricula($matricula);
 	    
 	    $turma->alunos()->updateExistingPivot($aluno->id, $data);
+
+        $aluno = $turma->alunos()->where('id', '=', $aluno->id)->first();
 	    
 	    return $aluno;
     }
