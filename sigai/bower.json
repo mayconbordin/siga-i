@@ -27,6 +27,7 @@
     "moment": "~2.10.3",
     "pwstrength-bootstrap": "ablanco/jquery.pwstrength.bootstrap#~1.2.7",
     "fontawesome": "~4.3.0",
-    "handlebars": "~3.0.3"
+    "handlebars": "~3.0.3",
+    "intro.js": "~1.0.0"
   }
 }
