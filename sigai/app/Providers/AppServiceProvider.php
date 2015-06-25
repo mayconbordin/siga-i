@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->bind('App\Services\Contracts\DiarioServiceContract', 'App\Services\DiarioService');
         $this->app->bind('App\Services\Contracts\UnidadeCurricularServiceContract', 'App\Services\UnidadeCurricularService');
         $this->app->bind('App\Services\Contracts\TurmaServiceContract', 'App\Services\TurmaService');
+        $this->app->bind('App\Services\Contracts\ProfessorServiceContract', 'App\Services\ProfessorService');
 	}
 
 }

@@ -4,7 +4,6 @@ use App\Models\Curso;
 use App\Models\Professor;
 use App\Models\User;
 
-use App\Repositories\Contracts\CursoRepositoryContract;
 use App\Repositories\Contracts\ProfessorRepositoryContract;
 
 use App\Exceptions\NotFoundError;
