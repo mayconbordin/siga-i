@@ -3,10 +3,13 @@
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SalvarAulaRequest;
 
+use App\Http\Requests\SalvarChamadaRequest;
+use App\Http\Requests\SearchAulasRequest;
 use App\Repositories\TurmaRepository;
 use App\Repositories\AulaRepository;
 use App\Repositories\ChamadaRepository;
 
+use App\Services\Contracts\AulaServiceContract;
 use \DB;
 use \Lang;
 use \Input;
@@ -15,36 +18,32 @@ use Carbon\Carbon;
 
 class AulaController extends Controller
 {
+    protected $service;
 
-    public function __construct()
+    public function __construct(AulaServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service = $service;
     }
     
-    public function listar($ucId, $turmaId)
+    public function listar(SearchAulasRequest $request, $ucId, $turmaId)
     {
-        $turma = TurmaRepository::findById($turmaId, $ucId);
-
-        $start = e(Input::get('start'));
-        $end   = e(Input::get('end'));
-        
-        $aulas = AulaRepository::findByTurmaBetweenDates($turma->id, $start, $end);
-        
+        $aulas = $this->service->listAll($ucId, $turmaId, $request->all());
         return $this->jsonResponse($aulas, ['full_calendar']);
     }
     
     public function mostrar($ucId, $turmaId, $data)
 	{
-	    $aula = AulaRepository::findByData($data, $turmaId, $ucId);
-	    
+	    $aula = $this->service->show($ucId, $turmaId, $data);
 	    return $this->jsonResponse($aula, ['turma']);
 	}
 
 	public function editar(SalvarAulaRequest $request, $ucId, $turmaId, $data)
 	{
-        $aula = AulaRepository::update($request->all(), $ucId, $turmaId, $data);
-        
+        $aula = $this->service->edit($request->all(), $ucId, $turmaId, $data);
+
         return $this->jsonResponse([
             'message' => Lang::get('aulas.saved'),
             'aula'    => $aula
@@ -53,8 +52,8 @@ class AulaController extends Controller
 	
 	public function salvar(SalvarAulaRequest $request, $ucId, $turmaId)
     {
-        $aula = AulaRepository::insert($request->all(), $ucId, $turmaId);
-        
+        $aula = $this->service->save($request->all(), $ucId, $turmaId);
+
         return $this->jsonResponse([
             'message' => Lang::get('aulas.saved'),
             'aula'    => $aula
@@ -63,7 +62,7 @@ class AulaController extends Controller
     
     public function deletar($ucId, $turmaId, $data)
 	{
-	    AulaRepository::deleteByData($data, $turmaId, $ucId);
+        $this->service->delete($ucId, $turmaId, $data);
 
 	    return $this->jsonResponse(['message' => 
 	        Lang::get('aulas.remove_success')]);
@@ -72,7 +71,7 @@ class AulaController extends Controller
 	
 	public function mudarData(SalvarAulaRequest $request, $ucId, $turmaId, $id)
     {
-        $aula = AulaRepository::updateData($ucId, $turmaId, $id, $request->data);
+        $aula = $this->service->changeDate($request->all(), $ucId, $turmaId, $id);
 
         return $this->jsonResponse([
             'message' => Lang::get('aulas.saved'),
@@ -82,10 +81,8 @@ class AulaController extends Controller
     
     public function salvarChamada($ucId, $turmaId, $data)
     {
-        $chamadas = Input::get('chamada');
-        
-        ChamadaRepository::insertOrUpdateAll($chamadas, $ucId, $turmaId, $data);
-        
+        $this->service->saveChamada(Input::get('chamada'), $ucId, $turmaId, $data);
+
         return $this->jsonResponse([
             'message' => Lang::get('chamadas.saved')
         ]);
