@@ -45,10 +45,10 @@ class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
         $q = Aluno::join('usuarios', 'alunos.id', '=', 'usuarios.id');
         
         if (!empty($turmaId)) {
-            $q->whereNotIn('alunos.id', function($query) {
+            $q->whereNotIn('alunos.id', function($query) use ($turmaId) {
                 $query->select('aluno_id')
                       ->from('alunos_turmas')
-                      ->where('turma_id', 2);
+                      ->where('turma_id', $turmaId);
             });
         }
                         

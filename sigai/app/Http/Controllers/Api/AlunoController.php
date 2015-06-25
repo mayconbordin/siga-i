@@ -2,43 +2,41 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SalvarAlunoRequest;
+use App\Http\Requests\SearchAlunosRequest;
 use App\Http\Requests\UpdateAlunoRequest;
 
-use App\Models\Aluno;
-use App\Repositories\AlunoRepository;
-
+use App\Services\Contracts\AlunoServiceContract;
 use \DB;
 use \Lang;
 use \Input;
 
-class AlunoController extends Controller {
+class AlunoController extends Controller
+{
+    protected $service;
 
-    public function __construct()
+    public function __construct(AlunoServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service = $service;
     }
 
-	public function listar()
+	public function listar(SearchAlunosRequest $request)
 	{
-	    $q       = e(Input::get('query'));
-	    $turmaId = e(Input::get('turmaId'));
-	    
-        $alunos = AlunoRepository::searchByNameAndMatricula($q, $turmaId);
-        
+        $alunos = $this->service->listAll($request->all());
 		return $this->jsonResponse($alunos);
 	}
 	
 	public function mostrar($matricula)
 	{
-	    $aluno = AlunoRepository::findByMatricula($matricula);
-
+	    $aluno = $this->service->show($matricula);
         return $this->jsonResponse($aluno);
 	}
 
 	public function editar(UpdateAlunoRequest $request, $matricula)
 	{
-        $aluno = AlunoRepository::updateByMatricula($request->all(), $matricula);
+        $aluno = $this->service->edit($request->all(), $matricula);
         
         return $this->jsonResponse([
             'message'   => Lang::get('alunos.saved'),
@@ -48,7 +46,7 @@ class AlunoController extends Controller {
 	
 	public function salvar(SalvarAlunoRequest $request)
     {
-        $aluno = AlunoRepository::insert($request->all());
+        $aluno = $this->service->save($request->all());
         
         return $this->jsonResponse([
             'message'   => Lang::get('alunos.saved'),
@@ -58,7 +56,7 @@ class AlunoController extends Controller {
     
     public function deletar($matricula)
 	{
-	    AlunoRepository::deleteByMatricula($matricula);
+        $this->service->delete($matricula);
 
 	    return $this->jsonResponse([
 	        'message' => Lang::get('alunos.remove_success')
