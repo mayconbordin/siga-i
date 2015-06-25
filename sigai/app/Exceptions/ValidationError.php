@@ -26,4 +26,9 @@ class ValidationError extends RepositoryException
 
         return $message;
     }
+
+    public static function withSingleError($field, $message)
+    {
+        return new ValidationError([$field => [$message]]);
+    }
 }

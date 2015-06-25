@@ -3,69 +3,47 @@
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\SalvarTurmaRequest;
-use App\Http\Requests\SalvarDiarioRequest;
 use App\Http\Requests\SalvarAlunoTurmaRequest;
-
-use App\Repositories\TurmaRepository;
-use App\Repositories\UsuarioRepository;
-use App\Repositories\DiarioRepository;
-use App\Repositories\ProfessorRepository;
-
-use App\Exceptions\BadRequest;
-use App\Exceptions\ConflictError;
-
+use App\Http\Requests\SearchTurmasRequest;
 use App\Services\Contracts\DiarioServiceContract;
+use App\Services\Contracts\TurmaServiceContract;
+
 use \DB;
 use \Lang;
 use \Input;
 use \Auth;
 
-use Carbon\Carbon;
-
 class TurmaController extends Controller
 {
-    protected $turmaRepository;
+    protected $turmaService;
     protected $diarioService;
 
-    public function __construct(DiarioServiceContract $diarioService)
+    public function __construct(DiarioServiceContract $diarioService, TurmaServiceContract $turmaService)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
 
+        $this->turmaService  = $turmaService;
         $this->diarioService = $diarioService;
     }
     
-    public function listar()
+    public function listar(SearchTurmasRequest $request)
     {
-        $perPage = Input::get('limit');
-        $sort    = Input::get('sort');
-        $order   = Input::get('order');
-        $search  = Input::get('search');
-        $field   = Input::get('field');
-        
-        if ($sort == "unidade_curricular") {
-            $sort = "uc.sigla";
-        }
-        
-        $turmas = TurmaRepository::search($perPage, $sort, $order, $search, $field);
-        
-        $data = $turmas->toArray();
-        $data['rows'] = $data['data'];
-        
-        unset($data['data']);
-        
+        $params = $request->all();
+        $data = $this->turmaService->filter($params);
+
         return $this->jsonResponse($data);
     }
 
 	public function mostrar($ucId, $id)
 	{
-	    $turma = TurmaRepository::findById($id, $ucId);
+	    $turma = $this->turmaService->show($ucId, $id);
 	    return $this->jsonResponse($turma);
 	}
 	
 	public function editar(SalvarTurmaRequest $request, $ucId, $id)
 	{
-	    $turma = TurmaRepository::update($request->all(), $ucId, $id);
+	    $turma = $this->turmaService->edit($request->all(), $ucId, $id);
 
         return $this->jsonResponse([
             'message' => Lang::get('turmas.saved'),
@@ -75,7 +53,7 @@ class TurmaController extends Controller
 	
 	public function salvar(SalvarTurmaRequest $request, $ucId)
 	{
-	    $turma = TurmaRepository::insert($request->all(), $ucId);
+        $turma = $this->turmaService->save($request->all(), $ucId);
 
         return $this->jsonResponse([
             'message' => Lang::get('turmas.saved'),
@@ -85,7 +63,7 @@ class TurmaController extends Controller
 	
 	public function deletar($ucId, $id)
 	{
-	    TurmaRepository::deleteById($id, $ucId);
+        $this->turmaService->delete($ucId, $id);
 
 	    return $this->jsonResponse([
 	        'message' => Lang::get('turmas.remove_success')]);
@@ -93,24 +71,24 @@ class TurmaController extends Controller
 	
 	public function listarAlunos($ucId, $id)
 	{
-	    $turma = TurmaRepository::findByIdWith($id, $ucId, ['alunos', 'alunos.usuario']);
+        $alunos = $this->turmaService->listAlunos($ucId, $id);
 	    
-	    return $this->jsonResponse($turma->alunos);
+	    return $this->jsonResponse($alunos);
 	}
 	
 	public function vincularAluno(SalvarAlunoTurmaRequest $request, $ucId, $turmaId, $matricula)
 	{
-	    $result = TurmaRepository::attachAluno($request->all(), $ucId, $turmaId, $matricula);
+        $aluno = $this->turmaService->attachAluno($request->all(), $ucId, $turmaId, $matricula);
 
 	    return $this->jsonResponse([
 	        'message' => Lang::get('turmas.aluno_attached'),
-	        'aluno'   => $result['aluno']
+	        'aluno'   => $aluno
         ], ['pivot']);
 	}
 	
 	public function desvincularAluno($ucId, $turmaId, $matricula)
 	{
-	    TurmaRepository::detachAluno($ucId, $turmaId, $matricula);
+        $this->turmaService->detachAluno($ucId, $turmaId, $matricula);
 	    
 	    return $this->jsonResponse([
 	        'message' => Lang::get('turmas.aluno_detached')
@@ -119,7 +97,7 @@ class TurmaController extends Controller
 	
 	public function updateAluno(SalvarAlunoTurmaRequest $request, $ucId, $turmaId, $matricula)
 	{
-	    $aluno = TurmaRepository::updateAluno($request->all(), $ucId, $turmaId, $matricula);
+	    $aluno = $this->turmaService->updateAluno($request->all(), $ucId, $turmaId, $matricula);
 
 	    return $this->jsonResponse([
 	        'message' => Lang::get('turmas.aluno_updated'),
@@ -129,25 +107,24 @@ class TurmaController extends Controller
 
 	public function listarProfessores($ucId, $id)
 	{
-	    $turma = TurmaRepository::findByIdWith($id, $ucId, ['professores', 'professores.usuario']);
-	    
-	    return $this->jsonResponse($turma->professores);
+	    $professores = $this->turmaService->listProfessores($ucId, $id);
+	    return $this->jsonResponse($professores);
 	}
 	
 	public function vincularProfessor($ucId, $turmaId, $matricula)
 	{
-	    $result = TurmaRepository::attachProfessor($ucId, $turmaId, $matricula);
+        $professor = $this->turmaService->attachProfessor($ucId, $turmaId, $matricula);
 
 	    return $this->jsonResponse([
 	        'message'   => Lang::get('turmas.professor_attached'),
-	        'professor' => $result['professor']
+	        'professor' => $professor
         ], ['pivot']);
 	}
 	
 	public function desvincularProfessor($ucId, $turmaId, $matricula)
 	{
-	    TurmaRepository::detachProfessor($ucId, $turmaId, $matricula);
-	    
+        $this->turmaService->detachProfessor($ucId, $turmaId, $matricula);
+
 	    return $this->jsonResponse([
 	        'message' => Lang::get('turmas.professor_detached')
         ]);

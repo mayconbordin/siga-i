@@ -145,7 +145,7 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
             Route::put ('/{ucId}/turmas/{turmaId}/diarios/{month}'       , 'TurmaController@fecharDiario');
             Route::post('/{ucId}/turmas/{turmaId}/diarios/{month}/enviar', 'TurmaController@enviarDiario');
             
-            Route::get   ('/{ucId}/turmas/{turmaId}/alunos', 'TurmaController@listarAlunos');
+            Route::get   ('/{ucId}/turmas/{turmaId}/alunos'     , 'TurmaController@listarAlunos');
             Route::get   ('/{ucId}/turmas/{turmaId}/professores', 'TurmaController@listarProfessores');
         });
     });

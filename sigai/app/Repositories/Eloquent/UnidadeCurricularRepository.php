@@ -149,7 +149,7 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
     public function getTurmaRepository()
     {
         if ($this->turmaRepository == null) {
-            $this->turmaRepository = App::getInstance()->make('App\Repositories\Contracts\TurmaRepositoryContract');
+            $this->turmaRepository = \App::getInstance()->make('App\Repositories\Contracts\TurmaRepositoryContract');
         }
         return $this->turmaRepository;
     }
