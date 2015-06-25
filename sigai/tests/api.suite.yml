@@ -1,6 +1,13 @@
 class_name: ApiTester
 modules:
-    enabled: [Laravel5, REST, ApiHelper, Asserts]
+    enabled: [Laravel5, REST, ApiHelper, Asserts, Db]
     config:
         Laravel5:
             environment_file: .env.testing
+        Db:
+            dsn: 'mysql:host=localhost;dbname=sigai_test'
+            user: 'root'
+            password: 'sorrisofresh'
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true
