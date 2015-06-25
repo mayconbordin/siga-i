@@ -9,5 +9,7 @@ return [
     "error" => "Ocorreu um erro ao importar a planilha",
     "archive" => "Arquivo",
     
-    "upload_info" => "Formatos suportados: .xls, .xlsm, .xlsb, .xlsx"
+    "upload_info" => "Formatos suportados: .xls, .xlsm, .xlsb, .xlsx",
+    
+    "skipLabel" => "Sair",
 ];
