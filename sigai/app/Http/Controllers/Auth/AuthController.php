@@ -55,24 +55,27 @@ class AuthController extends Controller {
 		]);
 		
 		$credentials = $request->only('email', 'password');
+        $otherCredentials = ['matricula' => $request->email, 'password' => $request->password];
 		
-		if ($this->auth->attempt($credentials, $request->has('remember')))
-		{
-			return redirect()->intended($this->redirectPath());
+		if ($this->auth->attempt($credentials, $request->has('remember')) ||
+                $this->auth->attempt($otherCredentials, $request->has('remember')))
+        {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['message' => 'Logged in.']);
+            }
+
+            return redirect()->intended($this->redirectPath());
 		}
-		else if ($this->auth->attempt([
-		    'matricula' => $request->email,
-		    'password' => $request->password], $request->has('remember')))
-		{
-			return redirect()->intended($this->redirectPath());
-		}
-		
-		
-		return redirect($this->loginPath())
-					->withInput($request->only('email', 'remember'))
-					->withErrors([
-						'email' => $this->getFailedLoginMessage(),
-					]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['email' => $this->getFailedLoginMessage()]);
+        } else {
+            return redirect($this->loginPath())
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors([
+                    'email' => $this->getFailedLoginMessage(),
+                ]);
+        }
 	}
 
     public function getRegister()
