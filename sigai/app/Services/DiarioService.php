@@ -103,6 +103,14 @@ class DiarioService implements DiarioServiceContract
     {
         $pdf     = $this->export($ucId, $turmaId, $month);
         $content = $pdf->Output('', 'S');
+
+        if ($this->diskDiarios->exists($filepath)) {
+            $this->diskDiarios->delete($filepath);
+        }
+
+        if ($this->diskLocal->exists($filepath)) {
+            $this->diskLocal->delete($filepath);
+        }
         
         $this->diskDiarios->put($filepath, $content);
         $this->diskLocal->put($filepath, $content);
