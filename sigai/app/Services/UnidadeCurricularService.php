@@ -22,9 +22,29 @@ class UnidadeCurricularService implements UnidadeCurricularServiceContract
         return $this->ucRepository->listAll();
     }
 
+    public function paginateWithTurmas()
+    {
+        return $this->ucRepository->paginateWith(['turmas']);
+    }
+
     public function show($id)
     {
         return $this->ucRepository->findById($id);
+    }
+
+    public function showFull($id)
+    {
+        return $this->ucRepository->findByIdWith($id, ['turmas', 'cursos']);
+    }
+
+    public function edit(array $data, $id)
+    {
+        return $this->ucRepository->update($data, $id);
+    }
+
+    public function save(array $data)
+    {
+        return $this->ucRepository->insert($data);
     }
 
     public function delete($id)

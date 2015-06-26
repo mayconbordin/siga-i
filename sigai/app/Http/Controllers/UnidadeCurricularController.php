@@ -1,24 +1,28 @@
 <?php namespace App\Http\Controllers;
 
-use App\Repositories\UnidadeCurricularRepository;
 use App\Http\Requests\SalvarUnidadeCurricularRequest;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 
+use App\Services\Contracts\UnidadeCurricularServiceContract;
 use \Lang;
 
-class UnidadeCurricularController extends Controller {
+class UnidadeCurricularController extends Controller
+{
+    protected $service;
 
-    public function __construct()
+    public function __construct(UnidadeCurricularServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service = $service;
     }
 
 	public function listar()
 	{
-        $ucs = UnidadeCurricularRepository::paginateWith(['turmas']);
+        $ucs = $this->service->paginateWithTurmas();
 	
 		return view('unidades_curriculares.index', [
 		    'unidadesCurriculares' => $ucs
@@ -28,7 +32,7 @@ class UnidadeCurricularController extends Controller {
 	public function mostrar($id)
 	{
 	    try {
-	        $uc = UnidadeCurricularRepository::findByIdWith($id, ['turmas', 'cursos']);
+	        $uc = $this->service->showFull($id);
 	        
 	        return view('unidades_curriculares.criar_mostrar', [
 		        'uc' => $uc
@@ -46,7 +50,7 @@ class UnidadeCurricularController extends Controller {
 	public function editar(SalvarUnidadeCurricularRequest $request, $id)
 	{
 	    try {
-	        $uc = UnidadeCurricularRepository::update($request->all(), $id);
+	        $uc = $this->service->edit($request->all(), $id);
 	    
 	        return redirect()->action('UnidadeCurricularController@mostrar', [$uc->id])
 	                         ->with('success', Lang::get('unidades_curriculares.create_success'));
@@ -61,7 +65,7 @@ class UnidadeCurricularController extends Controller {
 	public function salvar(SalvarUnidadeCurricularRequest $request)
 	{
 	    try {
-	        $uc = UnidadeCurricularRepository::insert($request->all());
+	        $uc = $this->service->save($request->all());
 	    
 	        return redirect()->action('UnidadeCurricularController@mostrar', [$uc->id])
 	                         ->with('success', Lang::get('unidades_curriculares.create_success'));
