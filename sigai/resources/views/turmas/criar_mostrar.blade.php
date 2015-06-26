@@ -595,7 +595,7 @@ var Turma = (function() {
             $("#vincularAluno").modal('show');
 
             editAlunoRow = $(this).parent().parent();
-            var data = editAlunoRow.data();
+            var data = $.extend({}, editAlunoRow.data());
             data.matricula = data.matricula + ' | ' + data.nome;
             delete data.nome;
 
