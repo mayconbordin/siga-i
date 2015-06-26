@@ -7,4 +7,5 @@ interface ProfessorServiceContract {
     public function edit(array $data, $matricula);
     public function save(array $data);
     public function delete($matricula);
+    public function paginate();
 }

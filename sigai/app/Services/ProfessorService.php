@@ -50,4 +50,9 @@ class ProfessorService implements ProfessorServiceContract
     {
         $this->repository->deleteByMatricula($matricula);
     }
+
+    public function paginate()
+    {
+        return $this->repository->paginate();
+    }
 }

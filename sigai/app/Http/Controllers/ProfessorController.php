@@ -9,24 +9,32 @@ use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
 use App\Exceptions\ServerError;
 
+use App\Services\Contracts\CursoServiceContract;
+use App\Services\Contracts\ProfessorServiceContract;
 use \Lang;
 
 class ProfessorController extends Controller
 {
-    public function __construct()
+    protected $service;
+    protected $cursoService;
+
+    public function __construct(ProfessorServiceContract $service, CursoServiceContract $cursoService)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service      = $service;
+        $this->cursoService = $cursoService;
     }
 
 	public function listar()
 	{
-        $professores = ProfessorRepository::paginate();
-        $cursos = CursoRepository::listAll();
+        $professores = $this->service->paginate();
+        $cursos      = $this->cursoService->listAll();
         
         return view('professores.index', [
             'professores' => $professores,
-            'cursos' => $cursos
+            'cursos'      => $cursos
         ]);
 	}
 }

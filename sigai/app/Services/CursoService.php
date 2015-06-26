@@ -15,10 +15,15 @@ class CursoService implements CursoServiceContract
         $this->usuarioRepository = $usuarioRepository;
     }
 
-    public function listAll(array $parameters)
+    public function listAll(array $parameters = null)
     {
         $query = array_get($parameters, 'query');
-        $cursos = $this->repository->searchByName($query);
+
+        if ($query == null) {
+            $cursos = $this->repository->listAll();
+        } else {
+            $cursos = $this->repository->searchByName($query);
+        }
 
         return $cursos;
     }
