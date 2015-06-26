@@ -3,7 +3,7 @@
 # suite for acceptance tests.
 class_name: AcceptanceTester
 modules:
-    enabled: [WebDriver, AcceptanceHelper, Db]
+    enabled: [WebDriver, AcceptanceHelper, Db, Asserts]
     config:
         WebDriver:
             url: 'http://localhost'
