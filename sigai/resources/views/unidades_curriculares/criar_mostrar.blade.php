@@ -225,6 +225,7 @@ var UnidadeCurricular = (function() {
                 $("#newTurma").modal('hide');
                 Modal.success(result.message);
                 UnidadeCurricular.addTurmaToTable(result.turma);
+                turmaForm.cleanValues();
             }, function(errors) {
                 turmaForm.validate(errors);
             });
