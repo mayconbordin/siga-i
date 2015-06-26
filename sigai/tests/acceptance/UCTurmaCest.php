@@ -180,7 +180,7 @@ class UCTurmaCest extends BaseAcceptanceCest {
         $I->selectOption('#alunoCursoOrigem', 'AUTOMAÇÃO INDUSTRIAL');
         $I->fillField('#alunoNomeOrMatricula', "20525");
 
-        $I->waitForElementVisible('#vincularAluno ul.typeahead');
+        $I->waitForElementVisible('#vincularAluno ul.typeahead', 30);
         $I->click('#vincularAluno ul.typeahead li[data-value="20525"]');
 
         $I->wait(2);
@@ -241,7 +241,7 @@ class UCTurmaCest extends BaseAcceptanceCest {
 
         $I->fillField('#professorNomeOrMatricula', "2345");
 
-        $I->waitForElementVisible('#vincularProfessor ul.typeahead');
+        $I->waitForElementVisible('#vincularProfessor ul.typeahead', 30);
         $I->click('#vincularProfessor ul.typeahead li[data-value="2345"]');
 
         $I->wait(2);
