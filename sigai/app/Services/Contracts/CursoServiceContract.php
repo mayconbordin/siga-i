@@ -6,4 +6,5 @@ interface CursoServiceContract {
     public function edit(array $data, $id);
     public function save(array $data);
     public function delete($id);
+    public function paginate();
 }

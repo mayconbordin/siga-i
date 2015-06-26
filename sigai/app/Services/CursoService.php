@@ -54,4 +54,9 @@ class CursoService implements CursoServiceContract
     {
         $this->repository->deleteById($id);
     }
+
+    public function paginate()
+    {
+        return $this->repository->paginate();
+    }
 }

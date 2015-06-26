@@ -36,6 +36,8 @@ class ProfessoresCest extends BaseAcceptanceCest {
 
         $I->fillField('#newProfessorMatricula', $newMatricula);
         $I->fillField('#newProfessorNome', $newNome);
+
+        $I->wait(2);
         $I->click('#newProfessor .save');
 
         $I->waitForElementNotVisible('#newProfessor', 30);
@@ -90,6 +92,8 @@ class ProfessoresCest extends BaseAcceptanceCest {
         $I->fillField('#newProfessorEmail', $email);
         $I->fillField('#newProfessorPassword', $senha);
         $I->selectOption('#newProfessorCursoOrigem', 'ANÁLISE E DESENVOLVIMENTO DE SISTEMAS');
+
+        $I->wait(2);
         $I->click('#newProfessor .save');
 
         $I->waitForElementNotVisible('#newProfessor', 30);

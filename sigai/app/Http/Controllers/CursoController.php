@@ -1,26 +1,27 @@
 <?php namespace App\Http\Controllers;
 
-use App\Repositories\CursoRepository;
-
+use App\Services\Contracts\CursoServiceContract;
 use \Validator;
 use \Input;
 
-class CursoController extends Controller {
+class CursoController extends Controller
+{
+    protected $service;
 
-    public function __construct()
+    public function __construct(CursoServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service = $service;
     }
 
 	public function listar()
 	{
-	    $cursos = CursoRepository::paginate();
+	    $cursos = $this->service->paginate();
 	
 		return view('cursos.index', [
 		    'cursos' => $cursos
 		]);
 	}
-	
-	
 }

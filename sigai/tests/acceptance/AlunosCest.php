@@ -40,6 +40,8 @@ class AlunosCest extends BaseAcceptanceCest {
 
         $I->fillField('#newAlunoMatricula', $newMatricula);
         $I->fillField('#newAlunoNome', $newNome);
+
+        $I->wait(2);
         $I->click('#newAluno .save');
 
         $I->waitForElementNotVisible('#newAluno', 30);
@@ -93,6 +95,8 @@ class AlunosCest extends BaseAcceptanceCest {
         $I->fillField('#newAlunoNome', $nome);
         $I->fillField('#newAlunoEmail', $email);
         $I->fillField('#newAlunoPassword', $senha);
+
+        $I->wait(2);
         $I->click('#newAluno .save');
 
         $I->waitForElementNotVisible('#newAluno', 30);
