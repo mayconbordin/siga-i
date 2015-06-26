@@ -53,8 +53,11 @@ class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
         }
                         
         if (!empty($query)) {
-            $q->where('usuarios.nome', 'LIKE', $query.'%')
-	          ->orWhere('usuarios.matricula', 'LIKE', $query.'%');
+            $q->where(function($q) use ($query)
+            {
+                $q->where('usuarios.nome', 'LIKE', $query.'%')
+                    ->orWhere('usuarios.matricula', 'LIKE', $query.'%');
+            });
         }
               
         return $q->get();
