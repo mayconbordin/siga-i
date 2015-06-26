@@ -43,4 +43,9 @@ class AlunoService implements AlunoServiceContract
     {
         $this->repository->deleteByMatricula($matricula);
     }
+
+    public function paginate()
+    {
+        return $this->repository->paginate();
+    }
 }

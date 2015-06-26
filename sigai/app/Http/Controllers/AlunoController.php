@@ -1,24 +1,24 @@
 <?php namespace App\Http\Controllers;
 
-use App\Models\Aluno;
-use App\Repositories\AlunoRepository;
-
-use App\Http\Requests\SalvarAlunoRequest;
-
+use App\Services\Contracts\AlunoServiceContract;
 use \Validator;
 use \Input;
 
-class AlunoController extends Controller {
+class AlunoController extends Controller
+{
+    protected $service;
 
-    public function __construct()
+    public function __construct(AlunoServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service = $service;
     }
 
 	public function listar()
 	{
-	    $alunos = AlunoRepository::paginate();
+	    $alunos = $this->service->paginate();
 	
 		return view('alunos.index', [
 		    'alunos' => $alunos

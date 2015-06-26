@@ -6,7 +6,14 @@
 
 class_name: FunctionalTester
 modules:
-    enabled: [Laravel5, Asserts, FunctionalHelper]
+    enabled: [Laravel5, Asserts, FunctionalHelper, Db]
     config:
         Laravel5:
             environment_file: .env.testing
+        Db:
+            dsn: 'mysql:host=localhost;dbname=sigai_test'
+            user: 'root'
+            password: 'sorrisofresh'
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true

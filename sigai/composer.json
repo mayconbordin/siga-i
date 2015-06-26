@@ -16,7 +16,8 @@
 		"phpspec/phpspec": "~2.1",
         "codeception/codeception": "2.0.14",
         "codeception/aspect-mock": "*",
-        "codeception/mockery-module": "*"
+        "codeception/mockery-module": "*",
+        "se/selenium-server-standalone": "^2.46"
 	},
 	"autoload": {
 		"classmap": [
@@ -51,7 +52,15 @@
 		"post-create-project-cmd": [
 			"php -r \"copy('.env.example', '.env');\"",
 			"php artisan key:generate"
-		]
+		],
+        "testing-on": [
+            "mv .env .env.temp",
+            "mv .env.testing .env"
+        ],
+        "testing-off": [
+          "mv .env .env.testing",
+          "mv .env.temp .env"
+        ]
 	},
 	"config": {
 		"preferred-install": "dist"

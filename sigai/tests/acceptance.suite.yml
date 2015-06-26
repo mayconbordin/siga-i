@@ -1,0 +1,17 @@
+# Codeception Test Suite Configuration
+
+# suite for acceptance tests.
+class_name: AcceptanceTester
+modules:
+    enabled: [WebDriver, AcceptanceHelper, Db]
+    config:
+        WebDriver:
+            url: 'http://localhost'
+            browser: firefox
+        Db:
+            dsn: 'mysql:host=localhost;dbname=sigai_test'
+            user: 'root'
+            password: 'sorrisofresh'
+            dump: tests/_data/dump.sql
+            populate: true
+            cleanup: true
