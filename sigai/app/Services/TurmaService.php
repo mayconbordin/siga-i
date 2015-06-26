@@ -2,6 +2,8 @@
 
 
 use App\Repositories\Contracts\AlunoRepositoryContract;
+use App\Repositories\Contracts\ChamadaRepositoryContract;
+use App\Repositories\Contracts\DiarioRepositoryContract;
 use App\Repositories\Contracts\ProfessorRepositoryContract;
 use App\Repositories\Contracts\TurmaRepositoryContract;
 use App\Repositories\Contracts\UnidadeCurricularRepositoryContract;
@@ -15,6 +17,8 @@ class TurmaService implements TurmaServiceContract
     protected $ucRepository;
     protected $alunoRepository;
     protected $professorRepository;
+    protected $diarioRepository;
+    protected $chamadaRepository;
 
     protected $sortFields = [
         'id'                 => 'turmas.id',
@@ -25,12 +29,15 @@ class TurmaService implements TurmaServiceContract
     ];
 
     public function __construct(TurmaRepositoryContract $turmaRepository, UnidadeCurricularRepositoryContract $ucRepository,
-                                AlunoRepositoryContract $alunoRepository, ProfessorRepositoryContract $professorRepository)
+                                AlunoRepositoryContract $alunoRepository, ProfessorRepositoryContract $professorRepository,
+                                DiarioRepositoryContract $diarioRepository, ChamadaRepositoryContract $chamadaRepository)
     {
         $this->turmaRepository     = $turmaRepository;
         $this->ucRepository        = $ucRepository;
         $this->alunoRepository     = $alunoRepository;
         $this->professorRepository = $professorRepository;
+        $this->chamadaRepository   = $chamadaRepository;
+        $this->diarioRepository    = $diarioRepository;
     }
 
     public function filter(array $parameters)
@@ -56,6 +63,19 @@ class TurmaService implements TurmaServiceContract
     public function show($ucId, $id)
     {
         return $this->turmaRepository->findById($id, $ucId);
+    }
+
+    public function showFull($ucId, $id)
+    {
+        $data = new \stdClass;
+
+        $data->turma = $this->turmaRepository->findByIdWithAll($id, $ucId);
+        $data->faltas = $this->chamadaRepository->findFaltasByTurma($data->turma->id);
+        $data->alunos = $this->alunoRepository->findByTurmaWithPivot($data->turma->id);
+        $data->diariosToClose = $this->diarioRepository->findDiariosToCloseByTurma($data->turma);
+        $data->diarios = $this->diarioRepository->findAllByTurma($data->turma);
+
+        return $data;
     }
 
     public function edit(array $data, $ucId, $id)

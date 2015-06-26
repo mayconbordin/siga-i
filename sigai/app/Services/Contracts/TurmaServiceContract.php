@@ -4,6 +4,7 @@
 interface TurmaServiceContract {
     public function filter(array $parameters);
     public function show($ucId, $id);
+    public function showFull($ucId, $id);
     public function edit(array $data, $ucId, $id);
     public function save(array $data, $ucId);
     public function delete($ucId, $id);

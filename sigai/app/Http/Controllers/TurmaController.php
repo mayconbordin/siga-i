@@ -21,23 +21,33 @@ use App\Exceptions\ServerError;
 
 use App\Exporters\ChamadaPDFExport;
 
+use App\Services\Contracts\CursoServiceContract;
 use App\Services\Contracts\DiarioServiceContract;
+use App\Services\Contracts\TurmaServiceContract;
+use App\Services\Contracts\UnidadeCurricularServiceContract;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use \Input;
 use \Lang;
 use \DB;
 
-class TurmaController extends Controller {
-
+class TurmaController extends Controller
+{
+    protected $service;
     protected $diarioService;
+    protected $ucService;
+    protected $cursoService;
     
-    public function __construct(DiarioServiceContract $diarioService)
+    public function __construct(TurmaServiceContract $service, DiarioServiceContract $diarioService,
+                                UnidadeCurricularServiceContract $ucService, CursoServiceContract $cursoService)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
 
+        $this->service       = $service;
         $this->diarioService = $diarioService;
+        $this->ucService     = $ucService;
+        $this->cursoService  = $cursoService;
     }
     
     public function listar()
@@ -48,25 +58,20 @@ class TurmaController extends Controller {
 	public function mostrar($ucId, $id)
 	{
         try {
-            $turma  = TurmaRepository::findByIdWithAll($id, $ucId);
-            $ucs    = UnidadeCurricularRepository::listAll();
-            $faltas = ChamadaRepository::findFaltasByTurma($turma->id);
-            $cursos = CursoRepository::listAll();
-            $alunos = AlunoRepository::findByTurmaWithPivot($turma->id);
-            $diariosToClose = DiarioRepository::findDiariosToCloseByTurma($turma);
-            
-            $diarios = DiarioRepository::findAllByTurma($turma);
+            $ucs    = $this->ucService->listAll();
+            $cursos = $this->cursoService->listAll();
+            $data   = $this->service->showFull($ucId, $id);
 
             return view('turmas.criar_mostrar', [
-		        'turma'                => $turma,
-		        'unidadeCurricular'    => $turma->unidadeCurricular,
+		        'turma'                => $data->turma,
+		        'unidadeCurricular'    => $data->turma->unidadeCurricular,
 		        'unidadesCurriculares' => $ucs,
-		        'faltas'               => $faltas['faltas'],
-		        'periods'              => $faltas['periods'],
+		        'faltas'               => $data->faltas['faltas'],
+		        'periods'              => $data->faltas['periods'],
 		        'cursos'               => $cursos,
-		        'alunos'               => $alunos,
-		        'diariosToClose'       => $diariosToClose,
-		        'diarios'              => $diarios
+		        'alunos'               => $data->alunos,
+		        'diariosToClose'       => $data->diariosToClose,
+		        'diarios'              => $data->diarios
 		    ]);
         } catch (NotFoundError $e) {
             return redirect()->action('UnidadeCurricularController@mostrar', [$ucId])
@@ -80,7 +85,8 @@ class TurmaController extends Controller {
 	public function editar(SalvarTurmaRequest $request, $ucId, $id)
 	{
 	    try {
-	        $turma = TurmaRepository::update($request->all(), $ucId, $id);
+	        //$turma = TurmaRepository::update($request->all(), $ucId, $id);
+            $turma = $this->service->edit($request->all(), $ucId, $id);
 	    
 	        return redirect()->action('TurmaController@mostrar', [$turma->unidade_curricular_id, $id])
 	                         ->with('success', Lang::get('turmas.saved'));
@@ -99,8 +105,9 @@ class TurmaController extends Controller {
 	public function salvar(SalvarTurmaRequest $request, $ucId)
 	{
 	    try {
-	        $turma = TurmaRepository::insert($request->all(), $ucId);
-	    
+	        //$turma = TurmaRepository::insert($request->all(), $ucId);
+            $turma = $this->service->save($request->all(), $ucId);
+
 	        return redirect()->action('TurmaController@mostrar', [$ucId, $turma->id])
 	                         ->with('success', Lang::get('turmas.saved'));
 	    } catch (NotFoundError $e) {
