@@ -53,13 +53,14 @@
 			"php -r \"copy('.env.example', '.env');\"",
 			"php artisan key:generate"
 		],
-        "testing-on": [
+        "test-selenium": [
             "mv .env .env.temp",
-            "mv .env.testing .env"
+            "mv .env.selenium .env",
+            "vendor/bin/selenium-server-standalone"
         ],
-        "testing-off": [
-          "mv .env .env.testing",
-          "mv .env.temp .env"
+        "clean-selenium": [
+            "mv .env .env.selenium",
+            "mv .env.temp .env"
         ]
 	},
 	"config": {
