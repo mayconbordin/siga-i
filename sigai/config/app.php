@@ -162,6 +162,9 @@ return [
 		 */
 		'Zizaco\Entrust\EntrustServiceProvider',
         'ProAI\Handlebars\HandlebarsServiceProvider',
+
+        'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
+        'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 	],
 
 	/*
@@ -212,7 +215,7 @@ return [
 		
 		
 		'Entrust'   => 'Zizaco\Entrust\EntrustFacade',
-
+        'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\Authorizer',
 	],
 
 ];
