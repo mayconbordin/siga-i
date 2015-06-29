@@ -1,24 +1,25 @@
 <?php namespace App\Http\Controllers;
 
-use App\Repositories\ProfessorRepository;
-use App\Repositories\AulaRepository;
-use App\Repositories\DiarioRepository;
-
+use App\Services\Contracts\ProfessorServiceContract;
 use \Auth;
 
 use Carbon\Carbon;
 
-class IndexController extends Controller {
+class IndexController extends Controller
+{
+    protected $professorService;
 
 	/**
 	 * Create a new controller instance.
 	 *
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(ProfessorServiceContract $professorService)
 	{
 		$this->middleware('auth');
 		//$this->middleware('permissions');
+
+        $this->professorService = $professorService;
 	}
 
 	/**
@@ -41,19 +42,15 @@ class IndexController extends Controller {
 	
 	protected function professorHome()
 	{
-	    $professor = ProfessorRepository::findByIdWith(Auth::user()->id, ['turmas']);
-	    $nextAulas = AulaRepository::findNextByProfessor($professor->id);
-	    $diarios   = DiarioRepository::findDiariosToClose($professor->id);
-	    
-	    $daysEndMonth = Carbon::now()->diffInDays(Carbon::now()->endOfMonth());
+        $data = $this->professorService->showSummary(Auth::user()->id);
 	    
 
 	    return view('home.professor', [
-	        'professor' => $professor,
-	        'turmas'    => $professor->turmas,
-	        'nextAulas' => $nextAulas,
-	        'diarios'   => $diarios,
-	        'daysEndMonth' => $daysEndMonth
+	        'professor' => $data['professor'],
+	        'turmas'    => $data['turmas'],
+	        'nextAulas' => $data['nextAulas'],
+	        'diarios'   => $data['diarios'],
+	        'daysEndMonth' => $data['daysEndMonth']
 	    ]);
 	}
 

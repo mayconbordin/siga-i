@@ -2,6 +2,7 @@
 
 
 interface ProfessorServiceContract {
+    public function showSummary($id);
     public function listAll(array $parameters);
     public function show($matricula);
     public function edit(array $data, $matricula);
