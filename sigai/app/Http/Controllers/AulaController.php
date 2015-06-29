@@ -2,21 +2,23 @@
 
 use App\Http\Requests\SalvarAulaRequest;
 
-use App\Repositories\AulaRepository;
-use App\Repositories\AlunoRepository;
-
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
 use App\Exceptions\ServerError;
 
+use App\Services\Contracts\AulaServiceContract;
 use \Lang;
 
-class AulaController extends Controller {
+class AulaController extends Controller
+{
+    protected $service;
 
-    public function __construct()
+    public function __construct(AulaServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service = $service;
     }
 
 	public function listar()
@@ -27,12 +29,11 @@ class AulaController extends Controller {
 	public function mostrar($ucId, $turmaId, $data)
 	{
         try {
-            $aula   = AulaRepository::findByDataWithAll($data, $turmaId, $ucId);
-            $alunos = AlunoRepository::findByAulaWithChamada($turmaId, $aula->id);
+            $data = $this->service->showFull($ucId, $turmaId, $data);
 
             return view('aulas.criar_mostrar', [
-		        'aula'     => $aula,
-		        'chamadas' => $alunos
+		        'aula'     => $data['aula'],
+		        'chamadas' => $data['alunos']
 		    ]);
         } catch (NotFoundError $e) {
             return redirect()->action('TurmaController@mostrar', [$turmaId])
@@ -46,10 +47,10 @@ class AulaController extends Controller {
 	public function editar(SalvarAulaRequest $request, $ucId, $turmaId, $data)
 	{
         try {
-            $aula = AulaRepository::update($request->all(), $ucId, $turmaId, $data);
+            $aula = $this->service->edit($request->all(), $ucId, $turmaId, $data);
             
             return redirect()->action('AulaController@mostrar', [$ucId, $turmaId, $aula->data->format('Y-m-d')])
-	                         ->with('success', Lang::get('turmas.saved'));
+	                         ->with('success', Lang::get('aulas.saved'));
         } catch (NotFoundError $e) {
             return redirect()->action('TurmaController@mostrar', [$turmaId])
                              ->with('error', $e->getMessage());

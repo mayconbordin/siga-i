@@ -52,6 +52,20 @@ class AulaService implements AulaServiceContract
         return $aula;
     }
 
+    public function showFull($ucId, $turmaId, $data)
+    {
+        $date   = Carbon::createFromFormat('Y-m-d', $data);
+        $aula   = $this->repository->findByDataWithAll($date, $turmaId, $ucId);
+        $alunos = $this->alunoRepository->findByAulaWithChamada($turmaId, $aula->id);
+
+        // soma número de presenças por aluno
+        foreach ($alunos as $aluno) {
+            $aluno->presencas = array_sum([$aluno->p1, $aluno->p2, $aluno->p3, $aluno->p4]);
+        }
+
+        return ['aula' => $aula, 'alunos' => $alunos];
+    }
+
     public function edit(array $data, $ucId, $turmaId, $date)
     {
         $date = Carbon::createFromFormat('Y-m-d', $date);

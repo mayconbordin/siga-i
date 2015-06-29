@@ -185,7 +185,7 @@ $(document).ready(function($) {
                 
                 <div class="tab-actions row">
                     <div class="col-sm-6 tab-actions-left">
-                        <button class="saveChamada btn btn-success"
+                        <button id="saveChamada-1" class="saveChamada btn btn-success"
                                 data-loading-text="@lang('general.saving')...">
                             @lang('general.save')</button>
                     </div>
@@ -236,7 +236,7 @@ $(document).ready(function($) {
                             
                         @if ($c->isNormal == true)
                             @foreach(['p1', 'p2', 'p3', 'p4'] as $p)
-                            <td class="text-center cell-gray period">
+                            <td class="text-center cell-gray period period-{{ $p }}">
                                 <input type="checkbox" {{ ($c[$p] || $c[$p] == null) ? 'checked' : '' }}
                                        data-toggle="toggle"
                                        data-size="mini" data-onstyle="success"
@@ -245,7 +245,7 @@ $(document).ready(function($) {
                             @endforeach
                             
                             <td class="text-center checkRow">
-                                <input type="checkbox" checked
+                                <input type="checkbox" {{ ($c->presencas > 2) ? 'checked' : '' }}
                                        data-toggle="toggle"
                                        data-size="mini" data-onstyle="success"
                                        data-offstyle="danger" data-on="P" data-off="F">
@@ -264,7 +264,7 @@ $(document).ready(function($) {
                 
                 <div class="tab-actions row">
                     <div class="col-sm-6 tab-actions-left">
-                        <button class="saveChamada btn btn-success"
+                        <button id="saveChamada-2" class="saveChamada btn btn-success"
                                 data-loading-text="@lang('general.saving')...">
                             @lang('general.save')</button>
                     </div>

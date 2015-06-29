@@ -1,32 +1,16 @@
 <?php namespace App\Http\Controllers;
 
-use App\Models\Aluno;
-use App\Models\Turma;
-use App\Models\UnidadeCurricular;
-
 use App\Http\Requests\SalvarTurmaRequest;
-
-use App\Repositories\AlunoRepository;
-use App\Repositories\CursoRepository;
-use App\Repositories\AulaRepository;
-use App\Repositories\UsuarioRepository;
-use App\Repositories\TurmaRepository;
-use App\Repositories\ChamadaRepository;
-use App\Repositories\UnidadeCurricularRepository;
-use App\Repositories\DiarioRepository;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ValidationError;
 use App\Exceptions\ServerError;
 
-use App\Exporters\ChamadaPDFExport;
-
 use App\Services\Contracts\CursoServiceContract;
 use App\Services\Contracts\DiarioServiceContract;
 use App\Services\Contracts\TurmaServiceContract;
 use App\Services\Contracts\UnidadeCurricularServiceContract;
-use Carbon\Carbon;
-use Illuminate\Http\Response;
+
 use \Input;
 use \Lang;
 use \DB;
@@ -85,7 +69,6 @@ class TurmaController extends Controller
 	public function editar(SalvarTurmaRequest $request, $ucId, $id)
 	{
 	    try {
-	        //$turma = TurmaRepository::update($request->all(), $ucId, $id);
             $turma = $this->service->edit($request->all(), $ucId, $id);
 	    
 	        return redirect()->action('TurmaController@mostrar', [$turma->unidade_curricular_id, $id])
@@ -105,7 +88,6 @@ class TurmaController extends Controller
 	public function salvar(SalvarTurmaRequest $request, $ucId)
 	{
 	    try {
-	        //$turma = TurmaRepository::insert($request->all(), $ucId);
             $turma = $this->service->save($request->all(), $ucId);
 
 	        return redirect()->action('TurmaController@mostrar', [$ucId, $turma->id])
