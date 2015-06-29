@@ -2,11 +2,10 @@
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 use \Lang;
+use \Auth;
 
 class AuthController extends Controller {
 
@@ -28,16 +27,10 @@ class AuthController extends Controller {
 
 	/**
 	 * Create a new authentication controller instance.
-	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
 	 * @return void
 	 */
-	public function __construct(Guard $auth, Registrar $registrar)
+	public function __construct()
 	{
-		$this->auth = $auth;
-		$this->registrar = $registrar;
-
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
 	
@@ -57,8 +50,7 @@ class AuthController extends Controller {
 		$credentials = $request->only('email', 'password');
         $otherCredentials = ['matricula' => $request->email, 'password' => $request->password];
 		
-		if ($this->auth->attempt($credentials, $request->has('remember')) ||
-                $this->auth->attempt($otherCredentials, $request->has('remember')))
+		if (Auth::attempt($credentials, $request->has('remember')) || Auth::attempt($otherCredentials, $request->has('remember')))
         {
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json(['message' => 'Logged in.']);
