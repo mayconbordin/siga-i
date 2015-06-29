@@ -31,6 +31,7 @@ class CursosCest extends BaseAcceptanceCest {
         $newNome  = 'TESTE TESTE';
 
         $I->waitForElementVisible('#newCurso', 30);
+        $I->wait(1);
 
         $I->fillField('#newCursoSigla', $newSigla);
         $I->fillField('#newCursoNome', $newNome);
@@ -83,6 +84,7 @@ class CursosCest extends BaseAcceptanceCest {
         $I->click('#openNewCurso');
 
         $I->waitForElementVisible('#newCurso', 30);
+        $I->wait(1);
 
         $I->fillField('#newCursoNome', $nome);
         $I->fillField('#newCursoSigla', $sigla);

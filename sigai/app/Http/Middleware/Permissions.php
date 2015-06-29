@@ -1,11 +1,17 @@
 <?php namespace App\Http\Middleware;
 
-use App\Repositories\TurmaRepository;
-
+use App\Repositories\Contracts\TurmaRepositoryContract;
 use Closure;
 use \Auth;
 
-class Permissions {
+class Permissions
+{
+    protected $turmaRepository;
+
+    public function __construct(TurmaRepositoryContract $turmaRepository)
+    {
+        $this->turmaRepository = $turmaRepository;
+    }
 
 	/**
 	 * Handle an incoming request.
@@ -63,24 +69,24 @@ class Permissions {
 	    switch ($permission)
 	    {
 	        case 'edit-own-turma':
-	            return TurmaRepository::hasProfessor($route->getParameter("turmaId"), $user->id);
+	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
 	            break;
 	            
             case 'view-own-turma':
-	            return TurmaRepository::hasProfessor($route->getParameter("turmaId"), $user->id);
+	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
 	            break;
 	            
             case 'view-own-aula':
-	            return TurmaRepository::hasProfessor($route->getParameter("turmaId"), $user->id) 
-	                or TurmaRepository::hasAluno($route->getParameter("turmaId"), $user->id);
+	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id)
+	                or $this->turmaRepository->hasAluno($route->getParameter("turmaId"), $user->id);
 	            break;
 	            
             case 'edit-own-aula':
-	            return TurmaRepository::hasProfessor($route->getParameter("turmaId"), $user->id);
+	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
 	            break;
 	            
             case 'create-own-aula':
-	            return TurmaRepository::hasProfessor($route->getParameter("turmaId"), $user->id);
+	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
 	            break;
 	    }
 	    

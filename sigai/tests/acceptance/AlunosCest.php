@@ -90,6 +90,7 @@ class AlunosCest extends BaseAcceptanceCest {
         $I->click('#openNewAluno');
 
         $I->waitForElementVisible('#newAluno', 30);
+        $I->wait(1);
 
         $I->fillField('#newAlunoMatricula', $matricula);
         $I->fillField('#newAlunoNome', $nome);
