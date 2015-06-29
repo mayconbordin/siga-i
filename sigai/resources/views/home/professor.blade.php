@@ -3,7 +3,7 @@
 @section('content')
 <div class="col-xs-12">
 
-    @if ($daysEndMonth < 5)
+    @if ($daysEndMonth < 5 && sizeof($diarios) > 0)
     <div class="alert alert-warning alert-dismissible fade in" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
         <h4 id="oh-snap!-you-got-an-error!">Você tem diários de classe para fechar!</h4>
