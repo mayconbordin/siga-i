@@ -58,6 +58,7 @@ class DiarioServicTest extends TestCase
         // Mock de um filesystem
         $fs = m::mock('Illuminate\Filesystem\FilesystemAdapter');
         $fs->shouldReceive('put')->twice()->andReturn(null);
+        $fs->shouldReceive('exists')->twice()->andReturn(false);
 
         // Mock do gerenciador de storage
         $storage = t::double('Illuminate\Filesystem\FilesystemManager', ['disk' => $fs]);

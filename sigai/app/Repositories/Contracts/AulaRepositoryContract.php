@@ -3,6 +3,7 @@
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 use App\Exceptions\ValidationError;
+use App\Models\Ambiente;
 use App\Models\Aula;
 use App\Models\Turma;
 
@@ -119,4 +120,11 @@ interface AulaRepositoryContract
      * @return boolean
      */
     public function exists($turmaId, Carbon $date);
+
+    /**
+     * Disassocia o ambiente informado das aulas.
+     * @param Ambiente $ambiente
+     * @return void
+     */
+    public function dissociateAmbiente(Ambiente $ambiente);
 }

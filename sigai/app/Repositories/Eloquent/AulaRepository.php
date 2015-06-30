@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Eloquent;
 
+use App\Models\Ambiente;
 use App\Models\Aula;
 use App\Models\Turma;
 
@@ -258,5 +259,14 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
               ->first()
         );
     }
-    
+
+    public function dissociateAmbiente(Ambiente $ambiente)
+    {
+        $aulas = Aula::where('ambiente_id', $ambiente->id)->get();
+
+        foreach ($aulas as $aula) {
+            $aula->ambiente()->dissociate();
+            $aula->save();
+        }
+    }
 }

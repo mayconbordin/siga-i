@@ -331,4 +331,16 @@ class TurmaRepositoryTest extends TestCase
 
         $this->assertNotTrue($this->turmaRepository->hasProfessor(2, 50));
     }
+
+    public function testDissociateAmbiente()
+    {
+        $turmas = \App\Models\Turma::where('ambiente_default_id', 1)->get();
+        $this->assertEquals(1, sizeof($turmas));
+
+        $ambiente = \App\Models\Ambiente::find(1);
+        $this->turmaRepository->dissociateAmbiente($ambiente);
+
+        $turmas = \App\Models\Turma::where('ambiente_default_id', 1)->get();
+        $this->assertEquals(0, sizeof($turmas));
+    }
 }

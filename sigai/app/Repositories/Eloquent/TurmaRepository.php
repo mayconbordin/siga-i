@@ -313,4 +313,14 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
               ->first()
         );
     }
+
+    public function dissociateAmbiente(Ambiente $ambiente)
+    {
+        $turmas = Turma::where('ambiente_default_id', $ambiente->id)->get();
+
+        foreach ($turmas as $turma) {
+            $turma->ambienteDefault()->dissociate();
+            $turma->save();
+        }
+    }
 }

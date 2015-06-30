@@ -14,7 +14,7 @@ class AddColumnAmbienteDefaultTurmasTable extends Migration
     {
         Schema::table('turmas', function($table)
         {
-            $table->integer('ambiente_default_id')->unsigned();
+            $table->integer('ambiente_default_id')->unsigned()->nullable();
 
             $table->foreign('ambiente_default_id')->references('id')
                 ->on('ambientes');

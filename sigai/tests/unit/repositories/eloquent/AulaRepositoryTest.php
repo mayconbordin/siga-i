@@ -384,4 +384,16 @@ class AulaRepositoryTest extends TestCase
             $this->assertTrue(isset($errors['data']));
         }
     }
+
+    public function testDissociateAmbiente()
+    {
+        $aulas = \App\Models\Aula::where('ambiente_id', 1)->get();
+        $this->assertEquals(0, sizeof($aulas));
+
+        $ambiente = \App\Models\Ambiente::find(1);
+        $this->aulaRepository->dissociateAmbiente($ambiente);
+
+        $aulas = \App\Models\Aula::where('ambiente_id', 1)->get();
+        $this->assertEquals(0, sizeof($aulas));
+    }
 }

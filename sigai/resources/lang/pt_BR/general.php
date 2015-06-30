@@ -24,6 +24,7 @@ return array(
     
     'or'            => 'ou',
     'to'            => 'a',
+    'until'         => 'até',
     
     'all'           => 'Todos',
     

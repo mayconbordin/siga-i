@@ -1076,7 +1076,7 @@ CREATE TABLE `turmas` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `turno` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Noite',
-  `ambiente_default_id` int(10) unsigned NOT NULL,
+  `ambiente_default_id` int(10) unsigned DEFAULT NULL,
   `horario_inicio` time NOT NULL,
   `horario_fim` time NOT NULL,
   PRIMARY KEY (`id`),

@@ -14,5 +14,14 @@ class Ambiente extends Model {
     {
         return $this->belongsTo('App\Models\TipoAmbiente', 'tipo_ambiente_id');
     }
-    
+
+    public function turmas()
+    {
+        return $this->hasMany('App\Models\Turma', 'ambiente_default_id');
+    }
+
+    public function aulas()
+    {
+        return $this->hasMany('App\Models\Aula', 'ambiente_id');
+    }
 }

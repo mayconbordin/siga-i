@@ -4,6 +4,7 @@ use App\Exceptions\ConflictError;
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 use App\Exceptions\ValidationError;
+use App\Models\Ambiente;
 use App\Models\Curso;
 use App\Models\Turma;
 use App\Models\Professor;
@@ -164,4 +165,11 @@ interface TurmaRepositoryContract
      * @return boolean
      */
     public function hasProfessor($turmaId, $professorId);
+
+    /**
+     * Disassocia todas as turmas que possuem relação com o ambiente informado.
+     * @param Ambiente $ambiente
+     * @return void
+     */
+    public function dissociateAmbiente(Ambiente $ambiente);
 }
