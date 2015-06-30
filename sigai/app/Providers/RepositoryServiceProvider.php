@@ -5,7 +5,8 @@ use Illuminate\Support\ServiceProvider;
 class RepositoryServiceProvider extends ServiceProvider
 {
     protected $entities = [
-        "Aluno", "Aula", "Chamada", "Curso", "DiarioEnvio", "Diario", "Professor", "Turma", "UnidadeCurricular", "Usuario"
+        "Aluno", "Aula", "Chamada", "Curso", "DiarioEnvio", "Diario", "Professor", "Turma", "UnidadeCurricular", "Usuario",
+        "Ambiente"
     ];
 
     public function register()

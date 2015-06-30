@@ -5,6 +5,7 @@ use App\Http\Requests\SalvarAulaRequest;
 
 use App\Http\Requests\SalvarChamadaRequest;
 use App\Http\Requests\SearchAulasRequest;
+use App\Http\Requests\UpdateAulaRequest;
 use App\Repositories\TurmaRepository;
 use App\Repositories\AulaRepository;
 use App\Repositories\ChamadaRepository;
@@ -69,7 +70,7 @@ class AulaController extends Controller
 	}
 	
 	
-	public function mudarData(SalvarAulaRequest $request, $ucId, $turmaId, $id)
+	public function mudarData(UpdateAulaRequest $request, $ucId, $turmaId, $id)
     {
         $aula = $this->service->changeDate($request->all(), $ucId, $turmaId, $id);
 
