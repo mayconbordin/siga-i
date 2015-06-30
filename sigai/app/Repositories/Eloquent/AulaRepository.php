@@ -166,6 +166,10 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
                 ])]
             ]);
         }
+
+        if (isset($data['ambiente']) && $data['ambiente'] instanceof Ambiente) {
+            $aula->ambiente()->associate($data['ambiente']);
+        }
         
         $aula->turma()->associate($turma);
         
@@ -208,6 +212,10 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
                     'max' => $aula->turma->data_fim->format('d/m/Y')
                 ])]
             ]);
+        }
+
+        if (isset($data['ambiente']) && $data['ambiente'] instanceof Ambiente) {
+            $aula->ambiente()->associate($data['ambiente']);
         }
         
         if (!$aula->save()) {

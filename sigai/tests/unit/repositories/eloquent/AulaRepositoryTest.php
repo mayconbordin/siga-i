@@ -241,6 +241,32 @@ class AulaRepositoryTest extends TestCase
         $this->aulaRepository->findById($aula->id, $turmaId, $ucId);
     }
 
+    public function testInsertWithAmbiente()
+    {
+        $turmaId = 2;
+        $ucId    = 1;
+        $turma = \App\Models\Turma::where('id', $turmaId)->first();
+
+        $data = [
+            'data'           => Carbon::createFromFormat('Y-m-d', '2014-08-06'),
+            'conteudo'       => 'teste',
+            'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00'),
+            'ambiente'       => \App\Models\Ambiente::find(1)
+        ];
+
+        $aula = $this->aulaRepository->insert($data, $turma);
+
+        $this->assertNotNull($aula->id);
+        $this->assertEquals($data['data']->format('Y-m-d'), $aula->data->format('Y-m-d'));
+        $this->assertEquals($data['conteudo'], $aula->conteudo);
+        $this->assertEquals($data['horario_inicio']->format('H:i:s'), $aula->horario_inicio->format('H:i:s'));
+        $this->assertEquals($data['horario_fim']->format('H:i:s'), $aula->horario_fim->format('H:i:s'));
+        $this->assertEquals($data['ambiente']->id, $aula->ambiente->id);
+
+        $this->aulaRepository->findById($aula->id, $turmaId, $ucId);
+    }
+
     public function testInsertExists()
     {
         $turmaId = 2;

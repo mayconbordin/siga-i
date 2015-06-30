@@ -29,7 +29,8 @@ class SalvarAulaRequest extends Request {
 			'ensino_a_distancia' => 'boolean',
 			'obs'                => 'string',
             'horario_inicio'     => 'required|date_format:H:i:s',
-            'horario_fim'        => 'required|date_format:H:i:s'
+            'horario_fim'        => 'required|date_format:H:i:s',
+            'ambiente_id'        => 'integer|exists:ambientes'
 		];
 	}
 

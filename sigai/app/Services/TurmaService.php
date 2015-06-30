@@ -86,7 +86,7 @@ class TurmaService implements TurmaServiceContract
     {
         $this->parseTurmaDates($data);
         $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
-        
+
         return $this->turmaRepository->update($data, $ucId, $id);
     }
 

@@ -1,6 +1,7 @@
 <?php namespace App\Services;
 
 use App\Repositories\Contracts\AlunoRepositoryContract;
+use App\Repositories\Contracts\AmbienteRepositoryContract;
 use App\Repositories\Contracts\AulaRepositoryContract;
 use App\Repositories\Contracts\ChamadaRepositoryContract;
 use App\Repositories\Contracts\TurmaRepositoryContract;
@@ -14,14 +15,17 @@ class AulaService implements AulaServiceContract
     protected $turmaRepository;
     protected $chamadaRepository;
     protected $alunoRepository;
+    protected $ambienteRepository;
 
     public function __construct(AulaRepositoryContract $repository, TurmaRepositoryContract $turmaRepository,
-                                ChamadaRepositoryContract $chamadaRepository, AlunoRepositoryContract $alunoRepository)
+                                ChamadaRepositoryContract $chamadaRepository, AlunoRepositoryContract $alunoRepository,
+                                AmbienteRepositoryContract $ambienteRepository)
     {
-        $this->repository        = $repository;
-        $this->turmaRepository   = $turmaRepository;
-        $this->chamadaRepository = $chamadaRepository;
-        $this->alunoRepository   = $alunoRepository;
+        $this->repository         = $repository;
+        $this->turmaRepository    = $turmaRepository;
+        $this->chamadaRepository  = $chamadaRepository;
+        $this->alunoRepository    = $alunoRepository;
+        $this->ambienteRepository = $ambienteRepository;
     }
 
     public function listAll($ucId, $turmaId, array $parameters)
@@ -72,6 +76,10 @@ class AulaService implements AulaServiceContract
 
         $this->parseAulaDates($data);
 
+        if (isset($data['ambiente_id']) && strlen($data['ambiente_id']) > 0) {
+            $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
+        }
+
         $aula = $this->repository->update($data, $ucId, $turmaId, $date);
 
         return $aula;
@@ -80,6 +88,10 @@ class AulaService implements AulaServiceContract
     public function save(array $data, $ucId, $turmaId)
     {
         $this->parseAulaDates($data);
+
+        if (isset($data['ambiente_id']) && strlen($data['ambiente_id']) > 0) {
+            $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
+        }
 
         $turma = $this->turmaRepository->findById($turmaId, $ucId);
         $aula  = $this->repository->insert($data, $turma);
