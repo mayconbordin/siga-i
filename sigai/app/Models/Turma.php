@@ -15,7 +15,7 @@ class Turma extends Model {
     protected $transformer = 'App\Transformers\TurmaTransformer';
 
 	protected $table    = 'turmas';
-	protected $fillable = ['nome', 'data_inicio', 'data_fim'];
+	protected $fillable = ['nome', 'data_inicio', 'data_fim', 'horario_inicio', 'horario_fim'];
 	protected $hidden   = ['pivot'];
 	
 	public function getDataInicioAttribute($value)
@@ -33,6 +33,22 @@ class Turma extends Model {
         else
             return Carbon::createFromFormat('Y-m-d', $value);
     }
+
+    public function getHorarioInicioAttribute($value)
+    {
+        if ($value instanceof Carbon)
+            return $value;
+        else
+            return Carbon::createFromFormat('H:i:s', $value);
+    }
+
+    public function getHorarioFimAttribute($value)
+    {
+        if ($value instanceof Carbon)
+            return $value;
+        else
+            return Carbon::createFromFormat('H:i:s', $value);
+    }
     
     public function isActive()
     {
@@ -43,6 +59,11 @@ class Turma extends Model {
     public function unidadeCurricular()
     {
         return $this->belongsTo('App\Models\UnidadeCurricular', 'unidade_curricular_id');
+    }
+
+    public function ambienteDefault()
+    {
+        return $this->belongsTo('App\Models\Ambiente', 'ambiente_default_id');
     }
 
     public function aulas()

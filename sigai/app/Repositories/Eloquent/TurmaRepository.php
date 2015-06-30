@@ -4,6 +4,7 @@ use App\Models\Aluno;
 use App\Models\Curso;
 use App\Models\Turma;
 use App\Models\Professor;
+use App\Models\Ambiente;
 use App\Models\UnidadeCurricular;
 
 use App\Exceptions\NotFoundError;
@@ -136,18 +137,30 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
 
         $dataInicio = array_get($data, 'data_inicio', $turma->data_inicio);
         $dataFim    = array_get($data, 'data_fim', $turma->data_fim);
+        $horaInicio = array_get($data, 'horario_inicio', $turma->horario_inicio);
+        $horaFim    = array_get($data, 'horario_fim', $turma->horario_fim);
 
         if (!($dataInicio instanceof Carbon) || !($dataFim instanceof Carbon)) {
             throw new \InvalidArgumentException("Datas devem ser do tipo Carbon");
         }
+
+        if (!($horaInicio instanceof Carbon) || !($horaFim instanceof Carbon)) {
+            throw new \InvalidArgumentException("Horários devem ser do tipo Carbon");
+        }
 	    
-	    $turma->nome        = array_get($data, 'nome', $turma->nome);
-	    $turma->data_inicio = $dataInicio;
-	    $turma->data_fim    = $dataFim;
+	    $turma->nome           = array_get($data, 'nome', $turma->nome);
+	    $turma->data_inicio    = $dataInicio;
+	    $turma->data_fim       = $dataFim;
+        $turma->horario_inicio = $horaInicio;
+        $turma->horario_fim    = $horaFim;
 	    
 	    if (isset($data['unidade_curricular']) && $data['unidade_curricular'] instanceof UnidadeCurricular) {
 	        $turma->unidadeCurricular()->associate($data['unidade_curricular']);
 	    }
+
+        if (isset($data['ambiente']) && $data['ambiente'] instanceof Ambiente) {
+            $turma->ambienteDefault()->associate($data['ambiente']);
+        }
 	    
 	    if (!$turma->save()) {
             throw new ServerError(Lang::get('turmas.save_error'));
@@ -160,18 +173,30 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
     {
         $dataInicio = array_get($data, 'data_inicio');
         $dataFim    = array_get($data, 'data_fim');
+        $horaInicio = array_get($data, 'horario_inicio');
+        $horaFim    = array_get($data, 'horario_fim');
 
         if (!($dataInicio instanceof Carbon) || !($dataFim instanceof Carbon)) {
             throw new \InvalidArgumentException("Datas devem ser do tipo Carbon");
         }
 
+        if (!($horaInicio instanceof Carbon) || !($horaFim instanceof Carbon)) {
+            throw new \InvalidArgumentException("Horários devem ser do tipo Carbon");
+        }
+
         $turma = new Turma;
 
-	    $turma->nome        = array_get($data, 'nome');
-        $turma->data_inicio = $dataInicio;
-        $turma->data_fim    = $dataFim;
+	    $turma->nome           = array_get($data, 'nome');
+        $turma->data_inicio    = $dataInicio;
+        $turma->data_fim       = $dataFim;
+        $turma->horario_inicio = $horaInicio;
+        $turma->horario_fim    = $horaFim;
 	    
 	    $turma->unidadeCurricular()->associate($uc);
+
+        if (isset($data['ambiente']) && $data['ambiente'] instanceof Ambiente) {
+            $turma->ambienteDefault()->associate($data['ambiente']);
+        }
 
 	    if (!$turma->save()) {
             throw new ServerError(Lang::get('turmas.create_error'));

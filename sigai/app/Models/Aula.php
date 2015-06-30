@@ -29,5 +29,9 @@ class Aula extends Model {
     {
         return $this->hasMany('App\Models\Chamada', 'aula_id');
     }
-    
+
+    public function ambiente()
+    {
+        return $this->belongsTo('App\Models\Ambiente', 'ambiente_id');
+    }
 }

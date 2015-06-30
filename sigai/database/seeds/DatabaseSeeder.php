@@ -17,6 +17,12 @@ class DatabaseSeeder extends Seeder {
 		
 		DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
+        // Ambientes
+        // --------------------------------------------------------------------
+        $this->call('AmbienteTableSeeder');
+        $this->command->info('Tabelas de ambientes e tipos de ambientes populadas!');
+
+
         $this->call('RolePermissionTablesSeeder');
 		$this->command->info('Tabelas de usuários, roles e permissions populadas!');
 

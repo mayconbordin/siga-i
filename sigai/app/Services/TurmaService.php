@@ -88,6 +88,7 @@ class TurmaService implements TurmaServiceContract
     {
         $uc = $this->ucRepository->findById($ucId);
         $this->parseTurmaDates($data);
+
         return $this->turmaRepository->insert($data, $uc);
     }
 
@@ -148,5 +149,8 @@ class TurmaService implements TurmaServiceContract
     {
         $data['data_inicio'] = Carbon::createFromFormat('d/m/Y', $data['data_inicio']);
         $data['data_fim']    = Carbon::createFromFormat('d/m/Y', $data['data_fim']);
+
+        $data['horario_inicio'] = Carbon::createFromFormat('H:i:s', $data['horario_inicio']);
+        $data['horario_fim']    = Carbon::createFromFormat('H:i:s', $data['horario_fim']);
     }
 }
