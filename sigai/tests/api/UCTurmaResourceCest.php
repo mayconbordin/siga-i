@@ -42,9 +42,18 @@ class UCTurmaResourceCest extends BaseResourceCest
     {
         $this->authenticate($I);
 
+        $data = [
+            'nome'           => 'S049-N2',
+            'data_inicio'    => '01/02/2015',
+            'data_fim'       => '20/07/2015',
+            'horario_inicio' => '18:30:00',
+            'horario_fim'    => '22:30:00',
+            'ambiente_id'    => 1
+        ];
+
         $I->wantTo("Create a new turma");
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST($this->endpoint, ['nome' => 'S049-N2', 'data_inicio' => '01/02/2015', 'data_fim' => '20/07/2015']);
+        $I->sendPOST($this->endpoint, $data);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
@@ -58,10 +67,18 @@ class UCTurmaResourceCest extends BaseResourceCest
         $this->authenticate($I);
 
         $id = 3;
+        $data = [
+            'nome'           => 'S049-N2',
+            'data_inicio'    => '01/02/2015',
+            'data_fim'       => '20/07/2015',
+            'horario_inicio' => '18:30:00',
+            'horario_fim'    => '22:30:00',
+            'ambiente_id'    => 1
+        ];
 
         $I->wantTo("Edit a turma");
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPUT($this->endpoint."/$id", ['nome' => 'S049-N2', 'data_inicio' => '01/02/2015', 'data_fim' => '20/07/2015']);
+        $I->sendPUT($this->endpoint."/$id", $data);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
