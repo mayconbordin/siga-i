@@ -18,7 +18,7 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
 {
     public function findByTurmaBetweenDates($turmaId, Carbon $start = null, Carbon $end = null)
     {
-        $query = Aula::where('turma_id', $turmaId);
+        $query = Aula::with('turma', 'turma.ambienteDefault')->where('turma_id', $turmaId);
         
         if ($start != null) {
             $query->where('data', '>=', $start->format('Y-m-d'));
@@ -129,16 +129,28 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
     
     public function insert(array $data, Turma $turma)
     {
-        $aula  = new Aula;
-        $date  = array_get($data, 'data');
+        $date       = array_get($data, 'data');
+        $horaInicio = array_get($data, 'horario_inicio');
+        $horaFim    = array_get($data, 'horario_fim');
+
+        if (!($date instanceof Carbon)) {
+            throw new \InvalidArgumentException("A data deve ser do tipo Carbon");
+        }
+
+        if (!($horaInicio instanceof Carbon) || !($horaFim instanceof Carbon)) {
+            throw new \InvalidArgumentException("Horários devem ser do tipo Carbon");
+        }
 
         if (self::exists($turma->id, $date)) {
             throw new ValidationError([
                 'data' => [Lang::get('aulas.already_exists')]
             ]);
         }
-        
+
+        $aula                     = new Aula;
         $aula->data               = $date;
+        $aula->horario_inicio     = $horaInicio;
+        $aula->horario_fim        = $horaFim;
         $aula->status             = array_get($data, 'status', 0);
         $aula->conteudo           = array_get($data, 'conteudo', '');
         $aula->obs                = array_get($data, 'obs', '');
@@ -166,12 +178,26 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
     public function update(array $data, $ucId, $turmaId, Carbon $date)
     {
         $aula = self::findByData($date, $turmaId, $ucId);
-	    
-	    $aula->data               = array_get($data, 'data');
-        $aula->status             = array_get($data, 'status', 0);
-        $aula->conteudo           = array_get($data, 'conteudo', '');
-        $aula->obs                = array_get($data, 'obs', '');
-        $aula->ensino_a_distancia = array_get($data, 'ensino_a_distancia', false);
+
+        $data       = array_get($data, 'data', $aula->data);
+        $horaInicio = array_get($data, 'horario_inicio', $aula->horario_inicio);
+        $horaFim    = array_get($data, 'horario_fim', $aula->horario_inicio);
+
+        if (!($data instanceof Carbon)) {
+            throw new \InvalidArgumentException("A data deve ser do tipo Carbon");
+        }
+
+        if (!($horaInicio instanceof Carbon) || !($horaFim instanceof Carbon)) {
+            throw new \InvalidArgumentException("Horários devem ser do tipo Carbon");
+        }
+
+	    $aula->data               = $data;
+        $aula->horario_inicio     = $horaInicio;
+        $aula->horario_fim        = $horaFim;
+        $aula->status             = array_get($data, 'status', $aula->status);
+        $aula->conteudo           = array_get($data, 'conteudo', $aula->conteudo);
+        $aula->obs                = array_get($data, 'obs', $aula->obs);
+        $aula->ensino_a_distancia = array_get($data, 'ensino_a_distancia', $aula->ensino_a_distancia);
         
         if (!$aula->data->between($aula->turma->data_inicio, $aula->turma->data_fim)) {
             throw new ValidationError([

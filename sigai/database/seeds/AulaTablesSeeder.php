@@ -25,6 +25,9 @@ class AulaTablesSeeder extends Seeder {
             $turma = Turma::where('nome', trim($row['nome_turma']))->first();
             $aula->turma()->associate($turma);
 
+            $aula->horario_inicio = $turma->horario_inicio;
+            $aula->horario_fim    = $turma->horario_fim;
+
             $aula->save();
         }
     }

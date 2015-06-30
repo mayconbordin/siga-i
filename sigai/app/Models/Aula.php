@@ -10,7 +10,7 @@ class Aula extends Model {
     
     protected $transformer = 'App\Transformers\AulaTransformer';
 	protected $table = 'aulas';
-	protected $fillable = ['data', 'status', 'conteudo'];
+	protected $fillable = ['data', 'status', 'conteudo', 'horario_inicio', 'horario_fim'];
 	
 	public function getDataAttribute($value)
     {
@@ -18,6 +18,22 @@ class Aula extends Model {
             return $value;
         else
             return Carbon::createFromFormat('Y-m-d', $value);
+    }
+
+    public function getHorarioInicioAttribute($value)
+    {
+        if ($value instanceof Carbon)
+            return $value;
+        else
+            return Carbon::createFromFormat('H:i:s', $value);
+    }
+
+    public function getHorarioFimAttribute($value)
+    {
+        if ($value instanceof Carbon)
+            return $value;
+        else
+            return Carbon::createFromFormat('H:i:s', $value);
     }
 	
 	public function turma()

@@ -69,7 +69,8 @@ class AulaService implements AulaServiceContract
     public function edit(array $data, $ucId, $turmaId, $date)
     {
         $date = Carbon::createFromFormat('Y-m-d', $date);
-        $data['data'] = Carbon::createFromFormat('d/m/Y', $data['data']);
+
+        $this->parseAulaDates($data);
 
         $aula = $this->repository->update($data, $ucId, $turmaId, $date);
 
@@ -78,7 +79,7 @@ class AulaService implements AulaServiceContract
 
     public function save(array $data, $ucId, $turmaId)
     {
-        $data['data'] = Carbon::createFromFormat('d/m/Y', $data['data']);
+        $this->parseAulaDates($data);
 
         $turma = $this->turmaRepository->findById($turmaId, $ucId);
         $aula  = $this->repository->insert($data, $turma);
@@ -109,5 +110,12 @@ class AulaService implements AulaServiceContract
         }
 
         $this->chamadaRepository->insertOrUpdateAll($chamadas, $aula);
+    }
+
+    protected function parseAulaDates(array &$data)
+    {
+        $data['data']           = Carbon::createFromFormat('d/m/Y', $data['data']);
+        $data['horario_inicio'] = Carbon::createFromFormat('H:i:s', $data['horario_inicio']);
+        $data['horario_fim']    = Carbon::createFromFormat('H:i:s', $data['horario_fim']);
     }
 }
