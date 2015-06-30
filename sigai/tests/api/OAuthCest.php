@@ -31,7 +31,8 @@ class OAuthCest extends BaseResourceCest
         $I->sendPOST('/oauth/access_token', [
             'client_id'     => 'client1id',
             'client_secret' => 'client1secret',
-            'grant_type'    => 'client_credentials'
+            'grant_type'    => 'client_credentials',
+            'scope'         => 'write-chamada'
         ]);
 
         $I->seeResponseCodeIs(200);

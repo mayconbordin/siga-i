@@ -1,0 +1,4 @@
+id,description
+write-chamada,Permissão para escrever na chamada
+read-agenda,Permissão para ler a agenda letiva
+read-usuarios,Permissão para ler informações dos usuários

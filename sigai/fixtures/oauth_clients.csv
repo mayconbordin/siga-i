@@ -1,0 +1,3 @@
+id,secret,name,scopes
+client1id,client1secret,client1,write-chamada
+client2id,client2secret,client2,"read-agenda,read-usuarios"
