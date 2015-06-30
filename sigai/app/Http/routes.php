@@ -156,17 +156,30 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
     {
         Route::get('/turmas', 'TurmaController@listar');
     });
-    
-    Route::group(['prefix' => 'cursos'], function()
+
+    Route::group(['prefix' => 'ambientes'], function()
     {
-        Route::get   ('/',                      'CursoController@listar');
-        Route::get   ('/{id}',                  'CursoController@mostrar');
-        
+        Route::get   ('/', 'AmbienteController@listar');
+        /*Route::get   ('/{id}',                  'CursoController@mostrar');
+
         Route::group(['roles' => 'coordenador'], function()
         {
             Route::post  ('/',                      'CursoController@salvar');
             Route::put   ('/{id}',                  'CursoController@editar');
             Route::delete('/{id}',                  'CursoController@deletar');
+        });*/
+    });
+    
+    Route::group(['prefix' => 'cursos'], function()
+    {
+        Route::get   ('/', 'CursoController@listar');
+        Route::get   ('/{id}', 'CursoController@mostrar');
+        
+        Route::group(['roles' => 'coordenador'], function()
+        {
+            Route::post  ('/'    , 'CursoController@salvar');
+            Route::put   ('/{id}', 'CursoController@editar');
+            Route::delete('/{id}', 'CursoController@deletar');
         });
     });
     

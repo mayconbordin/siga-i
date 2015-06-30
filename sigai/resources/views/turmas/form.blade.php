@@ -97,12 +97,12 @@
             <div class="col-sm-6">
 
                 <div class="input-group bootstrap-timepicker">
-                    <input id="turmaAmbiente" type="text" class="form-control">
-                    <input type="hidden" value="{{{ Input::old('ambiente_id', isset($turma) ? $turma->ambienteDefault->id : null) }}}">
-                    <span class="input-group-btn">
-                        <button id="turmaAmbienteSearch" class="btn btn-default" type="button">
+                    <input id="turmaAmbiente" type="text" class="form-control"
+                           value="{{ isset($turma) ? $turma->ambienteDefault->nome : null }}">
+                    <input id="turmaAmbienteId" type="hidden" name="ambiente_id"
+                           value="{{{ Input::old('ambiente_id', isset($turma) ? $turma->ambienteDefault->id : null) }}}">
+                    <span class="input-group-addon">
                             <i class="fa fa-search"></i>
-                        </button>
                     </span>
                 </div>
 

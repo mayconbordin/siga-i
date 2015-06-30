@@ -50,7 +50,7 @@ class AmbienteRepository extends BaseRepository implements AmbienteRepositoryCon
     
     public function listAll()
     {
-        $ambientes = Ambiente::all();
+        $ambientes = Ambiente::with('tipo')->get();
         return $ambientes;
     }
     

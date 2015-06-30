@@ -272,9 +272,6 @@ var Turma = (function() {
         init: function() {
             var self = this;
 
-            /// ativa botão de edição
-            $("#turmaEditBtn").click(this.onClickEdit);
-            
             // ativa botão para salvar aulas
             $("#newAula .save").click(this.onSaveAulaForm);
             
@@ -299,6 +296,16 @@ var Turma = (function() {
             // ativa remoção de aulas
             $("#aulas .remove").click(this.onRemoveAulaClick);
 
+            this.initTurmaEvents();
+            this.initAlunoEvents();
+            this.initProfessorEvents();
+            this.initDiarioEvents();
+        },
+
+        initTurmaEvents: function() {
+            /// ativa botão de edição
+            $("#turmaEditBtn").click(this.onClickEdit);
+
             // ativa timepickers
             $('.timepicker').timepicker({
                 minuteStep: 1,
@@ -306,10 +313,23 @@ var Turma = (function() {
                 showMeridian: false,
                 defaultTime: false
             });
-            
-            this.initAlunoEvents();
-            this.initProfessorEvents();
-            this.initDiarioEvents();
+
+            $("#turmaAmbiente").typeahead({
+                onSelect: function(item) {
+                    $("#turmaAmbienteId").val(item.value);
+                },
+                ajax: {
+                    url: Router.get('ambientes'),
+                    displayField: "nome",
+                    valueField: "id",
+                    method: "get",
+                    preDispatch: function (query) {
+                        return {
+                            query: query
+                        }
+                    }
+                }
+            });
         },
         
         initAlunoEvents: function() {
@@ -693,7 +713,8 @@ $(document).ready(function() {
         diarios: "{{ url('/unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id.'/diarios') }}",
         turma: "{{ url('unidades_curriculares/'.$unidadeCurricular->id.'/turmas/'.$turma->id) }}",
         alunos: "{{ url('api/alunos') }}",
-        professores: "{{ url('api/professores') }}"
+        professores: "{{ url('api/professores') }}",
+        ambientes: "{{ url('api/ambientes') }}"
     });
 
     Lang.registerAll({
