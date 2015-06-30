@@ -50,13 +50,72 @@
                 {!!$errors->first('data_fim', '<label class="control-label">:message</label>')!!}
             </div>
         </div>
+
+        {{-- Horário --}}
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                @lang('turmas.horario')
+            </label>
+            <div class="col-sm-5 row">
+                {{-- Início --}}
+                <div class="col-lg-5 {{{ $errors->has('horario_inicio') ? 'has-error' : '' }}}">
+                    <div class="input-group bootstrap-timepicker">
+                        <input id="turmaHorarioInicio" type="text" class="form-control timepicker"
+                               name="horario_inicio" placeholder="@lang('turmas.horario_inicio')"
+                               value="{{{ Input::old('horario_inicio', isset($turma) ? $turma->horario_inicio->format('H:i:s') : null) }}}">
+                        <span class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                        </span>
+                    </div>
+                    {!!$errors->first('horario_inicio', '<label class="control-label">:message</label>')!!}
+                </div>
+
+                <label class="col-sm-1 control-label">
+                    @lang('general.until')
+                </label>
+
+                {{-- Fim --}}
+                <div class="col-lg-5 {{{ $errors->has('horario_fim') ? 'has-error' : '' }}}">
+                    <div class="input-group bootstrap-timepicker">
+                        <input id="turmaHorarioFim" type="text" class="form-control timepicker"
+                               name="horario_fim" placeholder="@lang('turmas.horario_fim')"
+                               value="{{{ Input::old('horario_fim', isset($turma) ? $turma->horario_fim->format('H:i:s') : null) }}}">
+                        <span class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                        </span>
+                    </div>
+                    {!!$errors->first('horario_fim', '<label class="control-label">:message</label>')!!}
+                </div>
+            </div>
+        </div>
+
+        {{-- Ambiente --}}
+        <div class="form-group {{{ $errors->has('ambiente_id') ? 'has-error' : '' }}}">
+            <label for="turmaAmbiente" class="col-sm-2 control-label">
+                @lang('turmas.ambiente')
+            </label>
+            <div class="col-sm-6">
+
+                <div class="input-group bootstrap-timepicker">
+                    <input id="turmaAmbiente" type="text" class="form-control">
+                    <input type="hidden" value="{{{ Input::old('ambiente_id', isset($turma) ? $turma->ambienteDefault->id : null) }}}">
+                    <span class="input-group-btn">
+                        <button id="turmaAmbienteSearch" class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+
+                {!!$errors->first('ambiente_id', '<label class="control-label">:message</label>')!!}
+            </div>
+        </div>
         
         {{-- Unidade Curricular --}}
         <div class="form-group {{{ $errors->has('unidade_curricular_id') ? 'has-error' : '' }}}">
             <label for="turmaCargaHoraria" class="col-sm-2 control-label">
                 @lang('unidades_curriculares.single_title')
             </label>
-            <div class="col-sm-10">
+            <div class="col-sm-6">
                 <select class="form-control" id="turmaUnidadeCurricular" name="unidade_curricular_id">
                     @foreach ($unidadesCurriculares as $uc)
                     <option value="{{ $uc->id }}"

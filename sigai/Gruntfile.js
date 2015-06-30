@@ -40,6 +40,11 @@ module.exports = function(grunt) {
                         "src/extensions/toolbar/bootstrap-table-toolbar.js",
                         "src/locale/bootstrap-table-pt-BR.js"
                     ],
+
+                    'bootstrap-3-timepicker': [
+                        "css/bootstrap-timepicker.min.css",
+                        "js/bootstrap-timepicker.js"
+                    ],
                     
                     'fullcalendar': [
                         "dist/fullcalendar.js",

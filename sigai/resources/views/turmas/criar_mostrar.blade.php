@@ -298,6 +298,14 @@ var Turma = (function() {
             
             // ativa remoção de aulas
             $("#aulas .remove").click(this.onRemoveAulaClick);
+
+            // ativa timepickers
+            $('.timepicker').timepicker({
+                minuteStep: 1,
+                showSeconds: true,
+                showMeridian: false,
+                defaultTime: false
+            });
             
             this.initAlunoEvents();
             this.initProfessorEvents();
