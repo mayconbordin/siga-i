@@ -2,6 +2,7 @@
 
 
 use App\Repositories\Contracts\AlunoRepositoryContract;
+use App\Repositories\Contracts\AmbienteRepositoryContract;
 use App\Repositories\Contracts\ChamadaRepositoryContract;
 use App\Repositories\Contracts\DiarioRepositoryContract;
 use App\Repositories\Contracts\ProfessorRepositoryContract;
@@ -19,6 +20,7 @@ class TurmaService implements TurmaServiceContract
     protected $professorRepository;
     protected $diarioRepository;
     protected $chamadaRepository;
+    protected $ambienteRepository;
 
     protected $sortFields = [
         'id'                 => 'turmas.id',
@@ -30,7 +32,8 @@ class TurmaService implements TurmaServiceContract
 
     public function __construct(TurmaRepositoryContract $turmaRepository, UnidadeCurricularRepositoryContract $ucRepository,
                                 AlunoRepositoryContract $alunoRepository, ProfessorRepositoryContract $professorRepository,
-                                DiarioRepositoryContract $diarioRepository, ChamadaRepositoryContract $chamadaRepository)
+                                DiarioRepositoryContract $diarioRepository, ChamadaRepositoryContract $chamadaRepository,
+                                AmbienteRepositoryContract $ambienteRepository)
     {
         $this->turmaRepository     = $turmaRepository;
         $this->ucRepository        = $ucRepository;
@@ -38,6 +41,7 @@ class TurmaService implements TurmaServiceContract
         $this->professorRepository = $professorRepository;
         $this->chamadaRepository   = $chamadaRepository;
         $this->diarioRepository    = $diarioRepository;
+        $this->ambienteRepository  = $ambienteRepository;
     }
 
     public function filter(array $parameters)
@@ -81,13 +85,17 @@ class TurmaService implements TurmaServiceContract
     public function edit(array $data, $ucId, $id)
     {
         $this->parseTurmaDates($data);
+        $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
+        
         return $this->turmaRepository->update($data, $ucId, $id);
     }
 
     public function save(array $data, $ucId)
     {
         $uc = $this->ucRepository->findById($ucId);
+
         $this->parseTurmaDates($data);
+        $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
 
         return $this->turmaRepository->insert($data, $uc);
     }
