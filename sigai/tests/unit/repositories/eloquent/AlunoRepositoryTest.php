@@ -45,11 +45,10 @@ class AlunoRepositoryTest extends TestCase
     public function testSearchByNameAndMatricula()
     {
         $alunos = $this->alunoRepository->searchByNameAndMatricula('15');
-        $this->assertTrue(sizeof($alunos->toArray()) > 1);
-
+        $this->assertGreaterThan(1, sizeof($alunos->all()));
 
         $alunos = $this->alunoRepository->searchByNameAndMatricula('15', 2);
-        $this->assertTrue(sizeof($alunos->toArray()) > 1);
+        $this->assertEquals(0, sizeof($alunos->all()));
     }
 
     public function testPaginateFirstPage()

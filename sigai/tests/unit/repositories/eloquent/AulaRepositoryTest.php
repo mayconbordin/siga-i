@@ -224,8 +224,10 @@ class AulaRepositoryTest extends TestCase
         $turma = \App\Models\Turma::where('id', $turmaId)->first();
 
         $data = [
-            'data'     => Carbon::createFromFormat('Y-m-d', '2014-08-06'),
-            'conteudo' => 'teste',
+            'data'           => Carbon::createFromFormat('Y-m-d', '2014-08-06'),
+            'conteudo'       => 'teste',
+            'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00')
         ];
 
         $aula = $this->aulaRepository->insert($data, $turma);
@@ -233,6 +235,8 @@ class AulaRepositoryTest extends TestCase
         $this->assertNotNull($aula->id);
         $this->assertEquals($data['data']->format('Y-m-d'), $aula->data->format('Y-m-d'));
         $this->assertEquals($data['conteudo'], $aula->conteudo);
+        $this->assertEquals($data['horario_inicio']->format('H:i:s'), $aula->horario_inicio->format('H:i:s'));
+        $this->assertEquals($data['horario_fim']->format('H:i:s'), $aula->horario_fim->format('H:i:s'));
 
         $this->aulaRepository->findById($aula->id, $turmaId, $ucId);
     }
@@ -244,8 +248,10 @@ class AulaRepositoryTest extends TestCase
         $turma = \App\Models\Turma::where('id', $turmaId)->first();
 
         $data = [
-            'data'     => Carbon::createFromFormat('Y-m-d', '2014-08-05'),
-            'conteudo' => 'teste',
+            'data'           => Carbon::createFromFormat('Y-m-d', '2014-08-05'),
+            'conteudo'       => 'teste',
+            'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00')
         ];
 
         try {
@@ -264,8 +270,10 @@ class AulaRepositoryTest extends TestCase
         $turma = \App\Models\Turma::where('id', $turmaId)->first();
 
         $data = [
-            'data'     => Carbon::createFromFormat('Y-m-d', '2015-08-05'),
-            'conteudo' => 'teste',
+            'data'           => Carbon::createFromFormat('Y-m-d', '2015-08-05'),
+            'conteudo'       => 'teste',
+            'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00')
         ];
 
         try {

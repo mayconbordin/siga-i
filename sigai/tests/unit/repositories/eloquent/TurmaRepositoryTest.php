@@ -3,6 +3,7 @@
 use App\Exceptions\NotFoundError;
 use App\Repositories\Eloquent\TurmaRepository;
 use App\Models\Turma;
+use App\Models\Ambiente;
 
 use \DB;
 
@@ -165,9 +166,12 @@ class TurmaRepositoryTest extends TestCase
         $uc = \App\Models\UnidadeCurricular::where('id', 3)->first();
 
         $data = [
-            'data_inicio' => Carbon::createFromFormat('Y-m-d', '2014-06-31'),
-            'data_fim'    => Carbon::createFromFormat('Y-m-d', '2014-11-18'),
-            'nome'        => 'S049--'
+            'data_inicio'    => Carbon::createFromFormat('Y-m-d', '2014-06-31'),
+            'data_fim'       => Carbon::createFromFormat('Y-m-d', '2014-11-18'),
+            'nome'           => 'S049--',
+            'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00'),
+            'ambiente'       => Ambiente::find(1)
         ];
 
         $turma = $this->turmaRepository->insert($data, $uc);
@@ -177,6 +181,8 @@ class TurmaRepositoryTest extends TestCase
         $this->assertEquals($uc->id, $turma->unidadeCurricular->id);
         $this->assertEquals($data['data_inicio']->format('Y-m-d'), $turma->data_inicio->format('Y-m-d'));
         $this->assertEquals($data['data_fim']->format('Y-m-d'), $turma->data_fim->format('Y-m-d'));
+        $this->assertEquals($data['horario_inicio']->format('H:i:s'), $turma->horario_inicio->format('H:i:s'));
+        $this->assertEquals($data['horario_fim']->format('H:i:s'), $turma->horario_fim->format('H:i:s'));
     }
 
     public function testDelete()

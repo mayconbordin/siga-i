@@ -179,11 +179,11 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
     {
         $aula = self::findByData($date, $turmaId, $ucId);
 
-        $data       = array_get($data, 'data', $aula->data);
+        $dataAula   = array_get($data, 'data', $aula->data);
         $horaInicio = array_get($data, 'horario_inicio', $aula->horario_inicio);
         $horaFim    = array_get($data, 'horario_fim', $aula->horario_inicio);
 
-        if (!($data instanceof Carbon)) {
+        if (!($dataAula instanceof Carbon)) {
             throw new \InvalidArgumentException("A data deve ser do tipo Carbon");
         }
 
@@ -191,7 +191,7 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
             throw new \InvalidArgumentException("Horários devem ser do tipo Carbon");
         }
 
-	    $aula->data               = $data;
+	    $aula->data               = $dataAula;
         $aula->horario_inicio     = $horaInicio;
         $aula->horario_fim        = $horaFim;
         $aula->status             = array_get($data, 'status', $aula->status);
