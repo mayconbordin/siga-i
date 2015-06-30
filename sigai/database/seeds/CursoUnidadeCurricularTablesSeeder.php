@@ -11,7 +11,7 @@ class CursoUnidadeCurricularTablesSeeder extends Seeder {
     {
         DB::table('cursos_unidades_curriculares')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/cursos_unidades_curriculares.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/cursos_unidades_curriculares.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             try {

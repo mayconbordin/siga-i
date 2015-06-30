@@ -10,7 +10,7 @@ class TurmaTablesSeeder extends Seeder {
     {
         DB::table('turmas')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/turmas.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/turmas.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             $turma = new Turma;

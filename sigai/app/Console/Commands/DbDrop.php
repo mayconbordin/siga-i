@@ -56,17 +56,21 @@ class DbDrop extends DbCommand {
         }
 
         $this->info("Running on '".App::environment()."' environment.");
-        $this->info("Dropping database '".$db['database']."'.");
+        $this->info("This command is about to drop the database '".$db['database']."'.");
 
-        try {
-            $dbh = new PDO("mysql:host=".$db['host'], $db['username'], $db['password']);
-            $cmd = "DROP DATABASE IF EXISTS ".$db['database'].";";
-            $dbh->exec($cmd) or die(print_r($dbh->errorInfo(), true));
-        } catch (PDOException $e) {
-            $this->error("DB Error: " . $e->getMessage());
+        if ($this->confirm('Do you wish to continue? [y|N]')) {
+            try {
+                $dbh = new PDO("mysql:host=" . $db['host'], $db['username'], $db['password']);
+                $cmd = "DROP DATABASE IF EXISTS " . $db['database'] . ";";
+                $dbh->exec($cmd) or die(print_r($dbh->errorInfo(), true));
+            } catch (PDOException $e) {
+                $this->error("DB Error: " . $e->getMessage());
+            }
+
+            $this->info("Database dropped.");
+        } else {
+            $this->info("Command aborted.");
         }
-
-        $this->info("Database dropped.");
     }
 
     /**

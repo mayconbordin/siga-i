@@ -19,7 +19,7 @@ class ProfessorTablesSeeder extends Seeder {
     {
         DB::table('professores')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/professores.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/professores.csv", true, ',');
 
         $profRole  = Role::where('name', 'professor')->first();
         $coordRole = Role::where('name', 'coordenador')->first();

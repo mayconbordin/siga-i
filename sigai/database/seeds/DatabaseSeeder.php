@@ -55,6 +55,9 @@ class DatabaseSeeder extends Seeder {
 		
 		$this->call('ChamadaTablesSeeder');
 		$this->command->info('Tabela chamadas populada!');
+
+        $this->call('ClientsTableSeeder');
+        $this->command->info('Tabela oauth_clients populada!');
 		
 		DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	}

@@ -19,7 +19,7 @@ class ChamadaTablesSeeder extends Seeder {
     {
         DB::table('chamadas')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/chamadas.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/chamadas.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             try {

@@ -9,7 +9,7 @@ class UnidadeCurricularTablesSeeder extends Seeder {
     {
         DB::table('unidades_curriculares')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/unidades_curriculares.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/unidades_curriculares.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             $uc = new UnidadeCurricular();

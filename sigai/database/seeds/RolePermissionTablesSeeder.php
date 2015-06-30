@@ -14,7 +14,7 @@ class RolePermissionTablesSeeder extends Seeder {
         DB::table('roles')->truncate();
         DB::table('permissions')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/roles.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/roles.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             $owner = new Role();
@@ -25,7 +25,7 @@ class RolePermissionTablesSeeder extends Seeder {
         }
 
 
-        $csv = new CsvReader(base_path() . "/data/permissions.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/permissions.csv", true, ',');
 
         $role = [];
 

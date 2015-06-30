@@ -12,7 +12,7 @@ class AulaTablesSeeder extends Seeder {
     {
         DB::table('aulas')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/aulas.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/aulas.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             $aula = new Aula;

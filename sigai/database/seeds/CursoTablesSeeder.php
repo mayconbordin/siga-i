@@ -19,7 +19,7 @@ class CursoTablesSeeder extends Seeder {
     {
         DB::table('cursos')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/cursos.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/cursos.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             $curso = new Curso;

@@ -19,7 +19,7 @@ class AlunoTurmaTablesSeeder extends Seeder {
     {
         DB::table('alunos_turmas')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/alunos_turmas.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/alunos_turmas.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             try {

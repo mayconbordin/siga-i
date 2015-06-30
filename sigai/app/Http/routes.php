@@ -203,6 +203,10 @@ Route::post('oauth/access_token', function() {
     return Response::json(Authorizer::issueAccessToken());
 });
 
+Route::get('oauth/test', ['middleware' => 'oauth', function() {
+    return Response::json(['message' => 'OK']);
+}]);
+
 // Controllers
 // -----------------------------------------------------------------------------
 Route::controllers([

@@ -7,7 +7,7 @@ use App\Models\User;
 class UsuarioTablesSeeder extends Seeder {
     public function run()
     {
-        $csv = new CsvReader(base_path() . "/data/professores.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/professores.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             $usuario = new User;

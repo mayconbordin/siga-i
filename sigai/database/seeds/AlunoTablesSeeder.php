@@ -11,7 +11,7 @@ class AlunoTablesSeeder extends Seeder {
     {
         DB::table('alunos')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/alunos.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/alunos.csv", true, ',');
 
         $role = Role::where('name', 'aluno')->first();
 

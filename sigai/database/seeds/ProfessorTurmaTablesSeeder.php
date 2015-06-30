@@ -18,7 +18,7 @@ class ProfessorTurmaTablesSeeder extends Seeder {
     {
         DB::table('professores_turmas')->truncate();
 
-        $csv = new CsvReader(base_path() . "/data/professores_turmas.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/professores_turmas.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             try {

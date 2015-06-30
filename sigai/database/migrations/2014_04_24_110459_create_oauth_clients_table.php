@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-use LucaDegasperi\OAuth2Server\Support\Migration;
+use LucaDegasperi\OAuth2Server\Support\AbstractMigration;
 
-class CreateOauthScopesTable extends Migration
+class CreateOauthClientsTable extends AbstractMigration
 {
 
     /**
@@ -13,11 +13,13 @@ class CreateOauthScopesTable extends Migration
      */
     public function up()
     {
-        $this->schema()->create('oauth_scopes', function (Blueprint $table) {
+        $this->schema()->create('oauth_clients', function (BluePrint $table) {
             $table->string('id', 40)->primary();
-            $table->string('description');
-
+            $table->string('secret', 40);
+            $table->string('name');
             $table->timestamps();
+
+            $table->unique(['id', 'secret']);
         });
     }
 
@@ -28,6 +30,6 @@ class CreateOauthScopesTable extends Migration
      */
     public function down()
     {
-        $this->schema()->drop('oauth_scopes');
+        $this->schema()->drop('oauth_clients');
     }
 }
