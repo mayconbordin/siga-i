@@ -21,6 +21,7 @@ return array(
     'saving'        => 'Salvando',
      
     'home'          => 'Início',
+    'records'       => 'Cadastros',
     
     'or'            => 'ou',
     'to'            => 'a',

@@ -47,46 +47,72 @@
                 
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="{{ (Request::is('/')) ? 'active' : '' }}"><a href="{{ url('/') }}">Home</a></li>
+                        <li class="{{ (Request::is('/')) ? 'active' : '' }}"><a href="{{ url('/') }}">@lang('general.home')</a></li>
                         
-                        @if (Auth::guest())
+                    @if (Auth::guest())
                         
-                        @elseif (Auth::user()->hasRole('coordenador'))
-                        <li class="{{ (Request::is('alunos*')) ? 'active' : '' }}">
-                            <a href="{{ url('/alunos') }}">@choice('alunos.title', 2)</a>
+                    @elseif (Auth::user()->hasRole('coordenador'))
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <i class="fa fa-table"></i> @lang('general.records') <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="{{ (Request::is('unidades_curriculares*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/unidades_curriculares') }}">@lang('unidades_curriculares.title')</a>
+                                </li>
+
+                                <li class="{{ (Request::is('cursos*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/cursos') }}">@lang('cursos.title')</a>
+                                </li>
+
+                                <li class="{{ (Request::is('turmas*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/turmas') }}">@lang('turmas.title')</a>
+                                </li>
+                            </ul>
                         </li>
-                        
-                        <li class="{{ (Request::is('professores*')) ? 'active' : '' }}">
-                            <a href="{{ url('/professores') }}">@choice('professores.title', 2)</a>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <i class="fa fa-users"></i> @choice('usuarios.title', 2) <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="{{ (Request::is('alunos*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/alunos') }}">@choice('alunos.title', 2)</a>
+                                </li>
+
+                                <li class="{{ (Request::is('professores*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/professores') }}">@choice('professores.title', 2)</a>
+                                </li>
+                            </ul>
                         </li>
+                    @elseif (Auth::user()->hasRole('professor'))
                         
-                        <li class="{{ (Request::is('unidades_curriculares*')) ? 'active' : '' }}">
-                            <a href="{{ url('/unidades_curriculares') }}">@lang('unidades_curriculares.title')</a>
-                        </li>
+                    @endif
                         
-                        <li class="{{ (Request::is('cursos*')) ? 'active' : '' }}">
-                            <a href="{{ url('/cursos') }}">@lang('cursos.title')</a>
-                        </li>
-                        
-                        <li class="{{ (Request::is('turmas*')) ? 'active' : '' }}">
-                            <a href="{{ url('/turmas') }}">@lang('turmas.title')</a>
-                        </li>
-                        @elseif (Auth::user()->hasRole('professor'))
-                        
-                        @endif
-                        
-                        @if (Auth::check())
+                    @if (Auth::check())
                         <li class="navbar-green {{ (Request::is('importar*')) ? 'active' : '' }}">
                             <a href="{{ url('/importar') }}"><i class="fa fa-arrow-up"></i> @lang('importar.menu_title')</a>
                         </li>
-                        @endif
+                    @endif
+
+                        <li class="visible-xs-block">
+                            <a href="{{ url('/conta') }}">
+                                <i class="fa fa-gear"></i> @lang('usuarios.me_title')
+                            </a>
+                        </li>
+
+                        <li class="visible-xs-block">
+                            <a href="{{ url('/auth/logout') }}">
+                                <i class="fa fa-sign-out"></i> @lang('login.logout')
+                            </a>
+                        </li>
                     </ul>
                     
                     
-                    <ul class="nav navbar-nav navbar-nav-right">
-                        @if (Auth::guest())
+                    <ul class="nav navbar-nav navbar-nav-right hidden-xs">
+                    @if (Auth::guest())
 					    <li><a href="{{ url('/auth/login') }}"><i class="fa fa-sign-in"></i> @lang('login.login')</a></li>
-					    @else
+                    @else
 					    <li class="dropdown">
 						    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 						        <i class="fa fa-user"></i> {{ Auth::user()->nome }} <span class="caret"></span>
@@ -106,7 +132,7 @@
 					            </li>
 						    </ul>
 					    </li>
-					    @endif
+                    @endif
                     </ul>
                 </div><!-- /.nav-collapse -->
             </div><!-- /.container -->
