@@ -18,12 +18,16 @@
 @if (isset($uc))
 var UnidadeCurricular = (function() {
     var turmaForm = new Form({
-        nome       : {el: "#newTurmaNome"      , required: true},
-        data_inicio: {el: "#newTurmaDataInicio", required: true},
-        data_fim   : {el: "#newTurmaDataFim"   , required: true}
+        nome          : {el: "#newTurmaNome"         , required: true},
+        data_inicio   : {el: "#newTurmaDataInicio"   , required: true},
+        data_fim      : {el: "#newTurmaDataFim"      , required: true},
+        horario_inicio: {el: "#newTurmaHorarioInicio", required: true},
+        horario_fim   : {el: "#newTurmaHorarioFim"   , required: true},
+        ambiente_id   : {el: "#newTurmaAmbiente"     , required: true}
     });
 
-    var selectedCurso = null;
+    var selectedCurso    = null;
+    var selectedAmbiente = null;
 
     var Template = (function() {
         var cursoTableRow = $("#curso-table-row").html();
@@ -99,7 +103,7 @@ var UnidadeCurricular = (function() {
             $("#ucEditBtn").click(this.onClickEdit);
             
             this.initCursoEvents();
-            this.initAulaEvents();
+            this.initTurmaEvents();
         },
         
         initCursoEvents: function() {
@@ -133,13 +137,38 @@ var UnidadeCurricular = (function() {
             $("#cursos table .detach").click(this.onDetachCursoClick);
         },
         
-        initAulaEvents: function() {
+        initTurmaEvents: function() {
             $("#criarTurmaBtn").click(function() {
                 $("#newTurma").modal('show');
             });
             
             $("#newTurma .save").click(this.onSaveTurmaClick);
             $("#turmas table .remove").click(this.onRemoveTurmaClick);
+
+            $("#newTurmaAmbiente").typeahead({
+                onSelect: function(item) {
+                    selectedAmbiente = item;
+                },
+                ajax: {
+                    url: Router.get('ambientes'),
+                    displayField: "nome",
+                    valueField: "id",
+                    method: "get",
+                    preDispatch: function (query) {
+                        return {
+                            query: query
+                        }
+                    }
+                }
+            });
+
+            // ativa timepickers
+            $('.timepicker').timepicker({
+                minuteStep: 1,
+                showSeconds: true,
+                showMeridian: false,
+                defaultTime: false
+            });
         },
         
         // utilities -----------------------------------------------------------
@@ -220,6 +249,8 @@ var UnidadeCurricular = (function() {
                 turmaForm.validate(data.errors);
                 return;
             }
+
+            data.values.ambiente_id = selectedAmbiente.value;
             
             Model.createTurma(data.values, function(result) {
                 $("#newTurma").modal('hide');
@@ -256,7 +287,8 @@ $(document).ready(function($) {
     Router.registerAll({
         'api.base': "{{ url('api/unidades_curriculares/'.$uc->id) }}",
         base: "{{ url('/unidades_curriculares/'.$uc->id) }}",
-        curso: "{{ url('api/cursos') }}"
+        curso: "{{ url('api/cursos') }}",
+        ambientes: "{{ url('api/ambientes') }}"
     });
 
     Lang.registerAll({

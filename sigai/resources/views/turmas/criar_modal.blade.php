@@ -32,6 +32,30 @@
                                placeholder="@lang('turmas.data_fim')">
                         <label class="control-label hidden"></label>
                     </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6 bootstrap-timepicker">
+                            <label for="newTurmaHorarioInicio">@lang('turmas.horario') @lang('turmas.horario_inicio')</label>
+                            <input type="text" class="form-control timepicker" id="newTurmaHorarioInicio"
+                                   placeholder="@lang('turmas.horario_inicio')">
+                            <label class="control-label hidden"></label>
+                        </div>
+
+                        <div class="form-group col-sm-6 bootstrap-timepicker">
+                            <label for="newTurmaHorarioFim">@lang('turmas.horario') @lang('turmas.horario_fim')</label>
+                            <input type="text" class="form-control timepicker" id="newTurmaHorarioFim"
+                                   placeholder="@lang('turmas.horario_fim')">
+                            <label class="control-label hidden"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newTurmaAmbiente">@lang('turmas.ambiente')</label>
+                        <input type="text" class="form-control" id="newTurmaAmbiente"
+                               placeholder="@lang('turmas.ambiente')">
+                        <label class="control-label hidden"></label>
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
