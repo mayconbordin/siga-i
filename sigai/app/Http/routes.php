@@ -208,6 +208,8 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
             Route::delete('/{matricula}',           'ProfessorController@deletar');
         });
     });
+
+    Route::post('/chamada', ['uses' => 'ChamadaController@salvar'/*, 'middleware' => 'oauth:write-chamada'*/]);
 });
 
 // OAuth

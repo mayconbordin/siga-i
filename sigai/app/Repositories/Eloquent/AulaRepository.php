@@ -277,4 +277,28 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
             $aula->save();
         }
     }
+
+    public function findAulaByAlunoDeviceAndAmbienteDeviceAndData($clientId, $deviceCode, Carbon $data)
+    {
+        $aulas = Aula::select('aulas.*')
+            ->join('turmas AS t', 't.id', '=', 'aulas.turma_id')
+            ->join('alunos_turmas AS aut', 'aut.turma_id', '=', 'aulas.turma_id')
+            ->join('dispositivos_aluno AS da', 'da.aluno_id', '=', 'aut.aluno_id')
+
+            ->leftJoin('ambientes AS amb', function($join) {
+                $join->on('amb.id', '=', 'aulas.ambiente_id')
+                     ->orOn('amb.id', '=', 't.ambiente_default_id');
+            })
+
+            ->leftJoin('dispositivos_ambiente AS damb', 'damb.ambiente_id', '=', 'amb.id')
+            ->leftJoin('oauth_clients AS oc', 'oc.id', '=', 'damb.oauth_client_id')
+
+            ->where("data", "=", $data->format('Y-m-d'))
+            ->where('da.codigo', $deviceCode)
+            ->where('oc.id', $clientId)
+
+            ->get();
+
+        return $aulas;
+    }
 }

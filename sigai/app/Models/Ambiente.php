@@ -24,4 +24,9 @@ class Ambiente extends Model {
     {
         return $this->hasMany('App\Models\Aula', 'ambiente_id');
     }
+
+    public function dispositivos()
+    {
+        return $this->belongsToMany('App\Models\OAuthClient', 'dispositivos_ambiente', 'ambiente_id', 'oauth_client_id');
+    }
 }

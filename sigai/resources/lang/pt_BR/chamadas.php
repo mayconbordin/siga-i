@@ -25,6 +25,7 @@ return [
     'saved'        => 'Chamada salva com sucesso',
     'create_error' => 'Ocorreu um erro ao criar a chamada',
     'save_error'   => 'Ocorreu um erro ao salvar a chamada',
+    'cant_save'    => 'Chamada não pode ser salva, dados inválidos',
 
     'remove_message' => 'Deseja realmente remover esta chamada?',
     'remove_error'   => 'Ocorreu um erro ao remover a chamada',

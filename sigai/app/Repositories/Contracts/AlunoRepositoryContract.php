@@ -15,6 +15,14 @@ interface AlunoRepositoryContract
     public static function findByMatricula($matricula);
 
     /**
+     * Retorna o usuário dono do dispositivo identificado pelo código informado.
+     * @param string $codigo
+     * @return Aluno
+     * @throws NotFoundError
+     */
+    public static function findByDispositivo($codigo);
+
+    /**
      * Retorna o usuário identificado pela matrícula junto com as informações relacionadas a ele ou uma exception caso
      * ele não exista.
      * @param string $matricula

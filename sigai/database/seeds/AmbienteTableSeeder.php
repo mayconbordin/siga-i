@@ -12,6 +12,7 @@ class AmbienteTableSeeder extends Seeder {
     {
         DB::table('ambientes')->truncate();
         DB::table('tipos_ambiente')->truncate();
+        DB::table('dispositivos_ambiente')->truncate();
 
         $csv = new CsvReader(base_path() . "/fixtures/ambientes.csv", true, ',');
 
@@ -28,6 +29,20 @@ class AmbienteTableSeeder extends Seeder {
             $ambiente->nome = trim($row['nome']);
             $ambiente->tipo()->associate($tipo);
             $ambiente->save();
+
+            $dispositivos = explode(',', trim($row['dispositivos']));
+
+            foreach ($dispositivos as $dispositivo) {
+                if (strlen($dispositivo) == 0) continue;
+
+                $d = \App\Models\OAuthClient::where('id', $dispositivo)->first();
+
+                if ($d == null) {
+                    $this->command->error("Dispositivo com ID $dispositivo não foi encontrado.");
+                }
+
+                $ambiente->dispositivos()->attach($d);
+            }
         }
     }
 }

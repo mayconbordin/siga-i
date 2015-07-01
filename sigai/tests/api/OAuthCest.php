@@ -35,6 +35,8 @@ class OAuthCest extends BaseResourceCest
             'scope'         => 'write-chamada'
         ]);
 
+        dd($I->grabResponse());
+
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 

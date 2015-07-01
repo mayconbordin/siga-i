@@ -48,6 +48,10 @@ class ChamadaRepository extends BaseRepository implements ChamadaRepositoryContr
             throw new ValidationError(['periods' => [Lang::get('chamadas.period_size')]]);
         }
 
+        $periods = array_map(function($item) {
+            return is_bool($item) ? $item : ($item == 0 || $item == 1) ? ($item == 1) : $item;
+        }, $periods);
+
         $sum = array_sum(array_map(function($item) { return is_bool($item) ? 1 : 0; }, $periods));
 
         if ($sum != 4) {

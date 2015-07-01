@@ -127,4 +127,16 @@ interface AulaRepositoryContract
      * @return void
      */
     public function dissociateAmbiente(Ambiente $ambiente);
+
+    /**
+     * Busca por aulas que façam parte de turmas frequentadas pelo aluno com o dispositivo com o código informado, contato
+     * que o ambiente da aula tenha como um de seus dispositivos aquele informado pela ID de cliente. Também filtra as aulas
+     * por uma data específica.
+     *
+     * @param string $clientId
+     * @param string $deviceCode
+     * @param Carbon $data
+     * @return array
+     */
+    public function findAulaByAlunoDeviceAndAmbienteDeviceAndData($clientId, $deviceCode, Carbon $data);
 }
