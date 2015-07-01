@@ -26,6 +26,20 @@ class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
         
         return $aluno;
     }
+
+    public static function findByDispositivo($codigo)
+    {
+        $aluno = Aluno::join('usuarios', 'alunos.id', '=', 'usuarios.id')
+            ->join('dispositivos_aluno AS da', 'da.aluno_id', '=', 'alunos.id')
+            ->where('da.codigo', $codigo)
+            ->first();
+
+        if ($aluno == null) {
+            throw new NotFoundError(Lang::get('alunos.not_found'));
+        }
+
+        return $aluno;
+    }
     
     public static function findByMatriculaWith($matricula, array $relations)
     {
