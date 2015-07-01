@@ -158,8 +158,8 @@ class UnidadesCurricularesCest extends BaseAcceptanceCest {
 
         $I->fillField('#vincularCursoNome', "AUTOMAÇÃO INDUSTRIAL");
 
-        $I->waitForElementVisible('ul.typeahead');
-        $I->click('ul.typeahead li[data-value="1"]');
+        $I->waitForElementVisible('#cursos ul.typeahead');
+        $I->click('#cursos ul.typeahead li[data-value="1"]');
 
         $I->wait(2);
         $I->click('#vincularCurso .save');
@@ -195,7 +195,7 @@ class UnidadesCurricularesCest extends BaseAcceptanceCest {
     {
         $this->authenticate($I);
 
-        $I->wantTo('detach a curso of an unidade curricular');
+        $I->wantTo('delete turma of an unidade curricular');
         $I->amOnPage('/unidades_curriculares/1');
 
         $I->seeCurrentUrlEquals('/unidades_curriculares/1');
@@ -221,7 +221,7 @@ class UnidadesCurricularesCest extends BaseAcceptanceCest {
     {
         $this->authenticate($I);
 
-        $I->wantTo('attach a curso to an unidade curricular');
+        $I->wantTo('create turma of an unidade curricular');
         $I->amOnPage('/unidades_curriculares/1');
 
         $I->seeCurrentUrlEquals('/unidades_curriculares/1');
@@ -237,10 +237,18 @@ class UnidadesCurricularesCest extends BaseAcceptanceCest {
         $nome    = 'S049-TESTE';
         $dataIni = '01/06/2015';
         $dataFim = '01/12/2015';
+        $horaIni = '18:30:00';
+        $horaFim = '22:30:00';
 
         $I->fillField('#newTurmaNome', $nome);
         $I->fillField('#newTurmaDataInicio', $dataIni);
         $I->fillField('#newTurmaDataFim', $dataFim);
+        $I->fillField('#newTurmaHorarioInicio', $horaIni);
+        $I->fillField('#newTurmaHorarioFim', $horaFim);
+        $I->fillField('#newTurmaAmbiente', "sala");
+
+        $I->waitForElementVisible('#turmas ul.typeahead');
+        $I->click('#turmas ul.typeahead li[data-value="1"]');
 
         $I->wait(2);
         $I->click('#newTurma .save');
