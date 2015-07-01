@@ -18,7 +18,8 @@ class ChamadaService implements ChamadaServiceContract
 
     protected $tolerance = 20;
 
-    public function __construct(ChamadaRepositoryContract $repository, AulaRepositoryContract $aulaRepository, AlunoRepositoryContract $alunoRepository)
+    public function __construct(ChamadaRepositoryContract $repository, AulaRepositoryContract $aulaRepository,
+                                AlunoRepositoryContract $alunoRepository)
     {
         $this->repository      = $repository;
         $this->aulaRepository  = $aulaRepository;
