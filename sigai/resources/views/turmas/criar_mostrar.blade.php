@@ -30,6 +30,9 @@ var Turma = (function() {
     var aulaForm = new Form({
         id                 : {el: "#newAulaId"              , required: false},
         data               : {el: "#newAulaData"            , required: true },
+        horario_inicio     : {el: "#newAulaHorarioInicio"   , required: true},
+        horario_fim        : {el: "#newAulaHorarioFim"      , required: true},
+        ambiente_id        : {el: "#newAulaAmbienteId"      , required: true},
         conteudo           : {el: "#newAulaConteudo"        , required: false},
         obs                : {el: "#newAulaObs"             , required: false},
         ensino_a_distancia : {el: "#newAulaEnsinoDistancia" , required: false}
@@ -74,10 +77,11 @@ var Turma = (function() {
         }
     };
     
-    var selectedAluno = null;
+    var selectedAluno     = null;
     var selectedProfessor = null;
-    var isEditAluno = false;
-    var editAlunoRow = null;
+    var selectedAmbiente  = null;
+    var isEditAluno       = false;
+    var editAlunoRow      = null;
 
 
     var Template = (function() {
@@ -268,7 +272,9 @@ var Turma = (function() {
     return {
         startDate: moment('{{ $turma->isActive() ? Carbon\Carbon::now()->format("d/m/Y") 
                                 : $turma->data_inicio->format("d/m/Y") }}', 'DD/MM/YYYY'),
-        
+
+        turma: null,
+
         init: function() {
             var self = this;
 
@@ -300,6 +306,35 @@ var Turma = (function() {
             this.initAlunoEvents();
             this.initProfessorEvents();
             this.initDiarioEvents();
+            this.initAulaEvents();
+        },
+
+        initAulaEvents: function() {
+            $("#newAulaAmbiente").typeahead({
+                onSelect: function(item) {
+                    selectedAmbiente = item;
+                    $("#newAulaAmbienteId").val(item.value);
+                },
+                ajax: {
+                    url: Router.get('ambientes'),
+                    displayField: "nome",
+                    valueField: "id",
+                    method: "get",
+                    preDispatch: function (query) {
+                        return {
+                            query: query
+                        }
+                    }
+                }
+            });
+
+            // ativa timepickers
+            $('.timepicker').timepicker({
+                minuteStep: 1,
+                showSeconds: true,
+                showMeridian: false,
+                defaultTime: false
+            });
         },
 
         initTurmaEvents: function() {
@@ -415,12 +450,13 @@ var Turma = (function() {
         
         // utilities -----------------------------------------------------------
         
-        addAulaToCalendar: function(aula) {
+        addAulaToCalendar: function(aula, ambienteNome) {
             $('#calendar').fullCalendar('renderEvent', {
                 id: aula.id,
-                title: "Aula",
-                start: moment(aula.data, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-                allDay: true
+                title: ambienteNome,
+                start: moment(aula.data, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'T' + aula.horario_inicio,
+                end: moment(aula.data, 'DD/MM/YYYY').format('YYYY-MM-DD') + 'T' + aula.horario_fim,
+                allDay: false
             });
         },
         
@@ -493,11 +529,15 @@ var Turma = (function() {
             aulaForm.cleanValues();
             $("#newAula").modal("show");
             $("#newAulaData").val(date.format('DD/MM/YYYY'));
+            $("#newAulaHorarioInicio").val(Turma.turma.horario_inicio);
+            $("#newAulaHorarioFim").val(Turma.turma.horario_fim);
+            $("#newAulaAmbiente").val(Turma.turma.ambiente.nome);
+            $("#newAulaAmbienteId").val(Turma.turma.ambiente.id);
         },
         
         onEventClick: function(event) {
             // redireciona para página da aula
-            window.location = Router.get('turma') + "/aulas/" + event.start.format();
+            window.location = Router.get('turma') + "/aulas/" + event.start.format('YYYY-MM-DD');
         },
         
         onEventDrop: function(event, delta, revertFunc) {
@@ -523,18 +563,27 @@ var Turma = (function() {
             }
             
             var isNew = (data.values.id == "");
-            
+
             // cria nova aula
             if (isNew) {
+                if (selectedAmbiente == null) {
+                    var ambienteNome = $("#newAulaAmbiente").val();
+                } else {
+                    var ambienteNome = selectedAmbiente.text;
+                }
+
                 Model.createAula(data.values, function(result) {
                     $("#newAula").modal('hide');
                     Modal.success(result.message);
                     
-                    Turma.addAulaToCalendar(result.aula);
+                    Turma.addAulaToCalendar(result.aula, ambienteNome);
                 }, function(errors) {
                     aulaForm.validate(errors);
                 });
-            } else { // atualiza aula
+            }
+
+            // atualiza aula
+            else {
                 var d = moment(data.values.data, 'DD/MM/YYYY').format('YYYY-MM-DD');
                 
                 Model.updateAula(d, data.values, function(result) {
@@ -724,6 +773,16 @@ $(document).ready(function() {
         'general.cancel': "@lang('general.cancel')",
         'general.edit': "@lang('general.edit')"
     });
+
+    Turma.turma = {
+        id: {{ $turma->id }},
+        horario_inicio: '{{ $turma->horario_inicio->format('H:i:s') }}',
+        horario_fim: '{{ $turma->horario_fim->format('H:i:s') }}',
+        ambiente: {
+            id: {{ $turma->ambienteDefault->id }},
+            nome: '{{ $turma->ambienteDefault->nome }}'
+        }
+    };
 
     Turma.init();
 @endif

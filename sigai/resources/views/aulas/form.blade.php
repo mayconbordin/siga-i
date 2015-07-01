@@ -21,6 +21,65 @@
                 {!!$errors->first('data', '<label class="control-label">:message</label>')!!}
             </div>
         </div>
+
+        {{-- Horário --}}
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                @lang('turmas.horario')
+            </label>
+            <div class="col-sm-5 row">
+                {{-- Início --}}
+                <div class="col-lg-5 {{{ $errors->has('horario_inicio') ? 'has-error' : '' }}}">
+                    <div class="input-group bootstrap-timepicker">
+                        <input id="turmaHorarioInicio" type="text" class="form-control timepicker"
+                               name="horario_inicio" placeholder="@lang('turmas.horario_inicio')"
+                               value="{{{ Input::old('horario_inicio', isset($aula) ? $aula->horario_inicio->format('H:i:s') : null) }}}">
+                        <span class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                        </span>
+                    </div>
+                    {!!$errors->first('horario_inicio', '<label class="control-label">:message</label>')!!}
+                </div>
+
+                <label class="col-sm-1 control-label">
+                    @lang('general.until')
+                </label>
+
+                {{-- Fim --}}
+                <div class="col-lg-5 {{{ $errors->has('horario_fim') ? 'has-error' : '' }}}">
+                    <div class="input-group bootstrap-timepicker">
+                        <input id="turmaHorarioFim" type="text" class="form-control timepicker"
+                               name="horario_fim" placeholder="@lang('turmas.horario_fim')"
+                               value="{{{ Input::old('horario_fim', isset($aula) ? $aula->horario_fim->format('H:i:s') : null) }}}">
+                        <span class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                        </span>
+                    </div>
+                    {!!$errors->first('horario_fim', '<label class="control-label">:message</label>')!!}
+                </div>
+            </div>
+        </div>
+
+        {{-- Ambiente --}}
+        <div class="form-group {{{ $errors->has('ambiente_id') ? 'has-error' : '' }}}">
+            <label for="turmaAmbiente" class="col-sm-2 control-label">
+                @lang('turmas.ambiente')
+            </label>
+            <div class="col-sm-6">
+
+                <div class="input-group bootstrap-timepicker">
+                    <input id="turmaAmbiente" type="text" class="form-control"
+                           value="{{ isset($aula) ? (isset($aula->ambiente) ? $aula->ambiente->nome : $aula->turma->ambienteDefault->nome) : null }}">
+                    <input id="turmaAmbienteId" type="hidden" name="ambiente_id"
+                           value="{{{ Input::old('ambiente_id', isset($aula) ? (isset($aula->ambiente) ? $aula->ambiente->id : null) : null) }}}">
+                    <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                    </span>
+                </div>
+
+                {!!$errors->first('ambiente_id', '<label class="control-label">:message</label>')!!}
+            </div>
+        </div>
         
         {{-- Conteúdo --}}
         <div class="form-group {{{ $errors->has('conteudo') ? 'has-error' : '' }}}">
@@ -48,7 +107,7 @@
             </div>
         </div>
         
-        {{-- Unidade Curricular --}}
+        {{-- Ensino a distância --}}
         <div class="form-group {{{ $errors->has('ensino_a_distancia') ? 'has-error' : '' }}}">
             <div class="col-sm-2"></div>
             <div class="col-sm-10 checkbox">

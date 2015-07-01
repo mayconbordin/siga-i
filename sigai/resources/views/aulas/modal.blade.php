@@ -20,6 +20,30 @@
                                placeholder="@lang('aulas.data')">
                         <label class="control-label hidden"></label>
                     </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-6 bootstrap-timepicker">
+                            <label for="newAulaHorarioInicio">@lang('aulas.horario') @lang('aulas.horario_inicio')</label>
+                            <input type="text" class="form-control timepicker" id="newAulaHorarioInicio"
+                                   placeholder="@lang('turmas.horario_inicio')">
+                            <label class="control-label hidden"></label>
+                        </div>
+
+                        <div class="form-group col-sm-6 bootstrap-timepicker">
+                            <label for="newAulaHorarioFim">@lang('aulas.horario') @lang('aulas.horario_fim')</label>
+                            <input type="text" class="form-control timepicker" id="newAulaHorarioFim"
+                                   placeholder="@lang('aulas.horario_fim')">
+                            <label class="control-label hidden"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newAulaAmbiente">@lang('aulas.ambiente')</label>
+                        <input type="hidden" id="newAulaAmbienteId">
+                        <input type="text" class="form-control" id="newAulaAmbiente"
+                               placeholder="@lang('aulas.ambiente')">
+                        <label class="control-label hidden"></label>
+                    </div>
                     
                     <div class="form-group">
                         <label for="newAulaDataFim">@lang('aulas.conteudo')</label>
