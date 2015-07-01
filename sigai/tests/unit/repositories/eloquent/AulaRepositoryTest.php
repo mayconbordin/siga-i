@@ -422,4 +422,16 @@ class AulaRepositoryTest extends TestCase
         $aulas = \App\Models\Aula::where('ambiente_id', 1)->get();
         $this->assertEquals(0, sizeof($aulas));
     }
+
+    public function testFindAulaByAlunoDeviceAndAmbienteDeviceAndData()
+    {
+        $clientId = 'client3id';
+        $cardCode = '111111';
+        $date     = Carbon::createFromFormat('Y-m-d', '2014-08-05');
+
+        $aulas = $this->aulaRepository->findAulaByAlunoDeviceAndAmbienteDeviceAndData($clientId, $cardCode, $date);
+
+        $this->assertEquals(1, sizeof($aulas));
+        $this->assertEquals($date->format('Y-m-d'), $aulas[0]->data->format('Y-m-d'));
+    }
 }
