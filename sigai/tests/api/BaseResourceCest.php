@@ -8,12 +8,12 @@ abstract class BaseResourceCest {
         $I->sendPOST('auth/login', ['email' => '1234', 'password' => '12345']);
     }
 
-    protected function authenticateOAuth(ApiTester $I, $scope)
+    protected function authenticateOAuth(ApiTester $I, $scope, $client = 'client1id', $secret = 'client1secret')
     {
         $I->haveHttpHeader('Accept', 'application/json');
         $I->sendPOST('/api/oauth/access_token', [
-            'client_id'     => 'client1id',
-            'client_secret' => 'client1secret',
+            'client_id'     => $client,
+            'client_secret' => $secret,
             'grant_type'    => 'client_credentials',
             'scope'         => $scope
         ]);

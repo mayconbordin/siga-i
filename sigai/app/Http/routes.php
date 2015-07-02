@@ -206,6 +206,8 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
 
     Route::post('/chamada', ['uses' => 'ChamadaController@salvar', 'middleware' => 'oauth:write-chamada']);
 
+    Route::get('/agenda', ['uses' => 'AgendaController@mostrar'/*, 'middleware' => 'oauth:read-agenda'*/]);
+
     // OAuth
     // -----------------------------------------------------------------------------
     Route::group(['prefix' => 'oauth'], function()

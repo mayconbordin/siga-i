@@ -25,6 +25,7 @@ class RouteServiceProvider extends ServiceProvider {
 		//
 		$router->pattern('id', '[0-9]+');
 		$router->pattern('data', '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])');
+        $router->pattern('month', '[0-9]+');
 		
 		parent::boot($router);
 	}

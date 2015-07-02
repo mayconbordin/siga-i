@@ -72,6 +72,16 @@ interface AulaRepositoryContract
     public function findNextByProfessor($professorId, Carbon $now = null, $limit = 5);
 
     /**
+     * Retorna lista de aulas de um professor em um determinado mês e ano.
+     *
+     * @param int $professorId (Optional)
+     * @param int $month       (Optional) Se não for informado o ano, assume o mês atual.
+     * @param int $year        (Optional) Se não for informado o ano, assume o ano atual.
+     * @return array
+     */
+    public function findAllByProfessorAndMonth($professorId = null, $month = null, $year = null);
+
+    /**
      * Remove a aula pela data e turma informados.
      * @param Carbon $data
      * @param int    $turmaId

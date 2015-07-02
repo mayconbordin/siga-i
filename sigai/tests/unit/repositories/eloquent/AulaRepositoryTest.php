@@ -434,4 +434,31 @@ class AulaRepositoryTest extends TestCase
         $this->assertEquals(1, sizeof($aulas));
         $this->assertEquals($date->format('Y-m-d'), $aulas[0]->data->format('Y-m-d'));
     }
+
+    public function testFindAllByProfessorAndMonth()
+    {
+        $aulas = $this->aulaRepository->findAllByProfessorAndMonth(49, 8, 2014);
+        $this->assertEquals(9, sizeof($aulas));
+
+        foreach ($aulas as $aula) {
+            $this->assertEquals(2014, $aula->data->year);
+            $this->assertEquals(8, $aula->data->month);
+        }
+
+        $aulas = $this->aulaRepository->findAllByProfessorAndMonth(50, 4, 2015);
+        $this->assertEquals(14, sizeof($aulas));
+
+        foreach ($aulas as $aula) {
+            $this->assertEquals(2015, $aula->data->year);
+            $this->assertEquals(4, $aula->data->month);
+        }
+
+        $aulas = $this->aulaRepository->findAllByProfessorAndMonth(null, 4, 2015);
+        $this->assertEquals(19, sizeof($aulas));
+
+        foreach ($aulas as $aula) {
+            $this->assertEquals(2015, $aula->data->year);
+            $this->assertEquals(4, $aula->data->month);
+        }
+    }
 }

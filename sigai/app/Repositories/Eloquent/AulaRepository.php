@@ -110,7 +110,27 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
 
 	    return $aulas;
     }
-    
+
+    public function findAllByProfessorAndMonth($professorId = null, $month = null, $year = null)
+    {
+        $query = Aula::with('turma', 'turma.professores')
+            ->join('turmas AS t', 't.id', '=', 'aulas.turma_id')
+            ->join('professores_turmas AS pt', 'pt.turma_id', '=', 't.id')
+            ->join('professores AS p', 'p.id', '=', 'pt.professor_id');
+
+        if ($month != null)
+            $query->where(DB::raw("MONTH(data)"), "=", $month);
+
+        if ($year != null)
+            $query->where(DB::raw("YEAR(data)"), "=", $year);
+
+        if ($professorId != null)
+            $query->where('p.id', $professorId);
+
+        $aulas = $query->orderBy('data')->get();
+
+        return $aulas;
+    }
     
     public function deleteByData(Carbon $data, $turmaId, $unidadeCurricularId)
     {

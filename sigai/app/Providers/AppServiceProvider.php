@@ -43,6 +43,7 @@ class AppServiceProvider extends ServiceProvider {
         $this->app->bind('App\Services\Contracts\UsuarioServiceContract', 'App\Services\UsuarioService');
         $this->app->bind('App\Services\Contracts\AmbienteServiceContract', 'App\Services\AmbienteService');
         $this->app->bind('App\Services\Contracts\ChamadaServiceContract', 'App\Services\ChamadaService');
+        $this->app->bind('App\Services\Contracts\AgendaServiceContract', 'App\Services\AgendaService');
 
         $this->app->bind('App\Services\Contracts\OwnershipResolverContract', 'App\Services\OwnershipResolver');
 	}
