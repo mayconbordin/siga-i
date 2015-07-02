@@ -1,7 +1,7 @@
 <?php namespace App\Http\Middleware;
 
 use App\Models\User;
-use App\Repositories\Contracts\TurmaRepositoryContract;
+use App\Services\Contracts\OwnershipResolverContract;
 use Closure;
 use \Auth;
 
@@ -9,11 +9,12 @@ class Permissions
 {
     protected $user;
     protected $turmaRepository;
+    protected $ownershipResolver;
 
-    public function __construct(TurmaRepositoryContract $turmaRepository)
+    public function __construct(OwnershipResolverContract $ownershipResolver)
     {
         $this->user = Auth::user();
-        $this->turmaRepository = $turmaRepository;
+        $this->ownershipResolver = $ownershipResolver;
     }
 
 	/**
@@ -67,7 +68,7 @@ class Permissions
 
         foreach ($permissions as $permission) {
             if (strpos($permission, '-own-') !== false) {
-                if ($this->user->can($permission) && $this->hasOwnership($permission, $this->user, $route)) {
+                if ($this->user->can($permission) && $this->ownershipResolver->hasOwnership($permission, $this->user, $route)) {
                     return true;
                 }
             } else if ($this->user->can($permission)) {
@@ -115,44 +116,6 @@ class Permissions
 
         return false;
     }
-
-    /**
-     * Verify if the user has permission to see the resource.
-     *
-     * @param string $permission
-     * @param User $user
-     * @param \Illuminate/Routing/Route $route
-     * @return bool
-     */
-	private function hasOwnership($permission, $user, $route)
-	{
-	    switch ($permission)
-	    {
-	        case 'edit-own-turma':
-	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
-	            break;
-	            
-            case 'view-own-turma':
-	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
-	            break;
-	            
-            case 'view-own-aula':
-	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id)
-	                or $this->turmaRepository->hasAluno($route->getParameter("turmaId"), $user->id);
-	            break;
-	            
-            case 'edit-own-aula':
-	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
-	            break;
-	            
-            case 'create-own-aula':
-	            return $this->turmaRepository->hasProfessor($route->getParameter("turmaId"), $user->id);
-	            break;
-	    }
-	    
-	    
-	    return false;
-	}
 
     /**
      * Grab the permissions from the request
