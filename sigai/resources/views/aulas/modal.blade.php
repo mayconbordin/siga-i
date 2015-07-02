@@ -28,7 +28,7 @@
                         </textarea>
                         <label class="control-label hidden"></label>
                     </div>
-                    
+                   
                     <div class="form-group">
                         <label for="newAulaObs">@lang('aulas.obs')</label>
                         <textarea class="form-control" rows="3" id="newAulaObs"

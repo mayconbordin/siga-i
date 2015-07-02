@@ -1,4 +1,29 @@
+
+<script>
+
+    $(document).ready(function($) {
+      
+        var intro = introJs();
+        intro.setOptions({
+            skipLabel: '@lang("help.skipLabel")',
+            nextLabel: '@lang("help.nextLabel")',
+            prevLabel: '@lang("help.prevLabel")',
+            doneLabel: '@lang("help.doneLabel")',
+            
+            showProgress: true
+        });
+       
+        $("#startHelp").click(function() {
+            intro.start();
+        });
+    });
+</script>
+
+
 <form id="aulaForm" class="form-horizontal" method="post"
+
+  
+   
       @if (isset($aula))
       action="{{ url('unidades_curriculares/' . $aula->turma->unidadeCurricular->id .
                      '/turmas/' . $aula->turma->id . '/aulas/' . $aula->data->format('Y-m-d')) }}"
@@ -60,7 +85,7 @@
                 {!!$errors->first('ensino_a_distancia', '<label class="control-label">:message</label>')!!}
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-success">@lang('general.save')</button>

@@ -100,6 +100,23 @@ var Aula = (function() {
 
 })();
 
+$(document).ready(function($) {
+  
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+        
+        showProgress: true
+    });
+   
+    $("#startHelp").click(function() {
+        intro.start();
+    });
+});
+
 
 $(document).ready(function($) {
     Router.register('base', "{{ url('api/unidades_curriculares/'.$aula->turma->unidade_curricular_id.
@@ -112,6 +129,10 @@ $(document).ready(function($) {
 
 @section('content')
 <div class="col-xs-12">
+
+       <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> Ajuda
+    </button>
 
     @include('utils.alerts')
     
@@ -153,6 +174,7 @@ $(document).ready(function($) {
             @if (isset($aula) && Auth::user()->can('edit-own-aula'))
             <li role="presentation"><a href="#chamada" aria-controls="chamada"
                 role="tab" data-toggle="tab">@lang('aulas.chamada')</a></li>
+                
             @endif
         </ul>
 
@@ -181,16 +203,14 @@ $(document).ready(function($) {
             @if (isset($aula) && Auth::user()->can('edit-own-aula'))
             
             {{-- Aba de chamada --}}
-            <div role="tabpanel" class="tab-pane" id="chamada">
+            <div data-step="1" data-intro= "@lang('help.chamada')"  role="tabpanel" class="tab-pane" id="chamada">
                 
                 <div class="tab-actions row">
                     <div class="col-sm-6 tab-actions-left">
-                        <button class="saveChamada btn btn-success"
-                                data-loading-text="@lang('general.saving')...">
-                            @lang('general.save')</button>
+                        
                     </div>
                     <div class="col-sm-6 tab-actions-right">
-                        <div class="pull-right">
+                        <div data-step="4" data-intro= "@lang('help.todos')" class="pull-right">
                             <strong>Aplicar a todos:</strong>
                             <div id="switchChamadas" class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-success" data-action="p">
@@ -236,15 +256,19 @@ $(document).ready(function($) {
                             
                         @if ($c->isNormal == true)
                             @foreach(['p1', 'p2', 'p3', 'p4'] as $p)
-                            <td class="text-center cell-gray period">
+                            
+                            <td  data-step="2" data-intro= "@lang('help.presenca')" class="text-center cell-gray period">
+                               
                                 <input type="checkbox" {{ ($c[$p] || $c[$p] == null) ? 'checked' : '' }}
                                        data-toggle="toggle"
                                        data-size="mini" data-onstyle="success"
                                        data-offstyle="danger" data-on="P" data-off="F">
+                                 
                             </td>
+                           
                             @endforeach
                             
-                            <td class="text-center checkRow">
+                            <td data-step="3" data-intro= "@lang('help.periodos')" class="text-center checkRow">
                                 <input type="checkbox" checked
                                        data-toggle="toggle"
                                        data-size="mini" data-onstyle="success"
@@ -264,7 +288,7 @@ $(document).ready(function($) {
                 
                 <div class="tab-actions row">
                     <div class="col-sm-6 tab-actions-left">
-                        <button class="saveChamada btn btn-success"
+                        <button data-step="5" data-intro= "@lang('help.salvarChamada')"  class="saveChamada btn btn-success"
                                 data-loading-text="@lang('general.saving')...">
                             @lang('general.save')</button>
                     </div>

@@ -206,31 +206,55 @@ $(document).ready(function($) {
     Router.register('base', "{{ url('api/alunos') }}");
     Aluno.init();
 });
+
+$(document).ready(function($) {
+      
+var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+        
+        showProgress: true
+    });
+   
+    $("#startHelp").click(function() {
+        intro.start();
+    });
+});
+
+
 </script>
 @endsection
 
 @section('content')
-<div class="col-xs-12">
+<div  data-step="1" data-intro= "@lang('help.painelAluno')" class="col-xs-12">
 	@include('utils.alerts')
+	
+	  <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> Ajuda
+    </button>
+    
     
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
         <li class="active">@choice('alunos.title', 2)</li>
     </ol>
     
-    <button type="button" class="btn btn-primary" id="openNewAluno">
+    <button data-step="6" data-intro= "@lang('help.novoAluno')" type="button" class="btn btn-primary" id="openNewAluno">
         <i class="fa fa-plus"></i> @lang('alunos.new')
     </button>
     
     @include('alunos.criar_modal')
-  
+ 
     <!-- Lista Alunos -->
     <table class="table" id="alunos">
         <thead>
             <tr>
-                <th>@lang('alunos.matricula')</th>
-                <th>@lang('alunos.nome')</th>
-                <th class="text-center">@lang('general.actions')</th>
+                <th data-step="2" data-intro= "@lang('help.matricula')" > @lang('alunos.matricula')</th>
+                <th data-step="3" data-intro= "@lang('help.nome')" > @lang('alunos.nome')</th>
+                <th data-step="4" data-intro= "@lang('help.acoes')"class="text-center">@lang('general.actions')</th>
             </tr>
         </thead>
         <tbody>
@@ -240,7 +264,7 @@ $(document).ready(function($) {
         </tbody>
     </table>
     
-    <div class="pagination-container text-center">
+    <div data-step="5" data-intro= "@lang('help.paginacao')" class="pagination-container text-center">
         <?php echo $alunos->render(); ?>
     </div>
 </div>

@@ -1,7 +1,34 @@
 @extends('app')
 
+@section('js')
+<script>
+
+$(document).ready(function($) {
+  
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+        
+        showProgress: true
+    });
+   
+    $("#startHelp").click(function() {
+        intro.start();
+    });
+});
+</script>
+@endsection
+
+
 @section('content')
 <div class="col-xs-12">
+
+    <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> Ajuda
+    </button>
 
     @if ($daysEndMonth < 5)
     <div class="alert alert-warning alert-dismissible fade in" role="alert">
@@ -19,11 +46,10 @@
     </div>
     @endif
 	
-	<div class="row">
+	<div  class="row">
 	    <div class="col-xs-6">
-	        <div class="panel panel-default">
+	        <div data-step="1" data-intro= "@lang('help.painelTurma')"  class="panel panel-default">
 		        <div class="panel-heading">Minhas Turmas</div>
-
 		        <div class="panel-body">
 		            <div class="list-group">
 		                @foreach ($turmas as $turma)
@@ -41,7 +67,7 @@
 	    </div>
 	    
 	    <div class="col-xs-6">
-	        <div class="panel panel-default">
+	        <div  data-step="2" data-intro= "@lang('help.painelAula')"  class="panel panel-default">
 		        <div class="panel-heading">Próximas Aulas</div>
 
 		        <div class="panel-body">
