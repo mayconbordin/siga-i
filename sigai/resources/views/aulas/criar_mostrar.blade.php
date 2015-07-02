@@ -33,6 +33,31 @@ var Aula = (function() {
     return {
         init: function() {
             $("#aulaEditBtn").click(this.onClickEdit);
+
+            $("#aulaAmbiente").typeahead({
+                onSelect: function(item) {
+                    $("#aulaAmbienteId").val(item.value);
+                },
+                ajax: {
+                    url: Router.get('ambientes'),
+                    displayField: "nome",
+                    valueField: "id",
+                    method: "get",
+                    preDispatch: function (query) {
+                        return {
+                            query: query
+                        }
+                    }
+                }
+            });
+
+            // ativa timepickers
+            $('.timepicker').timepicker({
+                minuteStep: 1,
+                showSeconds: true,
+                showMeridian: false,
+                defaultTime: false
+            });
         
             $("#switchChamadas").click(this.onSwitchChamadasClick);
             $("#chamada .checkRow input[type=checkbox]").change(this.onCheckRowClick);
@@ -104,6 +129,7 @@ var Aula = (function() {
 $(document).ready(function($) {
     Router.register('base', "{{ url('api/unidades_curriculares/'.$aula->turma->unidade_curricular_id.
                                     '/turmas/'.$aula->turma->id.'/aulas/'.$aula->data->format('Y-m-d')) }}");
+    Router.register('ambientes', "{{ url('api/ambientes') }}");
     Aula.init();
 });
 </script>
