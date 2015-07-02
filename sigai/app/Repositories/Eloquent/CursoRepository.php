@@ -115,7 +115,7 @@ class CursoRepository extends BaseRepository implements CursoRepositoryContract
             $curso->delete();
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
             throw new ServerError(Lang::get('cursos.remove_error'), $e->getCode(), $e);
         }
 

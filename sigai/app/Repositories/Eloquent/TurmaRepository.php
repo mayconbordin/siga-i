@@ -226,7 +226,7 @@ class TurmaRepository extends BaseRepository implements TurmaRepositoryContract
 	        $turma->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
-	        Log::error($e->getMessage(), ['exception' => $e]);
+	        Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
 	        throw $e;
 	    }
 	    

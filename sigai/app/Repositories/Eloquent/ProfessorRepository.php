@@ -177,7 +177,7 @@ class ProfessorRepository extends BaseRepository implements ProfessorRepositoryC
             $professor->usuario->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
-            Log::error($e->getMessage(), ['context' => $e->getTraceAsString()]);
+            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
 	        throw new ServerError(Lang::get('professores.remove_error'));
 	    }
 	    

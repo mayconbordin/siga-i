@@ -12,6 +12,7 @@ use App\Exceptions\ServerError;
 
 use \DB;
 use \Lang;
+use \Log;
 
 use Carbon\Carbon;
 
@@ -122,6 +123,7 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
 	        $aula->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
+            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
 	        throw new ServerError(Lang::get('aulas.remove_error'));
 	    }
 	    

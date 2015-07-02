@@ -13,6 +13,7 @@ use App\Exceptions\ServerError;
 
 use \DB;
 use \Lang;
+use \Log;
 
 class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurricularRepositoryContract
 {
@@ -140,6 +141,7 @@ class UnidadeCurricularRepository extends BaseRepository implements UnidadeCurri
 	        $uc->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
+            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
 	        throw new ServerError(Lang::get('unidades_curriculares.remove_error'));
 	    }
 
