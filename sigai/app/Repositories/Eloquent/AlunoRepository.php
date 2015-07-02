@@ -11,6 +11,7 @@ use App\Exceptions\ServerError;
 use \DB;
 use \Lang;
 use \Hash;
+use \Log;
 
 class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
 {
@@ -176,10 +177,12 @@ class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
 	        $aluno->cursos()->detach();
 	        $aluno->turmas()->detach();
 	        $aluno->chamadas()->delete();
+            $aluno->dispositivos()->delete();
 	        $aluno->delete();
 	        $usuario->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
+            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
 	        throw new ServerError(Lang::get('alunos.remove_error'));
 	    }
 	    

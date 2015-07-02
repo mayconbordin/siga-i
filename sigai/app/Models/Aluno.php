@@ -37,9 +37,13 @@ class Aluno extends Model {
     
     public function turmas()
     {
-        return $this->belongsToMany('App\Models\Turma', 'alunos_turmas',
-                                    'aluno_id', 'turma_id')
+        return $this->belongsToMany('App\Models\Turma', 'alunos_turmas', 'aluno_id', 'turma_id')
                     ->withPivot('status', 'curso_origem_id');
+    }
+
+    public function dispositivos()
+    {
+        return $this->hasMany('App\Models\DispositivoAluno', 'aluno_id');
     }
     
     
