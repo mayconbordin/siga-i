@@ -13,6 +13,16 @@ class UsuarioTransformer extends Transformer
             'email'        => $this->email,
             'display_name' => ($this->matricula.' | '.$this->nome)
         ];
+
+        if (in_array('roles', $options)) {
+            $roles = [];
+
+            foreach ($this->roles as $role) {
+                $roles[] = ['id' => $role->id, 'name' => $role->name];
+            }
+
+            $data['roles'] = $roles;
+        }
         
         return $data;
     }

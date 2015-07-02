@@ -25,4 +25,11 @@ class UsuarioService implements UsuarioServiceContract
         $data['password'] = array_get($data, 'new_password', '');
         $this->repository->updateById($data, $usuario->id);
     }
+
+    public function getByMatriculaAndAuthenticate($matricula, $password)
+    {
+        $user = $this->repository->findByMatricula($matricula);
+
+        return $this->isPasswordValid($user, $password) ? $user : null;
+    }
 }
