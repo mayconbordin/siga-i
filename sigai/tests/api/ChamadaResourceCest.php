@@ -10,7 +10,7 @@ class ChamadaResourceCest extends BaseResourceCest
 
     public function saveChamada(ApiTester $I)
     {
-        //$this->authenticate($I);
+        $this->authenticateOAuth($I, 'write-chamada');
 
         $data = [
             'device_id' => 'client3id',
@@ -39,7 +39,7 @@ class ChamadaResourceCest extends BaseResourceCest
 
     public function saveChamadaSecondPeriod(ApiTester $I)
     {
-        //$this->authenticate($I);
+        $this->authenticateOAuth($I, 'write-chamada');
 
         $data = [
             'device_id' => 'client3id',
@@ -68,7 +68,7 @@ class ChamadaResourceCest extends BaseResourceCest
 
     public function saveChamadaThirdPeriod(ApiTester $I)
     {
-        //$this->authenticate($I);
+        $this->authenticateOAuth($I, 'write-chamada');
 
         $data = [
             'device_id' => 'client3id',
@@ -97,7 +97,7 @@ class ChamadaResourceCest extends BaseResourceCest
 
     public function saveChamadaLastPeriod(ApiTester $I)
     {
-        //$this->authenticate($I);
+        $this->authenticateOAuth($I, 'write-chamada');
 
         $data = [
             'device_id' => 'client3id',
@@ -126,7 +126,7 @@ class ChamadaResourceCest extends BaseResourceCest
 
     public function saveChamadaTooLate(ApiTester $I)
     {
-        //$this->authenticate($I);
+        $this->authenticateOAuth($I, 'write-chamada');
 
         $data = [
             'device_id' => 'client3id',
@@ -155,7 +155,7 @@ class ChamadaResourceCest extends BaseResourceCest
 
     public function saveChamadaTooEarly(ApiTester $I)
     {
-        //$this->authenticate($I);
+        $this->authenticateOAuth($I, 'write-chamada');
 
         $data = [
             'device_id' => 'client3id',

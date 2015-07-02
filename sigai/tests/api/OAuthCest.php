@@ -9,7 +9,7 @@ class OAuthCest extends BaseResourceCest
     {
         $I->wantTo("Get an OAuth access token");
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/oauth/access_token', [
+        $I->sendPOST('/api/oauth/access_token', [
             'client_id'     => 'client1id',
             'client_secret' => 'client1secret',
             'grant_type'    => 'client_credentials'
@@ -28,14 +28,12 @@ class OAuthCest extends BaseResourceCest
     {
         $I->wantTo("Get an OAuth access token");
         $I->haveHttpHeader('Accept', 'application/json');
-        $I->sendPOST('/oauth/access_token', [
+        $I->sendPOST('/api/oauth/access_token', [
             'client_id'     => 'client1id',
             'client_secret' => 'client1secret',
             'grant_type'    => 'client_credentials',
             'scope'         => 'write-chamada'
         ]);
-
-        dd($I->grabResponse());
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
@@ -43,7 +41,7 @@ class OAuthCest extends BaseResourceCest
         $json = json_decode($I->grabResponse());
 
         $I->haveHttpHeader('Authorization', 'Bearer '.$json->access_token);
-        $I->sendGET('/oauth/test');
+        $I->sendGET('/api/oauth/test');
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
