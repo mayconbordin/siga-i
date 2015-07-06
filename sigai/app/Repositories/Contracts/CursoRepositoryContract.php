@@ -61,7 +61,7 @@ interface CursoRepositoryContract
      * @return Curso
      * @throws ServerError Caso não consiga salvar os dados do curso
      */
-    public function insert(array $data, User $coordenador);
+    public function insert(array $data, User $coordenador = null);
 
     /**
      * Remove o curso pela id informada.

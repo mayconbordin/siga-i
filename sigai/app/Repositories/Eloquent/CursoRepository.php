@@ -76,14 +76,16 @@ class CursoRepository extends BaseRepository implements CursoRepositoryContract
         return $curso;
     }
     
-    public function insert(array $data, User $coordenador)
+    public function insert(array $data, User $coordenador = null)
     {
         $curso = new Curso;
 	    
 	    $curso->nome  = array_get($data, 'nome');
 	    $curso->sigla = array_get($data, 'sigla');
 
-        $curso->coordenador()->associate($coordenador);
+        if ($coordenador != null) {
+            $curso->coordenador()->associate($coordenador);
+        }
 
 	    if (!$curso->save()) {
             throw new ServerError(Lang::get('cursos.create_error'));

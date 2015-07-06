@@ -4,6 +4,7 @@ use App\Importers\XlsImport;
 use App\Http\Requests\ImportarXlsRequest;
 use App\Commands\ImportData;
 
+use App\Services\Contracts\ImportServiceContract;
 use \Validator;
 use \Input;
 use \Storage;
@@ -13,12 +14,16 @@ use \Lang;
 use PHPExcel;
 use PHPExcel_IOFactory;
 
-class ImportController extends Controller {
+class ImportController extends Controller
+{
+    protected $service;
 
-    public function __construct()
+    public function __construct(ImportServiceContract $service)
     {
         $this->middleware('auth');
         $this->middleware('permissions');
+
+        $this->service = $service;
     }
 
 	public function index()
@@ -42,11 +47,9 @@ class ImportController extends Controller {
         $xls = new XlsImport($file->getRealPath());
         $xls->readAll();
         $data = $xls->getData();
-	    
+
 	    try {
-            $this->dispatch(
-                new ImportData(Auth::user(), $data)
-            );
+            $this->service->importExcel(Auth::user(), $data);
         } catch (\Exception $e) {
             return response()->json(['errors' => [Lang::get('importar.error')]], 500);
         }
