@@ -14,5 +14,7 @@ return [
     
     'remove_message' => 'Deseja realmente remover este ambiente?',
     'remove_success' => 'Ambiente removido com sucesso!',
-    'remove_error'   => 'Erro ao remover o ambiente.'
+    'remove_error'   => 'Erro ao remover o ambiente.',
+
+    'dispositivo_exists' => 'Este dispositivo já está vínculado ao ambiente',
 ];

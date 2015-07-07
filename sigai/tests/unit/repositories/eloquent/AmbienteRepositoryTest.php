@@ -143,4 +143,39 @@ class AmbienteRepositoryTest extends TestCase
             $this->fail("Deveria ter ocorrido falha, este ambiente não existe.");
         } catch (NotFoundError $e) {}
     }
+
+    public function testAttachDispositivo()
+    {
+        $dev = \App\Models\OAuthClient::where('id', 'client3id')->first();
+        $result = $this->repository->attachDispositivo(1, $dev);
+
+        $ambiente = $this->repository->findById(1);
+        $this->assertEquals(2, sizeof($ambiente->dispositivos));
+        $this->assertTrue($this->repository->hasDispositivo(1, "client3id"));
+    }
+
+    public function testAttachDispositivoAlreadyAttached()
+    {
+        $dev = \App\Models\OAuthClient::where('id', 'client1id')->first();
+
+        try {
+            $result = $this->repository->attachDispositivo(1, $dev);
+            $this->fail("Deveria ter ocorrido falha, este dispositivo já está vínculado ao ambiente.");
+        } catch (\App\Exceptions\ConflictError $e) {}
+    }
+
+    public function testDetachDispositivo()
+    {
+        $dev = \App\Models\OAuthClient::where('id', 'client1id')->first();
+        $this->repository->detachDispositivo(1, $dev);
+
+        $ambiente = $this->repository->findById(1);
+        $this->assertEquals(0, sizeof($ambiente->dispositivos));
+    }
+
+    public function testHasDispositivo()
+    {
+        $this->assertTrue($this->repository->hasDispositivo(1, "client1id"));
+        $this->assertFalse($this->repository->hasDispositivo(1, "client3id"));
+    }
 }

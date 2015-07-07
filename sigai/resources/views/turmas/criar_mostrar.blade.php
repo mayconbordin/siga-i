@@ -407,7 +407,7 @@ var Turma = (function() {
             
             $("#vincularProfessor .save").click(this.onAttachProfessorClick);
             $("#professores .detach").click(this.onDetachProfessorClick);
-            
+
             $("#professorNomeOrMatricula").typeahead({
                 onSelect: function(item) {
                     selectedProfessor = item;

@@ -2,7 +2,9 @@
 
 use App\Models\Ambiente;
 use App\Models\TipoAmbiente;
+use App\Models\OAuthClient;
 
+use App\Exceptions\ConflictError;
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 
@@ -115,6 +117,8 @@ class AmbienteRepository extends BaseRepository implements AmbienteRepositoryCon
             $this->getTurmaRepository()->dissociateAmbiente($ambiente);
             $this->getAulaRepository()->dissociateAmbiente($ambiente);
 
+            $ambiente->dispositivos()->detach();
+
             $ambiente->delete();
         } catch (\Exception $e) {
             DB::rollback();
@@ -125,6 +129,34 @@ class AmbienteRepository extends BaseRepository implements AmbienteRepositoryCon
         DB::commit();
     }
 
+    public function attachDispositivo($id, OAuthClient $dispositivo)
+    {
+        $ambiente = self::findById($id);
+
+        if (self::hasDispositivo($ambiente->id, $dispositivo->id)) {
+            throw new ConflictError(Lang::get('ambientes.dispositivo_exists'));
+        }
+
+        $ambiente->dispositivos()->attach($dispositivo);
+
+        return ['ambiente' => $ambiente, 'dispositivo' => $dispositivo];
+    }
+
+    public function detachDispositivo($id, OAuthClient $dispositivo)
+    {
+        $ambiente = self::findById($id);
+        $ambiente->dispositivos()->detach($dispositivo);
+    }
+
+    public function hasDispositivo($ambienteId, $dispositivoId)
+    {
+        return !is_null(
+            DB::table('dispositivos_ambiente')
+                ->where('ambiente_id', $ambienteId)
+                ->where('oauth_client_id', $dispositivoId)
+                ->first()
+        );
+    }
 
     /**
      * @return TurmaRepositoryContract
