@@ -1,6 +1,7 @@
 <?php namespace App\Repositories\Eloquent;
 
 use App\Models\Aluno;
+use App\Models\Role;
 use App\Models\User;
 
 use App\Repositories\Contracts\AlunoRepositoryContract;
@@ -129,6 +130,9 @@ class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
         if (!$usuario->save()) {
             throw new ServerError(Lang::get('alunos.create_error'));
         }
+
+        $role = Role::where('name', 'aluno')->first();
+        $usuario->attachRole($role);
        
         $aluno = new Aluno();
         $aluno->id = $usuario->id;

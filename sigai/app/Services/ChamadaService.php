@@ -1,6 +1,8 @@
 <?php namespace App\Services;
 
 use App\Exceptions\NotFoundError;
+use App\Models\Aluno;
+use App\Models\Aula;
 use App\Repositories\Contracts\AlunoRepositoryContract;
 use App\Repositories\Contracts\AulaRepositoryContract;
 use App\Repositories\Contracts\ChamadaRepositoryContract;
@@ -121,6 +123,11 @@ class ChamadaService implements ChamadaServiceContract
         $this->repository->insertOrUpdate($aluno, $periods, $currentAula);
 
         return true;
+    }
+
+    public function saveOrUpdate(Aula $aula, Aluno $aluno, array $periods)
+    {
+        return $this->repository->insertOrUpdate($aluno, $periods, $aula);
     }
 
     protected function mergeDataAndTime(Carbon $data, Carbon $time)

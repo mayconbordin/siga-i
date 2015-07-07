@@ -12,36 +12,48 @@ use App\Repositories\Contracts\CursoRepositoryContract;
 use App\Repositories\Contracts\ProfessorRepositoryContract;
 use App\Repositories\Contracts\TurmaRepositoryContract;
 use App\Repositories\Contracts\UnidadeCurricularRepositoryContract;
+use App\Services\Contracts\AulaServiceContract;
+use App\Services\Contracts\ChamadaServiceContract;
 use App\Services\Contracts\ImportServiceContract;
 
+use App\Services\Contracts\TurmaServiceContract;
 use Carbon\Carbon;
 use \DB;
 use \Log;
+use \Lang;
 
 class ImportService implements ImportServiceContract
 {
     protected $cursoRepository;
     protected $ucRepository;
     protected $turmaRepository;
-    protected $aulaRepository;
     protected $alunoRepository;
-    protected $chamadaRepository;
     protected $professorRepository;
+
+    protected $turmaService;
+    protected $aulaService;
+    protected $chamadaService;
 
     protected $usuario;
 
+    public $defaultHorarioInicio = '16:30:00';
+    public $defaultHorarioFim    = '22:30:00';
+    public $defaultAmbienteId    = 1;
+
     public function __construct(CursoRepositoryContract $cursoRepository, UnidadeCurricularRepositoryContract $ucRepository,
-                                TurmaRepositoryContract $turmaRepository, AulaRepositoryContract $aulaRepository,
-                                AlunoRepositoryContract $alunoRepository, ChamadaRepositoryContract $chamadaRepository,
-                                ProfessorRepositoryContract $professorRepository)
+                                TurmaRepositoryContract $turmaRepository, AlunoRepositoryContract $alunoRepository,
+                                ProfessorRepositoryContract $professorRepository, TurmaServiceContract $turmaService,
+                                AulaServiceContract $aulaService, ChamadaServiceContract $chamadaService)
     {
         $this->cursoRepository     = $cursoRepository;
         $this->ucRepository        = $ucRepository;
         $this->turmaRepository     = $turmaRepository;
-        $this->aulaRepository      = $aulaRepository;
         $this->alunoRepository     = $alunoRepository;
-        $this->chamadaRepository   = $chamadaRepository;
         $this->professorRepository = $professorRepository;
+
+        $this->turmaService        = $turmaService;
+        $this->aulaService         = $aulaService;
+        $this->chamadaService      = $chamadaService;
     }
 
     public function importExcel(User $usuario, array $data)
@@ -63,7 +75,7 @@ class ImportService implements ImportServiceContract
             $this->associateProfessorTurma();
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage(), ['exception' => $e]);
+            Log::error($e->getMessage(), ['exception' => $e, 'trace' => $e->getTrace()]);
             throw $e;
         }
 
@@ -96,13 +108,14 @@ class ImportService implements ImportServiceContract
 
     protected function importTurma($turma)
     {
-        $turma['data_inicio'] = Carbon::createFromFormat('Y-m-d', $turma['data_inicio']);
-        $turma['data_fim']    = Carbon::createFromFormat('Y-m-d', $turma['data_fim']);
+        $turma['horario_inicio'] = $this->defaultHorarioInicio;
+        $turma['horario_fim']    = $this->defaultHorarioFim;
+        $turma['ambiente_id']    = $this->defaultAmbienteId;
 
         try {
-            $this->turma = $this->turmaRepository->findByNomeAndData($turma['nome'], $turma['data_inicio'], $turma['data_fim']);
+            $this->turma = $this->turmaService->getByNomeAndData($turma['nome'], $turma['data_inicio'], $turma['data_fim']);
         } catch (NotFoundError $e) {
-            $this->turma = $this->turmaRepository->insert($turma, $this->uc);
+            $this->turma = $this->turmaService->save($turma, $this->uc->id);
         }
     }
 
@@ -111,13 +124,13 @@ class ImportService implements ImportServiceContract
         $this->aulas = [];
 
         foreach ($aulas as $aula) {
-            $data = $aula['data'];
-            $aula['data'] = Carbon::createFromFormat('Y-m-d', $aula['data']);
+            $aula['horario_inicio'] = $this->defaultHorarioInicio;
+            $aula['horario_fim']    = $this->defaultHorarioFim;
 
             try {
-                $this->aulas[$data] = $this->aulaRepository->findByData($aula['data'], $this->turma->id, $this->uc->id);
+                $this->aulas[$aula['data']] = $this->aulaService->show($this->uc->id, $this->turma->id, $aula['data']);
             } catch (NotFoundError $e) {
-                $this->aulas[$data] = $this->aulaRepository->insert($aula, $this->turma);
+                $this->aulas[$aula['data']] = $this->aulaService->save($aula, $this->uc->id, $this->turma->id);
             }
         }
     }
@@ -126,8 +139,6 @@ class ImportService implements ImportServiceContract
     {
         $this->alunos = [];
         $this->cursosUC = [];
-
-        $role = Role::where('name', 'aluno')->first();
 
         foreach ($alunos as $aluno) {
             $this->cursosUC[$aluno['curso']] = true;
@@ -138,8 +149,6 @@ class ImportService implements ImportServiceContract
                 $aluno['password'] = '12345';
                 $aluno['email']    = str_replace(" ", "_", strtolower($aluno['nome'])) . "@gmail.com";
                 $this->alunos[$aluno['matricula']] = $this->alunoRepository->insert($aluno);
-
-                $this->alunos[$aluno['matricula']]->usuario->attachRole($role);
             }
         }
     }
@@ -151,16 +160,7 @@ class ImportService implements ImportServiceContract
                 $aula = $this->aulas[$data];
                 $_aluno = $this->alunos[$aluno['matricula']];
 
-                try {
-                    $chamada = $this->chamadaRepository->findByAulaAndAluno($aula->id, $_aluno->id);
-                } catch (NotFoundError $e) {
-                    $chamada = new Chamada;
-                    $chamada->aluno()->associate($_aluno);
-                    $chamada->aula()->associate($aula);
-                }
-
-                $chamada->setPeriodos($periodos);
-                $chamada->save();
+                $this->chamadaService->saveOrUpdate($aula, $_aluno, $periodos);
             }
         }
     }

@@ -7,6 +7,7 @@ use App\Repositories\Contracts\ChamadaRepositoryContract;
 use App\Repositories\Contracts\TurmaRepositoryContract;
 use App\Services\Contracts\AulaServiceContract;
 
+use App\Utils\DateUtils;
 use Carbon\Carbon;
 
 class AulaService implements AulaServiceContract
@@ -36,11 +37,11 @@ class AulaService implements AulaServiceContract
         $end   = array_get($parameters, 'end', null);
 
         if ($start != null) {
-            $start = Carbon::createFromFormat('Y-m-d', $start);
+            $start = DateUtils::parseDate($start);
         }
 
         if ($end != null) {
-            $end = Carbon::createFromFormat('Y-m-d', $end);
+            $end = DateUtils::parseDate($end);
         }
 
         $aulas = $this->repository->findByTurmaBetweenDates($turma->id, $start, $end);
@@ -50,7 +51,7 @@ class AulaService implements AulaServiceContract
 
     public function show($ucId, $turmaId, $data)
     {
-        $date = Carbon::createFromFormat('Y-m-d', $data);
+        $date = DateUtils::parseDate($data);
         $aula = $this->repository->findByData($date, $turmaId, $ucId);
 
         return $aula;
@@ -58,7 +59,7 @@ class AulaService implements AulaServiceContract
 
     public function showFull($ucId, $turmaId, $data)
     {
-        $date   = Carbon::createFromFormat('Y-m-d', $data);
+        $date   = DateUtils::parseDate($data);
         $aula   = $this->repository->findByDataWithAll($date, $turmaId, $ucId);
         $alunos = $this->alunoRepository->findByAulaWithChamada($turmaId, $aula->id);
 
@@ -72,7 +73,7 @@ class AulaService implements AulaServiceContract
 
     public function edit(array $data, $ucId, $turmaId, $date)
     {
-        $date = Carbon::createFromFormat('Y-m-d', $date);
+        $date = DateUtils::parseDate($date);
 
         $this->parseAulaDates($data);
 
@@ -101,13 +102,13 @@ class AulaService implements AulaServiceContract
 
     public function delete($ucId, $turmaId, $data)
     {
-        $date = Carbon::createFromFormat('Y-m-d', $data);
+        $date = DateUtils::parseDate($data);
         $this->repository->deleteByData($date, $turmaId, $ucId);
     }
 
     public function changeDate(array $data, $ucId, $turmaId, $id)
     {
-        $newData = Carbon::createFromFormat('d/m/Y', array_get($data, 'data'));
+        $newData = DateUtils::parseDate(array_get($data, 'data'));
         $aula = $this->repository->updateData($ucId, $turmaId, $id, $newData);
 
         return $aula;
@@ -126,7 +127,7 @@ class AulaService implements AulaServiceContract
 
     protected function parseAulaDates(array &$data)
     {
-        $data['data']           = Carbon::createFromFormat('d/m/Y', $data['data']);
+        $data['data']           = DateUtils::parseDate($data['data']);
         $data['horario_inicio'] = Carbon::createFromFormat('H:i:s', $data['horario_inicio']);
         $data['horario_fim']    = Carbon::createFromFormat('H:i:s', $data['horario_fim']);
     }

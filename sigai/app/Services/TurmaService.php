@@ -10,6 +10,7 @@ use App\Repositories\Contracts\TurmaRepositoryContract;
 use App\Repositories\Contracts\UnidadeCurricularRepositoryContract;
 use App\Services\Contracts\TurmaServiceContract;
 
+use App\Utils\DateUtils;
 use Carbon\Carbon;
 
 class TurmaService implements TurmaServiceContract
@@ -80,6 +81,19 @@ class TurmaService implements TurmaServiceContract
         $data->diarios = $this->diarioRepository->findAllByTurma($data->turma);
 
         return $data;
+    }
+
+    public function getByNomeAndData($nome, $dataInicio, $dataFim)
+    {
+        if (!($dataInicio instanceof Carbon)) {
+            $dataInicio = DateUtils::parseDate($dataInicio);
+        }
+
+        if (!($dataFim instanceof Carbon)) {
+            $dataFim = DateUtils::parseDate($dataFim);
+        }
+
+        return $this->turmaRepository->findByNomeAndData($nome, $dataInicio, $dataFim);
     }
 
     public function edit(array $data, $ucId, $id)
@@ -155,8 +169,8 @@ class TurmaService implements TurmaServiceContract
 
     protected function parseTurmaDates(array &$data)
     {
-        $data['data_inicio'] = Carbon::createFromFormat('d/m/Y', $data['data_inicio']);
-        $data['data_fim']    = Carbon::createFromFormat('d/m/Y', $data['data_fim']);
+        $data['data_inicio'] = DateUtils::parseDate($data['data_inicio']);
+        $data['data_fim']    = DateUtils::parseDate($data['data_fim']);
 
         $data['horario_inicio'] = Carbon::createFromFormat('H:i:s', $data['horario_inicio']);
         $data['horario_fim']    = Carbon::createFromFormat('H:i:s', $data['horario_fim']);

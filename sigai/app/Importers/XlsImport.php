@@ -1,10 +1,14 @@
 <?php namespace App\Importers;
 
+use App\Exceptions\XlsImportException;
 use App\Models\Aluno;
 
 use PHPExcel;
 use PHPExcel_Cell;
 use PHPExcel_IOFactory;
+
+use \Lang;
+use \Log;
 
 class XlsImport
 {
@@ -48,8 +52,10 @@ class XlsImport
     
     public function __construct($fileName)
     {
+        $start = microtime(true);
+
         if (!file_exists($fileName)) {
-		    throw new \Exception("File does not exists: $fileName.");
+		    throw new XlsImportException(Lang::get('importar.file_not_found', ['file' => $fileName]));
 	    }
 	    
 	    set_time_limit(0);
@@ -58,7 +64,11 @@ class XlsImport
         $this->reader = PHPExcel_IOFactory::createReaderForFile($fileName);
         $this->reader->setReadDataOnly(true);
         
-	    $this->xls = $this->reader->load ($fileName);
+	    $this->xls = $this->reader->load($fileName);
+
+        $end = microtime(true);
+
+        Log::info("Load time for Excel file: ".($end - $start)." seconds");
     }
     
     public function readAll()
@@ -213,7 +223,7 @@ class XlsImport
 				    if ($col == 3)
 				    {
 				        if (($value == 0) || ($value == null) || strlen(trim($value)) == 0) {
-							throw new \Exception("Faltam informações na aba produção referente aos alunos.");
+							throw new XlsImportException(Lang::get('importar.missing_data_producao'));
 						}
 						
 					    $aluno['matricula'] = "$value";
