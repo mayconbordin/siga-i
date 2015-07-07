@@ -5,6 +5,7 @@ use App\Transformers\Base\TransformableTrait;
 
 class OAuthClient extends Model {
     protected $table = 'oauth_clients';
+    public $incrementing = false;
     protected $fillable = ['id', 'secret', 'name'];
 
     public function ambientes()
