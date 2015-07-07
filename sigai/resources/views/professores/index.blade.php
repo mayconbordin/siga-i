@@ -205,19 +205,40 @@ $(document).ready(function($) {
 
     Professor.init();
 });
+
+
+
+$(document).ready(function($) {
+  
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+        
+        showProgress: true
+    });
+   
+    $("#startHelp").click(function() {
+        intro.start();
+    });
+});
 </script>
 @endsection
 
 @section('content')
-<div class="col-xs-12">
+<div data-step="1" data-intro= "@lang('help.consultarProf')" class="col-xs-12">
 	@include('utils.alerts')
-    
+    <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> Ajuda
+    </button>
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
         <li class="active">@choice('professores.title', 2)</li>
     </ol>
     
-    <button type="button" class="btn btn-primary" id="openNewProfessor">
+    <button data-step="4" data-intro= "@lang('help.novoProf')"  type="button" class="btn btn-primary" id="openNewProfessor">
         <i class="fa fa-plus"></i> @lang('professores.new')
     </button>
     
@@ -240,11 +261,11 @@ $(document).ready(function($) {
                 <td>{{ $p->usuario->nome }}</td>
                 <td>{{ $p->cursoOrigem->nome }}</td>
                 <td class="text-center">
-                    <button class="btn btn-default btn-xs edit">
+                    <button data-step="2" data-intro= "@lang('help.alterar')" class="btn btn-default btn-xs edit">
                         <i class="fa fa-pencil-square-o"></i> @lang('general.edit')
                     </button>
                     
-                    <button class="btn btn-danger btn-xs remove">
+                    <button data-step="3" data-intro= "@lang('help.remover')" class="btn btn-danger btn-xs remove">
                         <i class="fa fa-remove"></i> @lang('general.remove')
                     </button>
                 </td>
@@ -253,7 +274,7 @@ $(document).ready(function($) {
         </tbody>
     </table>
     
-    <div class="pagination-container text-center">
+    <div  class="pagination-container text-center">
         <?php echo $professores->render(); ?>
     </div>
 </div>

@@ -13,5 +13,7 @@ return [
 
     "archive"      => "Arquivo",
     
-    "upload_info"  => "Formatos suportados: .xls, .xlsm, .xlsb, .xlsx"
+    "upload_info" => "Formatos suportados: .xls, .xlsm, .xlsb, .xlsx",
+    
+    "skipLabel" => "Sair",
 ];

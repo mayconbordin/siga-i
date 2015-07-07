@@ -41,12 +41,34 @@ function parseQueryParams(params) {
     console.log(params);
     return params;
 }
+
+
+$(document).ready(function($) {
+  
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+        
+        showProgress: true
+    });
+   
+    $("#startHelp").click(function() {
+        intro.start();
+    });
+});
 </script>
 @endsection
 
 @section('content')
-<div class="col-xs-12">
+<div data-step="1" data-intro= "@lang('help.professor')"class="col-xs-12">
 	@include('utils.alerts')
+	
+	<button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> Ajuda
+    </button>
     
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
@@ -80,6 +102,7 @@ function parseQueryParams(params) {
            data-toolbar-align="right"
            >
         <thead>
+        
             <tr>
                 <th data-field="id"
                     data-sortable="true">
@@ -88,6 +111,7 @@ function parseQueryParams(params) {
                 <th data-field="nome"
                     data-sortable="true">
                     @lang('turmas.nome')
+ 
                 </th>
                 <th data-field="data_inicio"
                     data-formatter="formatData"

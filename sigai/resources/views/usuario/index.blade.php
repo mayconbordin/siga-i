@@ -24,17 +24,39 @@ $(document).ready(function($) {
     };
     $('#usuarioNewPassword').pwstrength(options);
 });
+
+$(document).ready(function($) {
+  
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+        
+        showProgress: true
+    });
+   
+    $("#startHelp").click(function() {
+        intro.start();
+    });
+});
 </script>
 @endsection
 
 @section('content')
-<div class="col-xs-12">
+<div data-step="1" data-intro= "@lang('help.contaUsuario')"  class="col-xs-12">
 	@include('utils.alerts')
 	
-	<div class="panel panel-default">
+	<button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> Ajuda
+    </button>
+
+	
+	<div data-step="2" data-intro= "@lang('help.editarConta')" class="panel panel-default">
 		<div class="panel-heading">@lang('usuarios.me_title')</div>
 
-		<div class="panel-body">
+		<div data-step="3" data-intro= "@lang('help.editarCampos')" class="panel-body">
 			<form class="form-horizontal" method="post" action="{{ url('conta') }}">
 			
 			    {{-- CSRF Token --}}
@@ -83,7 +105,7 @@ $(document).ready(function($) {
                 </div>
                 
                 {{-- Senha Nova --}}
-                <div id="newPasswordFormGroup" class="form-group {{{ $errors->has('new_password') ? 'has-error' : '' }}}">
+                <div data-step="4" data-intro= "@lang('help.senha')" id="newPasswordFormGroup" class="form-group {{{ $errors->has('new_password') ? 'has-error' : '' }}}">
                     <label for="usuarioNewPassword" class="col-sm-2 control-label">
                         @lang('usuarios.new_password')
                     </label>
@@ -109,7 +131,7 @@ $(document).ready(function($) {
 
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success">@lang('general.save')</button>
+                        <button  data-step="4" data-intro= "@lang('help.salvarUsuario')" type="submit" class="btn btn-success">@lang('general.save')</button>
                     </div>
                 </div>
             </form> 

@@ -48,15 +48,38 @@ $(document).ready(function($) {
         $("#alertMessage").toggleClass("alert-danger alert-success hidden")
                           .find(".message").html(msg);
     });
+
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+        
+        showProgress: true
+    });
+    
+    
+    $("#startHelp").click(function() {
+        intro.start();
+    });
 });
+
+
+
 </script>
 @endsection
 
 @section('content')
 <div class="col-xs-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">@lang('importar.title')</div>
+    <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> Ajuda
+    </button>
+   
+    <div class="clearfix"></div>
 
+	<div data-step="1" data-intro= "@lang('help.painel')" class="panel panel-default">
+		<div class="panel-heading">@lang('importar.title')</div>
 		<div class="panel-body">
 		    <div id="alertMessage" class="alert alert-success alert-dismissible fade in hidden" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -64,16 +87,17 @@ $(document).ready(function($) {
                 </button>
                 <span class="message"></span>
             </div>
-		
-			<form class="form-horizontal">
+       
+<form data-step="5" data-intro="@lang('help.enviar')" class="form-horizontal">
 
-                <div class="form-group">
-                    <label for="fileInput" class="col-sm-2 control-label">@lang('importar.archive')</label>
-                    <div class="col-sm-10">
+                <div  data-step="4" data-intro="@lang('help.aviso')"class="form-group">
+                    <label for="fileInput"  class="col-sm-2 control-label">@lang('importar.archive')</label></h1>
+                    <div data-step="2" data-intro="@lang('help.procurar')" class="col-sm-10">
                         <input type="file" id="fileInput" name="planilha">
-                        <p class="help-block">@lang('importar.upload_info')</p>
+                        <p data-step="3" data-intro="@lang('help.formato')" class="help-block">@lang('importar.upload_info')</p>
                     </div>
                 </div>
+
 
             </form> 
 		</div>

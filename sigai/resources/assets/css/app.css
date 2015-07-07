@@ -203,3 +203,16 @@ li.navbar-green:hover {
 .hiddenRow {
     padding: 0 !important;
 }
+
+/**
+ * Botão do intro.js
+ */
+.introjs-helperNumberLayer {
+    height: 30px;
+    width: 30px;
+    font-size: 12pt;
+}
+
+.help-button {
+    margin-bottom: 10px;
+}

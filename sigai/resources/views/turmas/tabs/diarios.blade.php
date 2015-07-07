@@ -1,5 +1,32 @@
+@section('js')
+
+<script>
+
+    $(document).ready(function($) {
+      
+        var intro = introJs();
+        intro.setOptions({
+            skipLabel: '@lang("help.skipLabel")',
+            nextLabel: '@lang("help.nextLabel")',
+            prevLabel: '@lang("help.prevLabel")',
+            doneLabel: '@lang("help.doneLabel")',
+            
+            showProgress: true
+        });
+       
+        $("#startHelp").click(function() {
+            intro.start();
+        });
+    });
+
+</script>
+@endsection
+
+   <
+
 <div role="tabpanel" class="tab-pane" id="diarios">
 
+ 
     <div class="tab-actions">
         <a id="closeDiarioBtn" class="btn btn-primary attach" href="#diarios">
             <i class="fa fa-file-text"></i> @lang('diarios.close')
