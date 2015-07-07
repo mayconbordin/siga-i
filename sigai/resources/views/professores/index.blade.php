@@ -204,12 +204,7 @@ $(document).ready(function($) {
     Lang.register('professores.remove_message', "@lang('professores.remove_message')");
 
     Professor.init();
-});
 
-
-
-$(document).ready(function($) {
-  
     var intro = introJs();
     intro.setOptions({
         skipLabel: '@lang("help.skipLabel")',
@@ -228,17 +223,20 @@ $(document).ready(function($) {
 @endsection
 
 @section('content')
-<div data-step="1" data-intro= "@lang('help.consultarProf')" class="col-xs-12">
-	@include('utils.alerts')
+<div data-step="1" data-intro="@lang('help.consultarProf')" class="col-xs-12">
+
     <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
+        <i class="fa fa-question-circle"></i> @lang('help.title')
     </button>
+
+    @include('utils.alerts')
+
     <ol class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
         <li class="active">@choice('professores.title', 2)</li>
     </ol>
     
-    <button data-step="4" data-intro= "@lang('help.novoProf')"  type="button" class="btn btn-primary" id="openNewProfessor">
+    <button data-step="4" data-intro="@lang('help.novoProf')" type="button" class="btn btn-primary" id="openNewProfessor">
         <i class="fa fa-plus"></i> @lang('professores.new')
     </button>
     
@@ -261,11 +259,11 @@ $(document).ready(function($) {
                 <td>{{ $p->usuario->nome }}</td>
                 <td>{{ $p->cursoOrigem->nome }}</td>
                 <td class="text-center">
-                    <button data-step="2" data-intro= "@lang('help.alterar')" class="btn btn-default btn-xs edit">
+                    <button data-step="2" data-intro="@lang('help.alterarProf')" class="btn btn-default btn-xs edit">
                         <i class="fa fa-pencil-square-o"></i> @lang('general.edit')
                     </button>
                     
-                    <button data-step="3" data-intro= "@lang('help.remover')" class="btn btn-danger btn-xs remove">
+                    <button data-step="3" data-intro="@lang('help.removerProf')" class="btn btn-danger btn-xs remove">
                         <i class="fa fa-remove"></i> @lang('general.remove')
                     </button>
                 </td>

@@ -42,7 +42,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     
-                    <a class="navbar-brand" href="#">SIGA-i</a>
+                    <span class="navbar-brand">SIGA-i</span>
                 </div>
                 
                 <div id="navbar" class="collapse navbar-collapse">

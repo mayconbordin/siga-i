@@ -28,34 +28,31 @@ $(document).ready(function($) {
             }
         });
     });
-});
 
-   $(document).ready(function($) {
-      
-        var intro = introJs();
-        intro.setOptions({
-            skipLabel: '@lang("help.skipLabel")',
-            nextLabel: '@lang("help.nextLabel")',
-            prevLabel: '@lang("help.prevLabel")',
-            doneLabel: '@lang("help.doneLabel")',
-            
-            showProgress: true
-        });
-       
-        $("#startHelp").click(function() {
-            intro.start();
-        });
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+
+        showProgress: true
     });
+
+    $("#startHelp").click(function() {
+        intro.start();
+    });
+});
 
 </script>
 @endsection
 
 @section('content')
-<div data-step="1" data-intro= "@lang('help.painelUC')" class="col-xs-12">
+<div data-step="1" data-intro="@lang('help.painelUC')" class="col-xs-12">
     @include('utils.alerts')
     
     <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
+        <i class="fa fa-question-circle"></i> @lang('help.title')
     </button>
     
     <ol class="breadcrumb">
@@ -63,7 +60,7 @@ $(document).ready(function($) {
         <li class="active">@lang('unidades_curriculares.title')</li>
     </ol>
     
-    <a  data-step="3" data-intro= "@lang('help.novaUC')" class="btn btn-primary" href="{{ url('unidades_curriculares/criar') }}">
+    <a  data-step="3" data-intro="@lang('help.novaUC')" class="btn btn-primary" href="{{ url('unidades_curriculares/criar') }}">
         <i class="fa fa-plus"></i> @lang('unidades_curriculares.new_uc')
     </a>
 
@@ -80,14 +77,14 @@ $(document).ready(function($) {
         </thead>
         <tbody>
             @foreach ($unidadesCurriculares as $uc)
-            <tr data-step="5" data-intro= "@lang('help.infoUC')" data-id="{{ $uc->id }}">
+            <tr data-step="5" data-intro="@lang('help.infoUC')" data-id="{{ $uc->id }}">
                 <td scope="row">{{ $uc->id }}</td>
                 <td><a href="#" data-toggle="collapse" data-target="#uc-turmas-{{ $uc->id }}" class="accordion-toggle">
                     {{ $uc->nome }}</a>
                 </td>
                 <td>{{ $uc->sigla }}</td>
                 <td class="text-center">{{ $uc->carga_horaria }}</td>
-                <td data-step="2" data-intro= "@lang('help.acoes')"class="text-center">
+                <td data-step="2" data-intro="@lang('help.acoes')" class="text-center">
                     <a href="{{ url('/unidades_curriculares', ['id' => $uc->id]) }}"
                        class="btn btn-default btn-xs edit">
                         <i class="fa fa-pencil"></i> @lang('general.edit')
@@ -114,7 +111,7 @@ $(document).ready(function($) {
                             
                                 @foreach ($uc->turmas as $t)
                                 <tr>
-                                    <td data-step="6" data-intro= "@lang('help.infoTurma')"> 
+                                    <td>
                                         <a href="{{ url('/unidades_curriculares/'.$uc->id.'/turmas/'.$t->id) }}">
                                         {{ $t->nome }}
                                         </a>

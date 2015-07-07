@@ -25,25 +25,6 @@
 </script>
 
 <script>
-
-
-$(document).ready(function($) {
-  
-    var intro = introJs();
-    intro.setOptions({
-        skipLabel: '@lang("help.skipLabel")',
-        nextLabel: '@lang("help.nextLabel")',
-        prevLabel: '@lang("help.prevLabel")',
-        doneLabel: '@lang("help.doneLabel")',
-        
-        showProgress: true
-    });
-   
-    $("#startHelp").click(function() {
-        intro.start();
-    });
-});
-
 var Turma = (function() {
     var aulaForm = new Form({
         id                 : {el: "#newAulaId"              , required: false},
@@ -803,6 +784,20 @@ $(document).ready(function() {
     };
 
     Turma.init();
+
+    var intro = introJs();
+    intro.setOptions({
+        skipLabel: '@lang("help.skipLabel")',
+        nextLabel: '@lang("help.nextLabel")',
+        prevLabel: '@lang("help.prevLabel")',
+        doneLabel: '@lang("help.doneLabel")',
+
+        showProgress: true
+    });
+
+    $("#startHelp").click(function() {
+        intro.start();
+    });
 @endif
 });
 
@@ -810,15 +805,15 @@ $(document).ready(function() {
 @endsection
 
 @section('content')
-<div data-step="1" data-intro= "@lang('help.gerenciarTurma')" class="col-xs-12">
+<div data-step="1" data-intro="@lang('help.gerenciarTurma')" class="col-xs-12">
 
     <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
+        <i class="fa fa-question-circle"></i> @lang('help.title')
     </button>
 
     @include('utils.alerts')
 
-    <ol data-step="2" data-intro= "@lang('help.caminhoInfo')"class="breadcrumb">
+    <ol data-step="2" data-intro="@lang('help.caminhoInfo')" class="breadcrumb">
         <li><a href="{{ url('/') }}">@lang('general.home')</a></li>
 
         @if (Auth::user()->hasRole('coordenador'))
@@ -831,7 +826,7 @@ $(document).ready(function() {
         <li>{{ $unidadeCurricular->nome }}</li>
         @endif
         
-        <li data-step="3" data-intro= "@lang('help.infoTurma')" class="active">
+        <li data-step="3" data-intro="@lang('help.infoTurma')" class="active">
         @if (isset($turma))
             @lang('turmas.single_title') {{ $turma->nome }}
         @else
@@ -848,26 +843,26 @@ $(document).ready(function() {
         <ul class="nav nav-tabs" role="tablist">
             
             <li role="presentation" class="active"><a href="#main" aria-controls="main"
-                role="tab" data-step="4" data-intro= "@lang('help.abaTurma')"data-toggle="tab">@lang('turmas.single_title')</a></li>    
+                role="tab" data-step="4" data-intro="@lang('help.abaTurma')" data-toggle="tab">@lang('turmas.single_title')</a></li>
            
             @if (isset($turma))
             <li role="presentation" id="tabCalendar"><a href="#calendario" aria-controls="calendario"
-                role="tab" data-step="5" data-intro= "@lang('help.abaCalendario')"data-toggle="tab">@lang('turmas.calendar')</a></li>
+                role="tab" data-step="5" data-intro="@lang('help.abaCalendario')" data-toggle="tab">@lang('turmas.calendar')</a></li>
                
             <li role="presentation"><a href="#aulas" aria-controls="aulas"
-            role="tab" data-step="6" data-intro= "@lang('help.abaAulas')" data-toggle="tab">@lang('aulas.title')</a></li>
+            role="tab" data-step="6" data-intro="@lang('help.abaAulas')" data-toggle="tab">@lang('aulas.title')</a></li>
                 
             <li role="presentation"><a href="#alunos" aria-controls="alunos"
-                role="tab"data-step="7" data-intro= "@lang('help.abaAlunos')" data-toggle="tab">@choice('alunos.title', 2)</a></li>
+                role="tab"data-step="7" data-intro="@lang('help.abaAlunos')" data-toggle="tab">@choice('alunos.title', 2)</a></li>
                 
             <li role="presentation"><a href="#professores" aria-controls="professores"
-                role="tab"data-step="8" data-intro= "@lang('help.abaProfessores')" data-toggle="tab">@choice('professores.title', 2)</a></li>
+                role="tab"data-step="8" data-intro="@lang('help.abaProfessores')" data-toggle="tab">@choice('professores.title', 2)</a></li>
                 
             <li role="presentation"><a href="#controle-faltas" aria-controls="controle-faltas"
-                role="tab"data-step="9" data-intro= "@lang('help.abaFaltas')"data-toggle="tab">@lang('turmas.controle_faltas')</a></li>
+                role="tab"data-step="9" data-intro="@lang('help.abaFaltas')" data-toggle="tab">@lang('turmas.controle_faltas')</a></li>
                 
             <li role="presentation"><a href="#diarios" aria-controls="diarios"
-                role="tab" data-step="10" data-intro= "@lang('help.abaDiarios')" data-toggle="tab">@lang('turmas.diaries')</a></li>
+                role="tab" data-step="10" data-intro="@lang('help.abaDiarios')" data-toggle="tab">@lang('turmas.diaries')</a></li>
             @endif
         </ul>
 

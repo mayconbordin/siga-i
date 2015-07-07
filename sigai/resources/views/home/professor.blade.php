@@ -4,7 +4,6 @@
 <script>
 
 $(document).ready(function($) {
-  
     var intro = introJs();
     intro.setOptions({
         skipLabel: '@lang("help.skipLabel")',
@@ -27,7 +26,7 @@ $(document).ready(function($) {
 <div class="col-xs-12">
 
     <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
+        <i class="fa fa-question-circle"></i> @lang('help.title')
     </button>
     
     @if ($daysEndMonth < 5 && sizeof($diarios) > 0)
@@ -48,7 +47,7 @@ $(document).ready(function($) {
 	
 	<div class="row">
 	    <div class="col-xs-6">
-	        <div data-step="1" data-intro= "@lang('help.painelTurma')"  class="panel panel-default">
+	        <div data-step="1" data-intro="@lang('help.painelTurma')"  class="panel panel-default">
 		        <div class="panel-heading">Minhas Turmas</div>
 		        <div class="panel-body">
 		            <div class="list-group">
@@ -67,7 +66,7 @@ $(document).ready(function($) {
 	    </div>
 	    
 	    <div class="col-xs-6">
-	        <div  data-step="2" data-intro= "@lang('help.painelAula')"  class="panel panel-default">
+	        <div data-step="2" data-intro="@lang('help.painelAula')" class="panel panel-default">
 		        <div class="panel-heading">Próximas Aulas</div>
 
 		        <div class="panel-body">

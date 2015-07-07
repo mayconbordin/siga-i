@@ -7,15 +7,6 @@
 
 @section('js')
 <script>
-$(document).ready(function($) {
-
-    // vai para página da turma ao clicar no registro
-    $("#turmas").on("click-row.bs.table", function(row, el) {
-        window.location = "{{ url('/unidades_curriculares') }}/" + el.unidade_curricular_id + "/turmas/" + el.id;
-    });
-
-});
-
 function parseData(res) {
     return res.data;
 }
@@ -44,30 +35,20 @@ function parseQueryParams(params) {
 
 
 $(document).ready(function($) {
-  
-    var intro = introJs();
-    intro.setOptions({
-        skipLabel: '@lang("help.skipLabel")',
-        nextLabel: '@lang("help.nextLabel")',
-        prevLabel: '@lang("help.prevLabel")',
-        doneLabel: '@lang("help.doneLabel")',
-        
-        showProgress: true
-    });
-   
-    $("#startHelp").click(function() {
-        intro.start();
+    // vai para página da turma ao clicar no registro
+    $("#turmas").on("click-row.bs.table", function(row, el) {
+        window.location = "{{ url('/unidades_curriculares') }}/" + el.unidade_curricular_id + "/turmas/" + el.id;
     });
 });
 </script>
 @endsection
 
 @section('content')
-<div data-step="1" data-intro= "@lang('help.professor')"class="col-xs-12">
+<div class="col-xs-12">
 	@include('utils.alerts')
 	
 	<button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
+        <i class="fa fa-question-circle"></i> @lang('help.title')
     </button>
     
     <ol class="breadcrumb">

@@ -1,29 +1,4 @@
-
-<script>
-
-    $(document).ready(function($) {
-      
-        var intro = introJs();
-        intro.setOptions({
-            skipLabel: '@lang("help.skipLabel")',
-            nextLabel: '@lang("help.nextLabel")',
-            prevLabel: '@lang("help.prevLabel")',
-            doneLabel: '@lang("help.doneLabel")',
-            
-            showProgress: true
-        });
-       
-        $("#startHelp").click(function() {
-            intro.start();
-        });
-    });
-</script>
-
-
 <form id="aulaForm" class="form-horizontal" method="post"
-
-  
-   
       @if (isset($aula))
       action="{{ url('unidades_curriculares/' . $aula->turma->unidadeCurricular->id .
                      '/turmas/' . $aula->turma->id . '/aulas/' . $aula->data->format('Y-m-d')) }}"

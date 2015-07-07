@@ -219,34 +219,12 @@ $(document).ready(function($) {
 
     Curso.init();
 });
-
-$(document).ready(function($) {
-      
-        var intro = introJs();
-        intro.setOptions({
-            skipLabel: '@lang("help.skipLabel")',
-            nextLabel: '@lang("help.nextLabel")',
-            prevLabel: '@lang("help.prevLabel")',
-            doneLabel: '@lang("help.doneLabel")',
-            
-            showProgress: true
-        });
-       
-        $("#startHelp").click(function() {
-            intro.start();
-        });
-    });
-
 </script>
 @endsection
 
 @section('content')
-<div  data-step="1" data-intro= "@lang('help.login')"  class="col-xs-12">
+<div class="col-xs-12">
 
-     <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
-    </button>
-    
 	@include('utils.alerts')
     
     <ol class="breadcrumb">

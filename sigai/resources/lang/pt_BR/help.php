@@ -1,7 +1,7 @@
 <?php
  
 return [
-
+    "title"            => "Ajuda",
     "skipLabel"        => "Sair",
     "nextLabel"        => "Próximo &rarr;",
     "prevLabel"        => "&larr; Anterior",
@@ -52,7 +52,8 @@ return [
     "editarCampos"     => "Para editar alguma informação basta apagar ela e reescrever novamente!",
     "senha"            => "Ao editar sua senha será necessário digitar sua senha atual e informar duas vezes sua nova senha, tenha atenção no nível de complexidade pois irá garantir sua segurança!",
     "salvarUsuario"    => "Depois da operação terminada, basta clicar no botão SALVAR para armazenar suas novas informações!",
-    
+    "removerProf"      => "Clique aqui para remover o professor",
+    "alterarProf"      => "Clique aqui para alterar os dados do professor",
     
 ];
 

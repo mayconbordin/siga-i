@@ -64,21 +64,18 @@ $(document).ready(function($) {
         intro.start();
     });
 });
-
-
-
 </script>
 @endsection
 
 @section('content')
 <div class="col-xs-12">
     <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
+        <i class="fa fa-question-circle"></i> @lang('help.title')
     </button>
    
     <div class="clearfix"></div>
 
-	<div data-step="1" data-intro= "@lang('help.painel')" class="panel panel-default">
+	<div data-step="1" data-intro="@lang('help.painel')" class="panel panel-default">
 		<div class="panel-heading">@lang('importar.title')</div>
 		<div class="panel-body">
 		    <div id="alertMessage" class="alert alert-success alert-dismissible fade in hidden" role="alert">
@@ -88,10 +85,10 @@ $(document).ready(function($) {
                 <span class="message"></span>
             </div>
        
-<form data-step="5" data-intro="@lang('help.enviar')" class="form-horizontal">
+            <form data-step="5" data-intro="@lang('help.enviar')" class="form-horizontal">
 
-                <div  data-step="4" data-intro="@lang('help.aviso')"class="form-group">
-                    <label for="fileInput"  class="col-sm-2 control-label">@lang('importar.archive')</label></h1>
+                <div data-step="4" data-intro="@lang('help.aviso')" class="form-group">
+                    <label for="fileInput" class="col-sm-2 control-label">@lang('importar.archive')</label>
                     <div data-step="2" data-intro="@lang('help.procurar')" class="col-sm-10">
                         <input type="file" id="fileInput" name="planilha">
                         <p data-step="3" data-intro="@lang('help.formato')" class="help-block">@lang('importar.upload_info')</p>

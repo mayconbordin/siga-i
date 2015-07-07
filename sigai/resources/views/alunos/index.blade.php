@@ -205,11 +205,8 @@ $(document).ready(function($) {
     Lang.register('alunos.remove_message', "@lang('alunos.remove_message')");
     Router.register('base', "{{ url('api/alunos') }}");
     Aluno.init();
-});
 
-$(document).ready(function($) {
-      
-var intro = introJs();
+    var intro = introJs();
     intro.setOptions({
         skipLabel: '@lang("help.skipLabel")',
         nextLabel: '@lang("help.nextLabel")',
@@ -229,11 +226,11 @@ var intro = introJs();
 @endsection
 
 @section('content')
-<div  data-step="1" data-intro= "@lang('help.painelAluno')" class="col-xs-12">
+<div data-step="1" data-intro="@lang('help.painelAluno')" class="col-xs-12">
 	@include('utils.alerts')
 	
-	  <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
-        <i class="fa fa-question-circle"></i> Ajuda
+    <button id="startHelp" class="help-button btn btn-large btn-success pull-right">
+        <i class="fa fa-question-circle"></i> @lang('help.title')
     </button>
     
     
@@ -242,7 +239,7 @@ var intro = introJs();
         <li class="active">@choice('alunos.title', 2)</li>
     </ol>
     
-    <button data-step="6" data-intro= "@lang('help.novoAluno')" type="button" class="btn btn-primary" id="openNewAluno">
+    <button data-step="6" data-intro="@lang('help.novoAluno')" type="button" class="btn btn-primary" id="openNewAluno">
         <i class="fa fa-plus"></i> @lang('alunos.new')
     </button>
     
@@ -252,9 +249,9 @@ var intro = introJs();
     <table class="table" id="alunos">
         <thead>
             <tr>
-                <th data-step="2" data-intro= "@lang('help.matricula')" > @lang('alunos.matricula')</th>
-                <th data-step="3" data-intro= "@lang('help.nome')" > @lang('alunos.nome')</th>
-                <th data-step="4" data-intro= "@lang('help.acoes')"class="text-center">@lang('general.actions')</th>
+                <th data-step="2" data-intro="@lang('help.matricula')"> @lang('alunos.matricula')</th>
+                <th data-step="3" data-intro="@lang('help.nome')"> @lang('alunos.nome')</th>
+                <th data-step="4" data-intro="@lang('help.acoes')" class="text-center">@lang('general.actions')</th>
             </tr>
         </thead>
         <tbody>
@@ -264,7 +261,7 @@ var intro = introJs();
         </tbody>
     </table>
     
-    <div data-step="5" data-intro= "@lang('help.paginacao')" class="pagination-container text-center">
+    <div data-step="5" data-intro="@lang('help.paginacao')" class="pagination-container text-center">
         <?php echo $alunos->render(); ?>
     </div>
 </div>
