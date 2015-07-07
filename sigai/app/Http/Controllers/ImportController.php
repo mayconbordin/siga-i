@@ -79,7 +79,7 @@ class ImportController extends Controller
         $read_file_time = $read_file_end - $read_file_start;
         $parse_xml_time = $parse_xml_end - $parse_xml_start;
         $save_data_time = $save_data_end - $save_data_start;
-        
+
         return response()->json([
             'message' => Lang::get('importar.success'),
             'result'  => [

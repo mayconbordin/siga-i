@@ -68,15 +68,30 @@ class XlsImport
 
         $end = microtime(true);
 
-        Log::info("Load time for Excel file: ".($end - $start)." seconds");
+        Log::info("XlsImport::__construct: ".($end - $start)." seconds");
     }
     
     public function readAll()
     {
+        $start = microtime(true);
         $this->readTabListas();
+        $end = microtime(true);
+        Log::info("XlsImport::readTabListas: ".($end - $start)." seconds");
+
+        $start = microtime(true);
         $this->readTabPlano();
+        $end = microtime(true);
+        Log::info("XlsImport::readTabPlano: ".($end - $start)." seconds");
+
+        $start = microtime(true);
 	    $this->readTabProducao();
+        $end = microtime(true);
+        Log::info("XlsImport::readTabProducao: ".($end - $start)." seconds");
+
+        $start = microtime(true);
 	    $this->readFaultsTab();
+        $end = microtime(true);
+        Log::info("XlsImport::readFaultsTab: ".($end - $start)." seconds");
     }
     
     public function getData()
@@ -172,7 +187,7 @@ class XlsImport
 			    }
 		    }
 	    }
-	    
+
 	    $this->fetchConteudo($objWorksheet, $highestRow);
     }
     
@@ -192,7 +207,7 @@ class XlsImport
 	    {
 		    $aluno = [];
 		    
-		    for($col = 0; $col <= $highestColumnIndex; $col++)
+		    for($col = 0; $col <= 3/*$highestColumnIndex*/; $col++)
 		    {
 			    $value = $objWorksheet->getCellByColumnAndRow($col, $row)->getCalculatedValue();
 			
@@ -201,7 +216,8 @@ class XlsImport
 			    if ($curso != null && strlen($curso) > 0) {
 			        $aluno['curso'] = $this->getNomeCurso($curso);
 			    }
-			    
+
+                // É o cabeçalho da tabela, então vai para a próxima linha
 			    if (($col == 0) && ($value == 'No')) {
 				    $flag = true;
 				    $row++;
@@ -245,8 +261,9 @@ class XlsImport
         
         for($mes = 1; $mes <= 12; $mes++)
         {
-		    $objWorksheet = $this->xls->getSheetByName ("$mes");
-		    
+		    $objWorksheet = $this->xls->getSheetByName("$mes");
+
+            // verifica se a aba existe
 		    if ($objWorksheet == null) {
 			    continue;
 		    }
@@ -259,71 +276,74 @@ class XlsImport
 		    $col = 2;
 		    $row = 15;
 		    $nomeAluno = $objWorksheet->getCellByColumnAndRow($col, $row)->getCalculatedValue();
-		
-		    if ($nomeAluno == "NOME DOS ALUNOS")
-		    {
-			    for ($rowAluno = 16; ($rowAluno <= $highestRow) && ($rowAluno != null); $rowAluno ++)
-			    {
-				    $proxDia = 0;
-				    $colAluno = 2;
-				
-				    $nomeAluno = $objWorksheet->getCellByColumnAndRow($colAluno, $rowAluno)->getCalculatedValue();
-				
-				    if ($nomeAluno != null)
-				    {
-					    $primeiroPer = 3;
-					    $rowDia = 15;
-					    
-					    for ($colDia = 3; $colDia <= $highestColumnIndex;)
-					    {
-						    $dia = $objWorksheet->getCellByColumnAndRow($colDia, $rowDia)->getOldCalculatedValue();
-						
-						    $colDia = $colDia + 4;
-						
-						    if (($dia != null) && ($dia != '#N/A'))
-						    {
-							    $flagAlunoCanc = false;
-							    $alunoStatus = null;
-							
-							    $rowMes = $rowDia - 2;
-							    $mes = $objWorksheet->getCellByColumnAndRow($colDia, $rowMes)->getCalculatedValue();
-							
-							    $dataFalta = $ano . "-" . $mes . "-" . $dia;
-							    $p = [];
-							
-							    for ($colPer = ($primeiroPer + 4 * $proxDia); $colPer < $colDia; $colPer ++)
-							    {
-								    $presenca = $objWorksheet->getCellByColumnAndRow ($colPer, $rowAluno)->getCalculatedValue();
-								    $presenca = strtoupper($presenca);
-								
-								    if (($presenca === '.') || ($presenca === "") || ($presenca == null)) {
-									    $p[] = 1;
-								    } elseif (($presenca === 'F') || ($presenca === 'f')) {
-									    $p[] = 0;
-								    } elseif (($presenca === 'C') || ($presenca === 'D') || 
-								              ($presenca === 'TR') || ($presenca === 'TC')) {
-									    $flagAlunoCanc = true;
-									    $alunoStatus = $presenca;
-								    }
-							    }
-							    
-							    $proxDia++;
-							    
-							    // add presença to aluno
-							    // se cancelado, add status
-							    if ($flagAlunoCanc) {
-							        $this->alunos[$nomeAluno]['status'] = $this->getNomeStatus($alunoStatus);
-							    } else {
-							        $this->alunos[$nomeAluno]['status'] = Aluno::STATUS_NORMAL;
-							        $this->alunos[$nomeAluno]['faltas'][$dataFalta] = $p;
-						        }
-						    }
-					    }
-				    } else {
-					    break;
-				    }
-			    }
-		    }
+
+            // Verifica se o cabeçalho existe, caso não exista ignora a aba
+		    if ($nomeAluno != "NOME DOS ALUNOS") {
+                continue;
+            }
+
+            // lista de alunos começa na linha 16
+            for ($rowAluno = 16; ($rowAluno <= $highestRow) && ($rowAluno != null); $rowAluno ++)
+            {
+                $proxDia  = 0;
+                $colAluno = 2;
+
+                $nomeAluno = $objWorksheet->getCellByColumnAndRow($colAluno, $rowAluno)->getCalculatedValue();
+
+                // percorre linhas até o nome do aluno ser nulo
+                if ($nomeAluno == null) {
+                    break;
+                }
+
+                $primeiroPer = 3;
+                $rowDia = 15;
+
+                // coluna dos dias começa na coluna 3
+                for ($colDia = 3; $colDia <= $highestColumnIndex;)
+                {
+                    $dia = $objWorksheet->getCellByColumnAndRow($colDia, $rowDia)->getOldCalculatedValue();
+
+                    $colDia = $colDia + 4;
+
+                    if (($dia == null) || ($dia == '#N/A')) {
+                        break;
+                    }
+
+                    $flagAlunoCanc = false;
+                    $alunoStatus = null;
+
+                    $dataFalta = $ano . "-" . $mes . "-" . $dia;
+                    $p = [];
+
+                    // percorre os 4 períodos do dia
+                    // cada período corresponde a uma coluna
+                    for ($colPer = ($primeiroPer + 4 * $proxDia); $colPer < $colDia; $colPer ++)
+                    {
+                        $presenca = $objWorksheet->getCellByColumnAndRow ($colPer, $rowAluno)->getCalculatedValue();
+                        $presenca = strtoupper($presenca);
+
+                        if (($presenca === '.') || ($presenca === "") || ($presenca == null)) {
+                            $p[] = 1;
+                        } elseif (($presenca === 'F') || ($presenca === 'f')) {
+                            $p[] = 0;
+                        } elseif (($presenca === 'C') || ($presenca === 'D') || ($presenca === 'TR') || ($presenca === 'TC')) {
+                            $flagAlunoCanc = true;
+                            $alunoStatus = $presenca;
+                        }
+                    }
+
+                    $proxDia++;
+
+                    // add presença to aluno
+                    // se cancelado, add status
+                    if ($flagAlunoCanc) {
+                        $this->alunos[$nomeAluno]['status'] = $this->getNomeStatus($alunoStatus);
+                    } else {
+                        $this->alunos[$nomeAluno]['status'] = Aluno::STATUS_NORMAL;
+                        $this->alunos[$nomeAluno]['faltas'][$dataFalta] = $p;
+                    }
+                }
+            }
 	    }
     }
     
