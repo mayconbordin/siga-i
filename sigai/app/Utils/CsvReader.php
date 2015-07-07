@@ -1,21 +1,19 @@
-<?php
-
+<?php namespace App\Utils;
 
 class CsvReader
 {
     const LINE_LENGTH = 2000;
 
-    public function __construct($filename, $header = FALSE, $delimiter = ";",
-                                $enclosure = '"', $escape = "\\")
+    public function __construct($filename, $header = FALSE, $delimiter = ";", $enclosure = '"', $escape = "\\")
     {
         if (!file_exists($filename)) {
-            throw new Exception('File not found.');
+            throw new \Exception('File not found.');
         }
 
         $this->handle = fopen($filename, "r");
 
         if ($this->handle === FALSE) {
-            throw new Exception("Failed to open file.");
+            throw new \Exception("Failed to open file.");
         }
 
         $this->hasHeader = $header;
@@ -27,7 +25,7 @@ class CsvReader
             $this->header = $this->readLine();
 
             if ($this->header === NULL) {
-                throw new Exception("File is empty.");
+                throw new \Exception("File is empty.");
             }
         }
     }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Utils\CsvReader;
 
 use App\Models\Ambiente;
 use App\Models\TipoAmbiente;

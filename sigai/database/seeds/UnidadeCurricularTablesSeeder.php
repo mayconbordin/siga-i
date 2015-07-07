@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use App\Utils\CsvReader;
 use App\Models\UnidadeCurricular;
 
 class UnidadeCurricularTablesSeeder extends Seeder {

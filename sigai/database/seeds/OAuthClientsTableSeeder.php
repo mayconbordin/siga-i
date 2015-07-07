@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use App\Utils\CsvReader;
 use Illuminate\Database\Seeder;
 
 class OAuthClientsTableSeeder extends Seeder

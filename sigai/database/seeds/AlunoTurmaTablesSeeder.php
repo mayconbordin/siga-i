@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Utils\CsvReader;
 
 use App\Repositories\Eloquent\AlunoRepository;
 use App\Models\Turma;

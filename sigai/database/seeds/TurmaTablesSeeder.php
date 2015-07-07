@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use App\Utils\CsvReader;
 use App\Models\UnidadeCurricular;
 use App\Models\Turma;
 use App\Models\Ambiente;

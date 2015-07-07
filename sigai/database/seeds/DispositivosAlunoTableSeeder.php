@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use App\Utils\CsvReader;
 use App\Models\DispositivoAluno;
 use App\Models\TipoDispositivoAluno;
 use App\Models\Aluno;

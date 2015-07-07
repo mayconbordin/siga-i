@@ -30,8 +30,7 @@
 			"app/Importers",
 			"app/Services",
 			"app/Services/Contracts",
-            "app/Utils",
-            "vendor/utils"
+            "app/Utils"
 		],
 		"psr-4": {
 			"App\\": "app/"

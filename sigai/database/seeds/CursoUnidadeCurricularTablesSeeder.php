@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use App\Utils\CsvReader;
 use App\Exceptions\NotFoundError;
 use App\Models\Curso;
 use App\Models\UnidadeCurricular;

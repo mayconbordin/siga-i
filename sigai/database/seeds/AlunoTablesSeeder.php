@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Utils\CsvReader;
+
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Aluno;
