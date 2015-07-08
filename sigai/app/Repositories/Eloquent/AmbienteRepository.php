@@ -24,7 +24,7 @@ class AmbienteRepository extends BaseRepository implements AmbienteRepositoryCon
 
     public function findById($id)
     {
-        $ambiente = Ambiente::where('id', $id)->first();
+        $ambiente = Ambiente::where('id', $id)->with('tipo')->first();
 	    
 	    if ($ambiente == null) {
 	        throw new NotFoundError(Lang::get('ambientes.not_found'));
@@ -35,7 +35,7 @@ class AmbienteRepository extends BaseRepository implements AmbienteRepositoryCon
     
     public function findByNome($nome)
     {
-        $ambiente = Ambiente::where('nome', $nome)->first();
+        $ambiente = Ambiente::where('nome', $nome)->with('tipo')->first();
 	    
 	    if ($ambiente == null) {
 	        throw new NotFoundError(Lang::get('ambientes.not_found'));
@@ -122,7 +122,7 @@ class AmbienteRepository extends BaseRepository implements AmbienteRepositoryCon
             $ambiente->delete();
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error($e->getMessage());
+            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
             throw new ServerError(Lang::get('ambientes.remove_error'), $e->getCode(), $e);
         }
 

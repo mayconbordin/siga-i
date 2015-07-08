@@ -54,6 +54,14 @@ Route::group(['prefix' => 'turmas'], function()
     Route::get ('/', ['uses' => 'TurmaController@listar', 'permissions' => ['list-turma']]);
 });
 
+// Alunos
+// -----------------------------------------------------------------------------
+Route::group(['prefix' => 'ambientes'], function()
+{
+    Route::get('/', ['uses' => 'AmbienteController@listar', /*'permissions' => ['list-alunos']*/]);
+});
+
+
 
 // Unidades Curriculares
 // -----------------------------------------------------------------------------
@@ -168,11 +176,20 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
     Route::group(['prefix' => 'ambientes'], function()
     {
         Route::get   ('/'    , ['uses' => 'AmbienteController@listar' , 'permissions' => ['list-ambientes']]);
-      /*Route::post  ('/'    , ['uses' => 'AmbienteController@salvar' , 'permissions' => ['create-ambiente']]);
+        Route::post  ('/'    , ['uses' => 'AmbienteController@salvar' , 'permissions' => ['create-ambiente']]);
         Route::get   ('/{id}', ['uses' => 'AmbienteController@mostrar', 'permissions' => ['view-ambiente']]);
         Route::put   ('/{id}', ['uses' => 'AmbienteController@editar' , 'permissions' => ['edit-ambiente']]);
         Route::delete('/{id}', ['uses' => 'AmbienteController@deletar', 'permissions' => ['delete-ambiente']]);
-      */
+    });
+
+    // Tipos Ambientes
+    Route::group(['prefix' => 'tipos_ambiente'], function()
+    {
+        Route::get   ('/'    , ['uses' => 'TipoAmbienteController@listar' , 'permissions' => ['list-tipo-ambientes']]);
+        Route::post  ('/'    , ['uses' => 'TipoAmbienteController@salvar' , 'permissions' => ['create-tipo-ambiente']]);
+        Route::get   ('/{id}', ['uses' => 'TipoAmbienteController@mostrar', 'permissions' => ['view-tipo-ambiente']]);
+        Route::put   ('/{id}', ['uses' => 'TipoAmbienteController@editar' , 'permissions' => ['edit-tipo-ambiente']]);
+        Route::delete('/{id}', ['uses' => 'TipoAmbienteController@deletar', 'permissions' => ['delete-tipo-ambiente']]);
     });
 
     // Cursos

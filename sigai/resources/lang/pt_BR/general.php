@@ -22,7 +22,8 @@ return array(
      
     'home'          => 'Início',
     'records'       => 'Cadastros',
-    
+    'admin'         => 'Administração',
+
     'or'            => 'ou',
     'to'            => 'a',
     'until'         => 'até',

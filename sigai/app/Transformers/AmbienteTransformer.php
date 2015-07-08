@@ -11,7 +11,7 @@ class AmbienteTransformer extends Transformer
         $data = [
             'id'                 => (int) $this->id,
             'nome'               => $this->nome,
-            'tipo_ambiente_id'   => $this->tipo_ambiente_id
+            'tipo_ambiente_id'   => (int) $this->tipo_ambiente_id
         ];
  
         if (in_array('tipo', $options)) {

@@ -216,3 +216,11 @@ li.navbar-green:hover {
 .help-button {
     margin-bottom: 10px;
 }
+
+#formTipoAmbiente .modal-body {
+    min-height: 128px;
+}
+
+#formTipoAmbiente .form-group {
+    margin-top: 25px;
+}

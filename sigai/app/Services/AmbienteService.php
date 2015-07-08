@@ -1,15 +1,18 @@
 <?php namespace App\Services;
 
 use App\Repositories\Contracts\AmbienteRepositoryContract;
+use App\Repositories\Contracts\TipoAmbienteRepositoryContract;
 use App\Services\Contracts\AmbienteServiceContract;
 
 class AmbienteService implements AmbienteServiceContract
 {
     protected $repository;
+    protected $tipoRepository;
 
-    public function __construct(AmbienteRepositoryContract $repository)
+    public function __construct(AmbienteRepositoryContract $repository, TipoAmbienteRepositoryContract $tipoRepository)
     {
-        $this->repository = $repository;
+        $this->repository     = $repository;
+        $this->tipoRepository = $tipoRepository;
     }
 
     public function listAll(array $parameters = null)
@@ -33,7 +36,7 @@ class AmbienteService implements AmbienteServiceContract
 
     public function edit(array $data, $id)
     {
-        // get tipo_id => tipo
+        $data['tipo'] = $this->tipoRepository->findById($data['tipo_ambiente_id']);
         $ambiente = $this->repository->update($data, $id);
 
         return $ambiente;
@@ -41,7 +44,7 @@ class AmbienteService implements AmbienteServiceContract
 
     public function save(array $data)
     {
-        // get tipo_id => tipo
+        $data['tipo'] = $this->tipoRepository->findById($data['tipo_ambiente_id']);
         $ambiente = $this->repository->insert($data);
 
         return $ambiente;

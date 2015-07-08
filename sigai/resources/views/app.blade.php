@@ -50,8 +50,10 @@
                         <li class="{{ (Request::is('/')) ? 'active' : '' }}"><a href="{{ url('/') }}">@lang('general.home')</a></li>
                         
                     @if (Auth::guest())
-                        
-                    @elseif (Auth::user()->hasRole('coordenador'))
+
+                    @endif
+
+                        @if (Auth::user()->hasRole('coordenador'))
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <i class="fa fa-table"></i> @lang('general.records') <span class="caret"></span>
@@ -85,15 +87,29 @@
                                 </li>
                             </ul>
                         </li>
-                    @elseif (Auth::user()->hasRole('professor'))
+                        @endif
+
+                        @if (Auth::user()->hasRole('professor'))
                         
-                    @endif
+                        @endif
+
+                        {{-- only admin --}}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <i class="fa fa-cogs"></i> @lang('general.admin') <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="{{ (Request::is('ambientes*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/ambientes') }}">@choice('ambientes.title', 2)</a>
+                                </li>
+                            </ul>
+                        </li>
                         
-                    @if (Auth::check())
+                        @if (Auth::check())
                         <li class="navbar-green {{ (Request::is('importar*')) ? 'active' : '' }}">
                             <a href="{{ url('/importar') }}"><i class="fa fa-arrow-up"></i> @lang('importar.menu_title')</a>
                         </li>
-                    @endif
+                        @endif
 
                         <li class="visible-xs-block">
                             <a href="{{ url('/conta') }}">
@@ -110,9 +126,9 @@
                     
                     
                     <ul class="nav navbar-nav navbar-nav-right hidden-xs">
-                    @if (Auth::guest())
+                        @if (Auth::guest())
 					    <li><a href="{{ url('/auth/login') }}"><i class="fa fa-sign-in"></i> @lang('login.login')</a></li>
-                    @else
+                        @else
 					    <li class="dropdown">
 						    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 						        <i class="fa fa-user"></i> {{ Auth::user()->nome }} <span class="caret"></span>
@@ -132,8 +148,9 @@
 					            </li>
 						    </ul>
 					    </li>
-                    @endif
+                        @endif
                     </ul>
+
                 </div><!-- /.nav-collapse -->
             </div><!-- /.container -->
         </nav><!-- /.navbar -->

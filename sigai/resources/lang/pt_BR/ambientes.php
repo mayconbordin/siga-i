@@ -2,6 +2,8 @@
  
 return [
     'title'      => 'Ambiente|Ambientes',
+    'id'         => 'Código',
+    'nome'       => 'Nome',
     'remove'     => 'Remover Ambiente',
     'add'        => 'Adicionar Ambiente',
     'new'        => 'Novo Ambiente',
