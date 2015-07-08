@@ -18,7 +18,8 @@
         "codeception/codeception": "2.0.14",
         "codeception/aspect-mock": "*",
         "codeception/mockery-module": "*",
-        "se/selenium-server-standalone": "^2.46"
+        "se/selenium-server-standalone": "^2.46",
+        "laravel/envoy": "~1.0"
 	},
 	"autoload": {
 		"classmap": [
