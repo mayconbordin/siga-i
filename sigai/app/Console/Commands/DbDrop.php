@@ -43,6 +43,7 @@ class DbDrop extends DbCommand {
     {
         $database = $this->option("database");
         $db = $this->getDatabaseInfo($database);
+        $auto = $this->option("auto");
 
         // check if database exists on configuration
         if ($db == null) {
@@ -58,7 +59,7 @@ class DbDrop extends DbCommand {
         $this->info("Running on '".App::environment()."' environment.");
         $this->info("This command is about to drop the database '".$db['database']."'.");
 
-        if ($this->confirm('Do you wish to continue? [y|N]')) {
+        if ($auto === true || $this->confirm('Do you wish to continue? [y|N]')) {
             try {
                 $dbh = new PDO("mysql:host=" . $db['host'], $db['username'], $db['password']);
                 $cmd = "DROP DATABASE IF EXISTS " . $db['database'] . ";";
@@ -92,6 +93,7 @@ class DbDrop extends DbCommand {
     {
         return [
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database to be dropped.', null],
+            ['auto', null, InputOption::VALUE_NONE, 'Will not ask for confirmation before dropping the database.'],
         ];
     }
 
