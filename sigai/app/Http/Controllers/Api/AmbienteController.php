@@ -14,7 +14,7 @@ class AmbienteController extends Controller
     public function __construct(AmbienteServiceContract $service)
     {
         $this->middleware('auth');
-        //$this->middleware('permissions');
+        $this->middleware('permissions');
 
         $this->service = $service;
     }

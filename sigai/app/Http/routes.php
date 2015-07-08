@@ -58,7 +58,7 @@ Route::group(['prefix' => 'turmas'], function()
 // -----------------------------------------------------------------------------
 Route::group(['prefix' => 'ambientes'], function()
 {
-    Route::get('/', ['uses' => 'AmbienteController@listar', /*'permissions' => ['list-alunos']*/]);
+    Route::get('/', ['uses' => 'AmbienteController@listar', 'permissions' => ['view-ambientes-page']]);
 });
 
 
@@ -185,7 +185,7 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
     // Tipos Ambientes
     Route::group(['prefix' => 'tipos_ambiente'], function()
     {
-        Route::get   ('/'    , ['uses' => 'TipoAmbienteController@listar' , 'permissions' => ['list-tipo-ambientes']]);
+        Route::get   ('/'    , ['uses' => 'TipoAmbienteController@listar' , 'permissions' => ['list-tipos-ambiente']]);
         Route::post  ('/'    , ['uses' => 'TipoAmbienteController@salvar' , 'permissions' => ['create-tipo-ambiente']]);
         Route::get   ('/{id}', ['uses' => 'TipoAmbienteController@mostrar', 'permissions' => ['view-tipo-ambiente']]);
         Route::put   ('/{id}', ['uses' => 'TipoAmbienteController@editar' , 'permissions' => ['edit-tipo-ambiente']]);

@@ -14,7 +14,7 @@ class TipoAmbienteController extends Controller
     public function __construct(TipoAmbienteServiceContract $service)
     {
         $this->middleware('auth');
-        //$this->middleware('permissions');
+        $this->middleware('permissions');
 
         $this->service = $service;
     }

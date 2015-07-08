@@ -49,11 +49,11 @@
                     <ul class="nav navbar-nav">
                         <li class="{{ (Request::is('/')) ? 'active' : '' }}"><a href="{{ url('/') }}">@lang('general.home')</a></li>
                         
-                    @if (Auth::guest())
+                        @if (Auth::guest())
 
-                    @endif
+                        @endif
 
-                        @if (Auth::user()->hasRole('coordenador'))
+                        @if (Auth::check() && (Auth::user()->hasRole('coordenador') || Auth::user()->hasRole('admin')))
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <i class="fa fa-table"></i> @lang('general.records') <span class="caret"></span>
@@ -89,11 +89,11 @@
                         </li>
                         @endif
 
-                        @if (Auth::user()->hasRole('professor'))
+                        @if (Auth::check() && (Auth::user()->hasRole('professor') || Auth::user()->hasRole('admin')))
                         
                         @endif
 
-                        {{-- only admin --}}
+                        @if (Auth::check() && Auth::user()->hasRole('admin'))
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 <i class="fa fa-cogs"></i> @lang('general.admin') <span class="caret"></span>
@@ -104,6 +104,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @endif
                         
                         @if (Auth::check())
                         <li class="navbar-green {{ (Request::is('importar*')) ? 'active' : '' }}">
