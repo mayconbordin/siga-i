@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel {
 		'App\Console\Commands\DbCreate',
         'App\Console\Commands\DbDump',
         'App\Console\Commands\DbDrop',
+        'App\Console\Commands\DbRestore',
 	];
 
 	/**

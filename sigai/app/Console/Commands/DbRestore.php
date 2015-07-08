@@ -5,21 +5,21 @@ use Symfony\Component\Console\Input\InputArgument;
 
 use \App;
 
-class DbDump extends DbCommand {
+class DbRestore extends DbCommand {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'db:dump';
+	protected $name = 'db:restore';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Dump the database into an SQL file or print on screen.';
+	protected $description = 'Restore the database from an SQL dump.';
 
 	/**
 	 * Create a new command instance.
@@ -39,8 +39,7 @@ class DbDump extends DbCommand {
 	public function fire()
 	{
         $database  = $this->option("database");
-        $out       = $this->argument('output');
-        $mergeData = $this->option("merge-data");
+        $dumpFile  = $this->argument('dump-file');
 
         $db = $this->getDatabaseInfo($database);
 
@@ -56,19 +55,14 @@ class DbDump extends DbCommand {
         }
 
         $this->info("Running on '".App::environment()."' environment.");
-        $this->info("Dumping database '".$db['database']."'.");
+        $this->info("Restoring database '".$db['database']."'.");
 
         $return_var = NULL;
         $output  = NULL;
 
-        $strCommand = "mysqldump -h %s -u %s -p%s %s %s";
-        $options = [];
+        $strCommand = "mysql -h %s -u %s -p%s %s < %s";
 
-        if ($mergeData === true) {
-            $options = array_merge($options, ['--replace', '--no-create-info', '--extended-insert=TRUE']);
-        }
-
-        $command = sprintf($strCommand, $db['host'], $db['username'], $db['password'], implode(' ', $options), $db['database']);
+        $command = sprintf($strCommand, $db['host'], $db['username'], $db['password'], $db['database'], $dumpFile);
         exec($command, $output, $return_var);
 
         if ($return_var != 0) {
@@ -76,17 +70,7 @@ class DbDump extends DbCommand {
             exit;
         }
 
-        $dump = implode("\n", $output);
-
-        if ($out != null) {
-            $file = fopen($out, "w") or die("Unable to open file '$out'");
-            fwrite($file, $dump);
-            fclose($file);
-
-            $this->info("Dump of database saved.");
-        } else {
-            echo $dump;
-        }
+        $this->info("Database restored.");
 	}
 
 	/**
@@ -97,7 +81,7 @@ class DbDump extends DbCommand {
 	protected function getArguments()
 	{
 		return [
-            ['output', InputArgument::OPTIONAL, 'Where to dump the SQL.', null],
+            ['dump-file', InputArgument::REQUIRED, 'The SQL dump to be applied in the database.', null],
 		];
 	}
 
@@ -110,7 +94,6 @@ class DbDump extends DbCommand {
 	{
 		return [
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database to be dumped.', null],
-            ['merge-data', null, InputOption::VALUE_NONE, 'The dump will have only the database data with REPLACE instead of INSERT.'],
 		];
 	}
 
