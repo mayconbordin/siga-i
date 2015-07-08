@@ -38,8 +38,9 @@ class DbDump extends DbCommand {
 	 */
 	public function fire()
 	{
-        $database = $this->option("database");
-        $out = $this->argument('output');
+        $database  = $this->option("database");
+        $out       = $this->argument('output');
+        $mergeData = $this->option("merge-data");
 
         $db = $this->getDatabaseInfo($database);
 
@@ -59,8 +60,17 @@ class DbDump extends DbCommand {
 
         $return_var = NULL;
         $output  = NULL;
-        $command = "mysqldump -h ".$db['host']." -u ".$db['username']." -p".$db['password']." ".$db['database']."";
 
+        //$command = "mysqldump -h ".$db['host']." -u ".$db['username']." -p".$db['password']." ".$db['database']."";
+
+        $strCommand = "mysqldump -h %s -u %s -p%s %s %s";
+        $options = [];
+
+        if ($mergeData === true) {
+            $options = array_merge($options, ['--replace', '--no-create-info', '--extended-insert=FALSE']);
+        }
+
+        $command = sprintf($strCommand, $db['host'], $db['username'], $db['password'], implode(' ', $options), $db['database']);
         exec($command, $output, $return_var);
 
         if ($return_var != 0) {
@@ -102,6 +112,7 @@ class DbDump extends DbCommand {
 	{
 		return [
             ['database', null, InputOption::VALUE_OPTIONAL, 'The database to be dumped.', null],
+            ['merge-data', null, InputOption::VALUE_NONE, 'The dump will have only the database data with REPLACE instead of INSERT.'],
 		];
 	}
 
