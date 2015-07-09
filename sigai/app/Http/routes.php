@@ -238,6 +238,20 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         }]);
     });
 
+
+    // Arduino
+    // -----------------------------------------------------------------------------
+    Route::get('ardunio/config', function() {
+        return Response::json([
+            'urlOauth'  => 'api/oauth/access_token',
+            'urlReport' => 'api/chamada',
+            'readBufferFlushPerc' => 0.8,
+            'reportInterval' => 30000,
+            'reportTimeout' => 5000,
+            'bootstrapTimeout' => 15000
+        ]);
+    });
+
 });
 
 // Controllers
