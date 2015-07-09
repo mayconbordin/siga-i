@@ -210,6 +210,15 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         Route::delete('/{did}', ['uses' => 'OAuthClientController@deletar', 'permissions' => ['delete-ambiente']]);
     });
 
+    Route::group(['prefix' => 'tipos_dispositivo'], function()
+    {
+        Route::get   ('/'    , ['uses' => 'TipoDispositivoController@listar' , 'permissions' => ['list-tipos-ambiente']]);
+        Route::post  ('/'    , ['uses' => 'TipoDispositivoController@salvar' , 'permissions' => ['create-tipo-ambiente']]);
+        Route::get   ('/{id}', ['uses' => 'TipoDispositivoController@mostrar', 'permissions' => ['view-tipo-ambiente']]);
+        Route::put   ('/{id}', ['uses' => 'TipoDispositivoController@editar' , 'permissions' => ['edit-tipo-ambiente']]);
+        Route::delete('/{id}', ['uses' => 'TipoDispositivoController@deletar', 'permissions' => ['delete-tipo-ambiente']]);
+    });
+
     // Cursos
     Route::group(['prefix' => 'cursos'], function()
     {
