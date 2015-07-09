@@ -241,7 +241,7 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
 
     // Arduino
     // -----------------------------------------------------------------------------
-    Route::get('ardunio/config', function() {
+    Route::post('ardunio/config', function() {
         return Response::json([
             'urlOauth'  => 'api/oauth/access_token',
             'urlReport' => 'api/chamada',
