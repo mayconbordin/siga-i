@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Utils\CsvReader;
 use App\Models\DispositivoAluno;
-use App\Models\TipoDispositivoAluno;
+use App\Models\TipoDispositivo;
 use App\Models\Aluno;
 
 use Carbon\Carbon;
@@ -12,15 +12,14 @@ class DispositivosAlunoTableSeeder extends Seeder {
     public function run()
     {
         DB::table('dispositivos_aluno')->truncate();
-        DB::table('tipos_dispositivos_aluno')->truncate();
 
         $csv = new CsvReader(base_path() . "/fixtures/dispositivos_aluno.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
-            $tipo = TipoDispositivoAluno::where('nome', trim($row['tipo']))->first();
+            $tipo = TipoDispositivo::where('nome', trim($row['tipo']))->first();
 
             if ($tipo == null) {
-                $tipo = new TipoDispositivoAluno;
+                $tipo = new TipoDispositivo;
                 $tipo->nome = trim($row['tipo']);
                 $tipo->save();
             }

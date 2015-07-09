@@ -4,6 +4,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Transformers\Base\TransformableTrait;
 
 class OAuthClient extends Model {
+    use TransformableTrait;
+
+    const STATUS_OK          = 'OK';
+    const STATUS_UNKNOWN     = 'NA';
+    const STATUS_OFFLINE     = 'OFF';
+
+    protected $transformer = 'App\Transformers\OAuthClientTransformer';
     protected $table = 'oauth_clients';
     public $incrementing = false;
     protected $fillable = ['id', 'secret', 'name'];
@@ -13,12 +20,13 @@ class OAuthClient extends Model {
         return $this->belongsToMany('App\Models\Ambiente', 'dispositivos_ambiente', 'oauth_client_id', 'ambiente_id');
     }
 
-    public function ambiente()
+    public function tipo()
     {
-        if (sizeof($this->ambientes) > 0) {
-            return $this->ambientes[0];
-        }
+        return $this->belongsTo('App\Models\TipoDispositivo', 'tipo_dispositivo_id');
+    }
 
-        return null;
+    public function heartbeats()
+    {
+        return $this->hasMany('App\Models\HeartbeatDispositivo', 'oauth_client_id');
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace App\Repositories\Contracts;
 
+use App\Models\Ambiente;
 use App\Models\OAuthClient;
 
 interface OAuthClientRepositoryContract {
@@ -48,6 +49,14 @@ interface OAuthClientRepositoryContract {
      * @throws ServerError Caso não consiga salvar os dados do cliente
      */
     public function update(array $data, $id);
+
+    /**
+     * Atualiza apenas o ambiente do cliente.
+     * @param int $id
+     * @param Ambiente $ambiente
+     * @return OAuthClient
+     */
+    public function updateAmbiente($id, Ambiente $ambiente = null);
 
     /**
      * Insere um novo cliente com os dados informados pelo array.

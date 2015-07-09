@@ -29,6 +29,7 @@
     "fontawesome": "~4.3.0",
     "handlebars": "~3.0.3",
     "intro.js": "~1.0.0",
-    "bootstrap-3-timepicker": "rendom/bootstrap-3-timepicker#~0.2.5"
+    "bootstrap-3-timepicker": "rendom/bootstrap-3-timepicker#~0.2.5",
+    "jsSHA": "~2.0.1"
   }
 }

@@ -12,7 +12,16 @@ class CreateHeartbeatsDispositivoTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('heartbeats_dispositivo', function(Blueprint $table)
+        {
+            $table->increments('id');
+            $table->string('oauth_client_id', 40);
+
+            $table->foreign('oauth_client_id')->references('id')
+                ->on('oauth_clients');
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +31,6 @@ class CreateHeartbeatsDispositivoTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('heartbeats_dispositivo');
     }
 }

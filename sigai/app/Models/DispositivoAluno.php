@@ -14,6 +14,6 @@ class DispositivoAluno extends Model {
     
     public function tipo()
     {
-        return $this->belongsTo('App\Models\TipoDispositivoAluno', 'tipo_dispositivo_id');
+        return $this->belongsTo('App\Models\TipoDispositivo', 'tipo_dispositivo_id');
     }
 }

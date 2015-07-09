@@ -48,7 +48,7 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="{{ (Request::is('/')) ? 'active' : '' }}"><a href="{{ url('/') }}">@lang('general.home')</a></li>
-                        
+
                         @if (Auth::guest())
 
                         @endif
@@ -101,6 +101,9 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li class="{{ (Request::is('ambientes*')) ? 'active' : '' }}">
                                     <a href="{{ url('/ambientes') }}">@choice('ambientes.title', 2)</a>
+                                </li>
+                                <li class="{{ (Request::is('dispositivos*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/dispositivos') }}">@choice('dispositivos.title', 2)</a>
                                 </li>
                             </ul>
                         </li>

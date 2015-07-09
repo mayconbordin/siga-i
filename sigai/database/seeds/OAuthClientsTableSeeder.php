@@ -3,12 +3,14 @@
 use Carbon\Carbon;
 use App\Utils\CsvReader;
 use Illuminate\Database\Seeder;
+use App\Models\TipoDispositivo;
 
 class OAuthClientsTableSeeder extends Seeder
 {
     public function run()
     {
         DB::table('oauth_clients')->truncate();
+        DB::table('tipos_dispositivos')->truncate();
 
         $csv = new CsvReader(base_path() . "/fixtures/oauth_clients.csv", true, ',');
 
@@ -16,10 +18,19 @@ class OAuthClientsTableSeeder extends Seeder
             $id = trim($row['id']);
             $datetime = Carbon::now();
 
+            $tipo = TipoDispositivo::where('nome', trim($row['tipo']))->first();
+
+            if ($tipo == null) {
+                $tipo = new TipoDispositivo;
+                $tipo->nome = trim($row['tipo']);
+                $tipo->save();
+            }
+
             $scope = [
                 'id'          => $id,
                 'secret'      => trim($row['secret']),
                 'name'        => trim($row['name']),
+                'tipo_dispositivo_id' => $tipo->id,
                 'created_at'  => $datetime,
                 'updated_at'  => $datetime
             ];

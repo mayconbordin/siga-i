@@ -1,10 +1,12 @@
 <?php namespace App\Repositories\Eloquent;
 
+use App\Models\Ambiente;
 use App\Models\OAuthClient;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 
+use App\Models\TipoDispositivo;
 use App\Repositories\Contracts\OAuthClientRepositoryContract;
 use \DB;
 use \Lang;
@@ -14,10 +16,10 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
 {
     public function findById($id)
     {
-        $cliente = OAuthClient::where('id', $id)->first();
+        $cliente = OAuthClient::with('ambientes', 'tipo', 'heartbeats')->where('id', $id)->first();
 	    
 	    if ($cliente == null) {
-	        throw new NotFoundError(Lang::get('cursos.not_found'));
+	        throw new NotFoundError(Lang::get('clients.not_found'));
 	    }
 
 	    return $cliente;
@@ -28,7 +30,7 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
         $cliente = OAuthClient::where('name', $nome)->first();
 	    
 	    if ($cliente == null) {
-	        throw new NotFoundError(Lang::get('cursos.not_found'));
+	        throw new NotFoundError(Lang::get('clients.not_found'));
 	    }
 
 	    return $cliente;
@@ -48,7 +50,9 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
     
     public function paginate($orderBy = 'id', $perPage = 10)
     {
-        $clientes = OAuthClient::with('ambientes')->orderBy($orderBy)->paginate($perPage);
+        $clientes = OAuthClient::with('ambientes', 'tipo', 'heartbeats')
+                               ->orderBy($orderBy)
+                               ->paginate($perPage);
 	    return $clientes;
     }
 
@@ -59,10 +63,26 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
 	    $cliente->name   = array_get($data, 'name', $cliente->name);
 	    $cliente->secret = array_get($data, 'secret', $cliente->secret);
 
+        $this->associateTipo($cliente, $data);
+        $this->associateAmbiente($cliente, $data);
+
 	    if (!$cliente->save()) {
             throw new ServerError(Lang::get('clients.save_error'));
         }
         
+        return $cliente;
+    }
+
+    public function updateAmbiente($id, Ambiente $ambiente = null)
+    {
+        $cliente = self::findById($id);
+
+        $cliente->ambientes()->detach();
+
+        if ($ambiente != null) {
+            $cliente->ambientes()->attach($ambiente);
+        }
+
         return $cliente;
     }
     
@@ -74,9 +94,13 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
         $cliente->name   = array_get($data, 'name');
         $cliente->secret = array_get($data, 'secret');
 
+        $this->associateTipo($cliente, $data);
+
 	    if (!$cliente->save()) {
             throw new ServerError(Lang::get('clients.create_error'));
         }
+
+        $this->associateAmbiente($cliente, $data);
         
         return $cliente;
     }
@@ -101,5 +125,32 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
         }
 
         DB::commit();
+    }
+
+    protected function associateAmbiente(OAuthClient $cliente, array $data)
+    {
+        $ambiente = array_get($data, 'ambiente', null);
+
+        if ($ambiente != null) {
+            if (!($ambiente instanceof Ambiente)) {
+                throw new \InvalidArgumentException("Ambiente deve ser do tipo Ambiente");
+            }
+
+            $cliente->ambientes()->detach();
+            $cliente->ambientes()->attach($ambiente);
+        }
+    }
+
+    protected function associateTipo(OAuthClient $cliente, array $data)
+    {
+        $tipo = array_get($data, 'tipo', null);
+
+        if ($tipo != null) {
+            if (!($tipo instanceof TipoDispositivo)) {
+                throw new \InvalidArgumentException("Tipo deve ser do tipo TipoDispositivo");
+            }
+
+            $cliente->tipo()->associate($tipo);
+        }
     }
 }

@@ -19,6 +19,8 @@ return array(
     'remove'        => 'Remover',
     'detach'        => 'Desvincular',
     'saving'        => 'Salvando',
+    'create'        => 'Criar',
+    'generate'      => 'Gerar',
      
     'home'          => 'Início',
     'records'       => 'Cadastros',

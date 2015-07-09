@@ -59,6 +59,10 @@ module.exports = function(grunt) {
                     'qtip2': [
 		                "jquery.qtip.js",
 		                "jquery.qtip.css"
+                    ],
+
+                    'jsSHA': [
+                        "src/sha1.js"
                     ]
                 },
                 bowerOptions: {

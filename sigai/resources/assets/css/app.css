@@ -224,3 +224,19 @@ li.navbar-green:hover {
 #formTipoAmbiente .form-group {
     margin-top: 25px;
 }
+
+.fixed-100-width {
+    width: 100px;
+}
+
+.label-status-NA {
+    background-color: #f0ad4e;
+}
+
+.label-status-OFF {
+    background-color: #d9534f;
+}
+
+.label-status-OK {
+    background-color: #5cb85c;
+}

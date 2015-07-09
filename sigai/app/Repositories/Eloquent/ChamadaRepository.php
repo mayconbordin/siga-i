@@ -49,7 +49,7 @@ class ChamadaRepository extends BaseRepository implements ChamadaRepositoryContr
         }
 
         $periods = array_map(function($item) {
-            return is_bool($item) ? $item : ($item == 0 || $item == 1) ? ($item == 1) : $item;
+            return is_bool($item) ? $item : ($item === 0 || $item === 1) ? ($item == 1) : $item;
         }, $periods);
 
         $sum = array_sum(array_map(function($item) { return is_bool($item) ? 1 : 0; }, $periods));
