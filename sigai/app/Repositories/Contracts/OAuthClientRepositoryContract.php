@@ -38,7 +38,7 @@ interface OAuthClientRepositoryContract {
      * @param int    $perPage
      * @return array
      */
-    public function paginate($orderBy = 'name', $perPage = 10);
+    public function paginate($orderBy = 'id', $perPage = 10);
 
     /**
      * Atualiza o cliente com a id informada com os dados passados pelo array de dados.

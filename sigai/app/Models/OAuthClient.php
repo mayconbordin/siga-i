@@ -12,4 +12,13 @@ class OAuthClient extends Model {
     {
         return $this->belongsToMany('App\Models\Ambiente', 'dispositivos_ambiente', 'oauth_client_id', 'ambiente_id');
     }
+
+    public function ambiente()
+    {
+        if (sizeof($this->ambientes) > 0) {
+            return $this->ambientes[0];
+        }
+
+        return null;
+    }
 }

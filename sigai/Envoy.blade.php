@@ -9,6 +9,11 @@
     update:db
 @endmacro
 
+@task('update:repo', ['on' => 'web'])
+    cd {{ $app_dir }};
+    git pull origin master
+@endtask
+
 @task('update:code', ['on' => 'web'])
     cd {{ $app_dir }};
     php artisan down

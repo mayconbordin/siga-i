@@ -54,11 +54,18 @@ Route::group(['prefix' => 'turmas'], function()
     Route::get ('/', ['uses' => 'TurmaController@listar', 'permissions' => ['list-turma']]);
 });
 
-// Alunos
+// Ambientes
 // -----------------------------------------------------------------------------
 Route::group(['prefix' => 'ambientes'], function()
 {
     Route::get('/', ['uses' => 'AmbienteController@listar', 'permissions' => ['view-ambientes-page']]);
+});
+
+// Dispositivos do Ambiente
+// -----------------------------------------------------------------------------
+Route::group(['prefix' => 'dispositivos_ambientes'], function()
+{
+    Route::get('/', ['uses' => 'OAuthClientController@listar'/*, 'permissions' => ['view-ambientes-page']*/]);
 });
 
 
@@ -241,15 +248,19 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
 
     // Arduino
     // -----------------------------------------------------------------------------
-    Route::post('ardunio/config', function() {
+    Route::post('arduino/config', function() {
         return Response::json([
-            'urlOauth'  => 'api/oauth/access_token',
-            'urlReport' => 'api/chamada',
+            'urlOauth'            => 'api/oauth/access_token',
+            'urlReport'           => 'api/chamada',
             'readBufferFlushPerc' => 0.8,
-            'reportInterval' => 30000,
-            'reportTimeout' => 5000,
-            'bootstrapTimeout' => 15000
+            'reportInterval'      => 30000,
+            'reportTimeout'       => 5000,
+            'bootstrapTimeout'    => 15000
         ]);
+    });
+
+    Route::post('arduino/heartbeat', function() {
+
     });
 
 });

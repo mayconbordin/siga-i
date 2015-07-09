@@ -44,7 +44,7 @@ interface AmbienteRepositoryContract {
      * @param int    $perPage
      * @return Array
      */
-    public function paginate($orderBy = 'nome', $perPage = 10);
+    public function paginate($orderBy = 'id', $perPage = 10);
 
     /**
      * Atualiza um ambiente existente.

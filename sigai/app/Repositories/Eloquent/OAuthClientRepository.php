@@ -46,9 +46,9 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
         return $clientes;
     }
     
-    public function paginate($orderBy = 'name', $perPage = 10)
+    public function paginate($orderBy = 'id', $perPage = 10)
     {
-        $clientes = OAuthClient::orderBy($orderBy)->paginate($perPage);
+        $clientes = OAuthClient::with('ambientes')->orderBy($orderBy)->paginate($perPage);
 	    return $clientes;
     }
 
