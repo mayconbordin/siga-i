@@ -26,7 +26,8 @@ class SalvarOAuthClientRequest extends Request {
             'secret'              => 'required|max:40',
 			'name'                => 'required|max:255',
 			'tipo_dispositivo_id' => 'required|exists:tipos_dispositivos,id',
-            'ambiente_id'         => 'integer|exists:ambientes,id'
+            'ambiente_id'         => 'integer|exists:ambientes,id',
+            'scopes'              => ''
 		];
 	}
 

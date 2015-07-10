@@ -16,7 +16,7 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
 {
     public function findById($id)
     {
-        $cliente = OAuthClient::with('ambientes', 'tipo', 'heartbeats')->where('id', $id)->first();
+        $cliente = OAuthClient::with('ambientes', 'tipo', 'heartbeats', 'scopes')->where('id', $id)->first();
 	    
 	    if ($cliente == null) {
 	        throw new NotFoundError(Lang::get('clients.not_found'));
@@ -50,7 +50,7 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
     
     public function paginate($orderBy = 'id', $perPage = 10)
     {
-        $clientes = OAuthClient::with('ambientes', 'tipo', 'heartbeats')
+        $clientes = OAuthClient::with('ambientes', 'tipo', 'heartbeats', 'scopes')
                                ->orderBy($orderBy)
                                ->paginate($perPage);
 	    return $clientes;
@@ -62,9 +62,13 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
 
 	    $cliente->name   = array_get($data, 'name', $cliente->name);
 	    $cliente->secret = array_get($data, 'secret', $cliente->secret);
+        $scopes          = array_get($data, 'scopes', []);
 
         $this->associateTipo($cliente, $data);
         $this->associateAmbiente($cliente, $data);
+
+        $cliente->scopes()->detach();
+        $cliente->scopes()->attach($scopes);
 
 	    if (!$cliente->save()) {
             throw new ServerError(Lang::get('clients.save_error'));
@@ -93,6 +97,7 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
         $cliente->id     = array_get($data, 'id');
         $cliente->name   = array_get($data, 'name');
         $cliente->secret = array_get($data, 'secret');
+        $scopes          = array_get($data, 'scopes', []);
 
         $this->associateTipo($cliente, $data);
 
@@ -101,6 +106,8 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
         }
 
         $this->associateAmbiente($cliente, $data);
+        $cliente->scopes()->detach();
+        $cliente->scopes()->attach($scopes);
         
         return $cliente;
     }

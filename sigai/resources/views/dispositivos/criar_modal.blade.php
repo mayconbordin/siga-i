@@ -81,6 +81,33 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="formDispositivoPermissao">@lang('dispositivos.permissions')</label>
+
+                        <div class="col-sm-6">
+                            <select class="form-control" id="formDispositivoPermissao">
+                                @if (isset($escopos))
+                                    @foreach ($escopos as $escopo)
+                                        <option value="{{ $escopo->id }}">{{ $escopo->id }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <button id="addPermissaoDispositivo" type="button" class="btn btn-success pull-right fixed-100-width"
+                                    title="@lang('dispositivos.add_permission')">
+                                <i class="fa fa-plus"></i> @lang('general.add')
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="permissoesDispositivo" class="col-sm-6 col-sm-offset-4">
+                        <ul class="list-group"></ul>
+                    </div>
+
+                    <div class="clearfix"></div>
+
                 </form>
             </div>
             <div class="modal-footer">

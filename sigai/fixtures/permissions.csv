@@ -87,3 +87,4 @@ edit-tipo-dispositivo,admin
 delete-tipo-dispositivo,admin
 view-tipo-dispositivo,admin
 list-tipos-dispositivo,admin
+list-escopos,admin

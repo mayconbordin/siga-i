@@ -9,6 +9,9 @@
 <script id="dispositivo-table-row" type="text/x-handlebars-template">
     @include('dispositivos.table-row', ['raw' => true])
 </script>
+<script id="scope-item" type="text/x-handlebars-template">
+    @include('dispositivos.scope-item', ['raw' => true])
+</script>
 
 <script>
 
@@ -31,9 +34,11 @@ var Dispositivo = (function() {
 
     var Template = (function() {
         var dispositivoTableRow = $("#dispositivo-table-row").html();
+        var scopeItem = $("#scope-item").html();
 
         return {
-            dispositivoTableRow: Handlebars.compile(dispositivoTableRow)
+            dispositivoTableRow: Handlebars.compile(dispositivoTableRow),
+            scopeItem: Handlebars.compile(scopeItem)
         }
     })();
     
@@ -143,6 +148,9 @@ var Dispositivo = (function() {
                     }
                 }
             });
+
+            $("#addPermissaoDispositivo").click(this.onAddPermissaoDispositivoClick);
+            $("#permissoesDispositivo button.detach").click(this.onDetachPermissaoClick);
         },
         
         // utilities -----------------------------------------------------------
@@ -179,7 +187,22 @@ var Dispositivo = (function() {
             var html = '<option value='+tipo.id+' selected>'+tipo.nome+'</option>';
             $("#formDispositivoTipo").append(html);
         },
-        
+
+        addScopeDispositivoToList: function(scope) {
+            var html = $(Template.scopeItem({
+                scope: scope
+            }));
+
+            html.find('.detach').click(this.onDetachPermissaoClick);
+            $("#permissoesDispositivo ul").append(html);
+        },
+
+        addScopesDispositivoToList: function(scopes) {
+            for(var i=0; i<scopes.length; i++) {
+                Dispositivo.addScopeDispositivoToList(scopes[i]);
+            }
+        },
+
         // eventos -------------------------------------------------------------
         onOpenNewDispositivoModal: function() {
             isEdit = false;
@@ -198,9 +221,12 @@ var Dispositivo = (function() {
                 dispositivoForm.validate(data.errors);
                 return;
             }
-        
+
+            var values = data.values;
+            values.scopes = Dispositivo.getScopesDispositivosFromList();
+
             if (isEdit) {
-                Model.updateDispositivo(editDispositivoId, data.values, function(result) {
+                Model.updateDispositivo(editDispositivoId, values, function(result) {
                     $("#formDispositivo").modal('hide');
                     Modal.success(result.message);
                     Dispositivo.updateDispositivoToTable(result.dispositivo, editDispositivoRow);
@@ -211,7 +237,7 @@ var Dispositivo = (function() {
                         Modal.error(json.errors.join('<br>'));
                 });
             } else {
-                Model.createDispositivo(data.values, function(result) {
+                Model.createDispositivo(values, function(result) {
                     $("#formDispositivo").modal('hide');
                     Modal.success(result.message);
                     Dispositivo.addDispositivoToTable(result.dispositivo);
@@ -264,6 +290,7 @@ var Dispositivo = (function() {
         onCloseDispositivoModal: function(e) {
             dispositivoForm.cleanValues();
             $("#formDispositivoAmbiente").val('');
+            $("#permissoesDispositivo ul").html('');
         },
         
         onEditDispositivoClick: function() {
@@ -280,6 +307,7 @@ var Dispositivo = (function() {
                     $("#formDispositivoAmbiente").val(ambiente.nome);
                 }
 
+                Dispositivo.addScopesDispositivoToList(result.scopes);
                 Dispositivo.setFormEditTitle(result.name);
                 $("#formDispositivo").modal('show');
             }, function(r) {
@@ -307,6 +335,41 @@ var Dispositivo = (function() {
 
         onStatusDispositivoClick: function() {
             $('#statusDispositivo').modal('show');
+        },
+
+        onDetachPermissaoClick: function() {
+            $(this).parent().remove();
+        },
+
+        scopeExists: function(id) {
+            var items = $("#permissoesDispositivo ul li");
+
+            for (var i=0; i<items.length; i++) {
+                var data = $(items[i]).data();
+                if (data.id == id) return true;
+            }
+
+            return false;
+        },
+
+        getScopesDispositivosFromList: function() {
+            var items = $("#permissoesDispositivo ul li");
+            var scopes = [];
+
+            for (var i=0; i<items.length; i++) {
+                var data = $(items[i]).data();
+                scopes.push(data.id);
+            }
+
+            return scopes;
+        },
+
+        onAddPermissaoDispositivoClick: function() {
+            var scopeId = $("#formDispositivoPermissao").val();
+
+            if (!Dispositivo.scopeExists(scopeId)) {
+                Dispositivo.addScopeDispositivoToList({id: scopeId});
+            }
         }
     };    
 

@@ -240,3 +240,7 @@ li.navbar-green:hover {
 .label-status-OK {
     background-color: #5cb85c;
 }
+
+#permissoesDispositivo {
+    padding: 0 5px 0 10px;
+}

@@ -28,6 +28,14 @@ class OAuthClientTransformer extends Transformer
                 return $e->transform($opts);
             }, $this->ambientes->all());
         }
+
+        if (in_array('scopes', $options)) {
+            $opts = $this->getSubOptions('scopes', $options);
+
+            $data['scopes'] = array_map(function($e) use ($opts) {
+                return $e->transform($opts);
+            }, $this->scopes->all());
+        }
         
         return $data;
     }

@@ -17,6 +17,8 @@ return [
     'create'     => 'Criar Dispositivo',
     'status'     => 'Status',
     'info'       => 'Informações',
+    'permissions'=> 'Permissões',
+    'add_permission' => 'Adicionar permissão ao dispositivo',
 
     'not_found'  => 'Dispositivo não foi encontrado',
     'saved'      => 'Dispositivo salvo com sucesso',

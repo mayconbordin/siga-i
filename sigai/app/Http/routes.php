@@ -246,6 +246,11 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         Route::delete('/{matricula}', ['uses' => 'ProfessorController@deletar', 'permissions' => ['delete-professor']]);
     });
 
+    Route::group(['prefix' => 'escopos'], function()
+    {
+        Route::get('/', ['uses' => 'OAuthScopeController@listar', 'permissions' => ['list-escopos']]);
+    });
+
 
     Route::post('/chamada', ['uses' => 'ChamadaController@salvar', 'middleware' => 'oauth:write-chamada']);
     Route::get ('/agenda', ['uses' => 'AgendaController@mostrar'/*, 'middleware' => 'oauth:read-agenda'*/]);
@@ -276,10 +281,6 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
             'reportTimeout'       => config('arduino.reportTimeout'),
             'bootstrapTimeout'    => config('arduino.bootstrapTimeout')
         ]);
-    });
-
-    Route::post('arduino/heartbeat', function() {
-
     });
 
 });

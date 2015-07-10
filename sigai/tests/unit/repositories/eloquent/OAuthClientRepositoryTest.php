@@ -87,6 +87,23 @@ class OAuthClientRepositoryTest extends TestCase
         $this->assertEquals($data['secret'], $cliente->secret);
     }
 
+    public function testUpdateWithScope()
+    {
+        $data = [
+            'name'   => 'Arduino 01',
+            'secret' => '2e6f9b0d5885b6010f9167787445617f553a735f',
+            'scopes' => ['write-chamada']
+        ];
+
+        $cliente = $this->repository->update($data, "client1id");
+
+        $this->assertEquals($data['name'], $cliente->name);
+        $this->assertEquals($data['secret'], $cliente->secret);
+
+        $scope = $cliente->scopes()->find('write-chamada');
+        $this->assertNotNull($scope);
+    }
+
     public function testInsert()
     {
         $data = [
@@ -101,6 +118,26 @@ class OAuthClientRepositoryTest extends TestCase
         $this->assertEquals($data['secret'], $cliente->secret);
         $this->assertEquals($data['name'], $cliente->name);
         $this->assertEquals($data['id'], $cliente->id);
+    }
+
+    public function testInsertWithScope()
+    {
+        $data = [
+            'id'     => '10-AD-4A-E8-52-EA',
+            'name'   => 'Arduino 01',
+            'secret' => '2e6f9b0d5885b6010f9167787445617f553a735f',
+            'scopes' => ['write-chamada']
+        ];
+
+        $cliente = $this->repository->insert($data);
+
+        $this->assertNotNull($cliente->id);
+        $this->assertEquals($data['secret'], $cliente->secret);
+        $this->assertEquals($data['name'], $cliente->name);
+        $this->assertEquals($data['id'], $cliente->id);
+
+        $scope = $cliente->scopes()->find('write-chamada');
+        $this->assertNotNull($scope);
     }
 
     public function testInsertWithTipo()

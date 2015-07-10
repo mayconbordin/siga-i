@@ -32,7 +32,7 @@ class OAuthClientController extends Controller
     public function mostrar($id)
     {
         $client = $this->service->show($id);
-        return $this->jsonResponse($client, ['tipo', 'ambientes']);
+        return $this->jsonResponse($client, ['tipo', 'ambientes', 'scopes']);
     }
 
     public function editar(UpdateOAuthClientRequest $request, $id)

@@ -22,6 +22,7 @@ return array(
     'create'        => 'Criar',
     'generate'      => 'Gerar',
     'close'         => 'Fechar',
+    'add'           => 'Adicionar',
      
     'home'          => 'Início',
     'records'       => 'Cadastros',
