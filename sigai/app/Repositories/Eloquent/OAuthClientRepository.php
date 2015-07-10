@@ -124,6 +124,8 @@ class OAuthClientRepository extends BaseRepository implements OAuthClientReposit
 
         try {
             $cliente->ambientes()->detach();
+            $cliente->scopes()->detach();
+            $cliente->heartbeats()->delete();
             $cliente->delete();
         } catch (\Exception $e) {
             DB::rollback();

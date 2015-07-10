@@ -176,6 +176,44 @@ class OAuthClientRepositoryTest extends TestCase
         $this->assertEquals(0, sizeof($ambientes));
     }
 
+    public function testDeleteWithHeartbeatsById()
+    {
+        $id = "client1id";
+
+        // insert some random heartbeats
+        DB::table('heartbeats_dispositivo')->insert([
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()],
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()->addMinutes(1)],
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()->addMinutes(2)],
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()->addMinutes(3)],
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()->addMinutes(4)],
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()->addMinutes(5)],
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()->addMinutes(6)],
+            ['oauth_client_id' => $id, 'created_at' => Carbon::now()->addMinutes(7)]
+        ]);
+
+
+        $cliente = OAuthClient::with('ambientes', 'heartbeats', 'scopes')->where('id', $id)->first();
+
+        // verifica estado antes de remoção
+        $this->assertEquals(1, sizeof($cliente->ambientes));
+        $this->assertEquals(1, sizeof($cliente->scopes));
+        $this->assertEquals(8, sizeof($cliente->heartbeats));
+
+        // remove o cliente
+        $this->repository->deleteById($id);
+
+        // pesquisa o banco de dados novamente
+        $ambientes  = DB::table('dispositivos_ambiente')->where('oauth_client_id', $id)->get();
+        $heartbeats = DB::table('heartbeats_dispositivo')->where('oauth_client_id', $id)->get();
+        $scopes     = DB::table('oauth_client_scopes')->where('client_id', $id)->get();
+
+        // verifica se o cliente foi removido completamente
+        $this->assertEquals(0, sizeof($ambientes));
+        $this->assertEquals(0, sizeof($heartbeats));
+        $this->assertEquals(0, sizeof($scopes));
+    }
+
     public function testDeleteByIdNotFound()
     {
         try {
