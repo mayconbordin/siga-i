@@ -4,6 +4,8 @@ use Carbon\Carbon;
 use App\Utils\CsvReader;
 use Illuminate\Database\Seeder;
 use App\Models\TipoDispositivo;
+use App\Models\HeartbeatDispositivo;
+use App\Models\OAuthClient;
 
 class OAuthClientsTableSeeder extends Seeder
 {
@@ -12,6 +14,7 @@ class OAuthClientsTableSeeder extends Seeder
         DB::table('oauth_clients')->truncate();
         DB::table('oauth_client_scopes')->truncate();
         DB::table('tipos_dispositivos')->truncate();
+        DB::table('heartbeats_dispositivo')->truncate();
 
         $csv = new CsvReader(base_path() . "/fixtures/oauth_clients.csv", true, ',');
 
@@ -27,7 +30,7 @@ class OAuthClientsTableSeeder extends Seeder
                 $tipo->save();
             }
 
-            $scope = [
+            /*$client = [
                 'id'          => $id,
                 'secret'      => trim($row['secret']),
                 'name'        => trim($row['name']),
@@ -36,8 +39,16 @@ class OAuthClientsTableSeeder extends Seeder
                 'updated_at'  => $datetime
             ];
 
-            DB::table('oauth_clients')->insert($scope);
+            DB::table('oauth_clients')->insert($client);*/
+            $dispositivo = new OAuthClient;
+            $dispositivo->id = $id;
+            $dispositivo->secret = trim($row['secret']);
+            $dispositivo->name = trim($row['name']);
+            $dispositivo->tipo()->associate($tipo);
 
+            $dispositivo->save();
+
+            // Insere escopos do cliente
             $scopes = explode(',', trim($row['scopes']));
 
             foreach ($scopes as $scope) {
@@ -54,6 +65,18 @@ class OAuthClientsTableSeeder extends Seeder
                     'created_at'  => $datetime,
                     'updated_at'  => $datetime
                 ]);
+            }
+
+            // Cria heartbeats para o cliente
+            $ts = Carbon::create(2015, 7, 10, 14, 0);
+
+            for ($i=1; $i<=40; $i++) {
+                $ts = $ts->addMinutes($i);
+                $hb = new HeartbeatDispositivo;
+                $hb->created_at = $ts;
+                $hb->updated_at = $ts;
+                $hb->dispositivo()->associate($dispositivo);
+                $hb->save();
             }
         }
     }

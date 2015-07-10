@@ -106,9 +106,12 @@ class OAuthClientService implements OAuthClientServiceContract
         }
     }
 
-    protected function defineStatus(OAuthClient $client)
+    protected function defineStatus(OAuthClient $client, Carbon $now = null)
     {
-        $now  = Carbon::now();
+        if ($now == null) {
+            $now  = Carbon::now();
+        }
+
         $last = null;
 
         foreach ($client->heartbeats as $heartbeat) {
