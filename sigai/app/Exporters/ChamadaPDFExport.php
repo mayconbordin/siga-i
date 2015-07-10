@@ -357,7 +357,7 @@ class ChamadaPDFExport extends TCPDF
         $yStart = 53.5;
         
         $xEnd = 275;
-        $yEnd = 184.5;
+        $yEnd = 193.5;
         
         $y1 = $yStart + ($linesUsed * $this->lineHeight);
         
@@ -371,7 +371,7 @@ class ChamadaPDFExport extends TCPDF
         $yStart = 53.5;
         
         $xEnd = 275;
-        $yEnd = 184.5;
+        $yEnd = 193.5;
         
         $x1 = $xStart + ($colsUsed * $this->headers['datas']['width'] * $this->numPeriods);
         
