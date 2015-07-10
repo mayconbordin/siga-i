@@ -20,9 +20,9 @@ class OAuthClientRepositoryTest extends TestCase
 
     public function testFindById()
     {
-        $cliente = $this->repository->findById("client1id");
-        $this->assertEquals("client1id", $cliente->id);
-        $this->assertEquals("client1", $cliente->name);
+        $client = $this->repository->findById("client1id");
+        $this->assertEquals("client1id", $client->id);
+        $this->assertEquals("client1", $client->name);
     }
 
     public function testFindByIdNotFound()

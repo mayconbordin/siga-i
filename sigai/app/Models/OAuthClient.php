@@ -29,4 +29,9 @@ class OAuthClient extends Model {
     {
         return $this->hasMany('App\Models\HeartbeatDispositivo', 'oauth_client_id');
     }
+
+    public function scopes()
+    {
+        return $this->belongsToMany('App\Models\OAuthScope', 'oauth_client_scopes', 'client_id', 'scope_id');
+    }
 }

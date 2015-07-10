@@ -10,6 +10,7 @@ class OAuthClientsTableSeeder extends Seeder
     public function run()
     {
         DB::table('oauth_clients')->truncate();
+        DB::table('oauth_client_scopes')->truncate();
         DB::table('tipos_dispositivos')->truncate();
 
         $csv = new CsvReader(base_path() . "/fixtures/oauth_clients.csv", true, ',');
