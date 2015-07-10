@@ -114,6 +114,8 @@ var Dispositivo = (function() {
             $("#formDispositivo .save").click(this.onSaveDispositivoClick);
             $("#dispositivos .remove").click(this.onRemoveDispositivoClick);
             $("#dispositivos .edit").click(this.onEditDispositivoClick);
+            $("#dispositivos .status").click(this.onStatusDispositivoClick);
+
             
             $("#formDispositivo").on('hidden.bs.modal', this.onCloseDispositivoModal);
 
@@ -301,6 +303,10 @@ var Dispositivo = (function() {
             }, function(r) {
                 Modal.error(r.errors.join('<br>'));
             });
+        },
+
+        onStatusDispositivoClick: function() {
+            $('#statusDispositivo').modal('show');
         }
     };    
 
@@ -338,7 +344,8 @@ $(document).ready(function($) {
     
     @include('dispositivos.criar_modal')
     @include('tipos_dispositivo.criar_modal')
-  
+    @include('dispositivos.status_modal')
+
     <!-- Lista Dispositivos -->
     <table class="table" id="dispositivos">
         <thead>

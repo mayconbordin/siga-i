@@ -8,6 +8,7 @@ return [
     'nome'       => 'Nome',
     'secret'     => 'Chave Secreta',
     'secret_help'=> 'Código de 40 dígitos utilizado na autenticação do dispositivo.',
+    'generate_secret' => 'Gerar um segredo aleatório utilizando o algoritmo SHA1',
     'ambiente'   => 'Ambiente do Dispositivo',
     'ambiente_help' => 'Opcional. Indica o ambiente onde o dispositivo se encontra.',
     'remove'     => 'Remover Dispositivo',

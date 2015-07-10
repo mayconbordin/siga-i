@@ -21,6 +21,7 @@ return array(
     'saving'        => 'Salvando',
     'create'        => 'Criar',
     'generate'      => 'Gerar',
+    'close'         => 'Fechar',
      
     'home'          => 'Início',
     'records'       => 'Cadastros',

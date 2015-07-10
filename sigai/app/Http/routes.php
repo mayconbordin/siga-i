@@ -65,7 +65,7 @@ Route::group(['prefix' => 'ambientes'], function()
 // -----------------------------------------------------------------------------
 Route::group(['prefix' => 'dispositivos'], function()
 {
-    Route::get('/', ['uses' => 'OAuthClientController@listar'/*, 'permissions' => ['view-ambientes-page']*/]);
+    Route::get('/', ['uses' => 'OAuthClientController@listar', 'permissions' => ['view-dispositivos-page']]);
 });
 
 
@@ -199,24 +199,23 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         Route::delete('/{id}', ['uses' => 'TipoAmbienteController@deletar', 'permissions' => ['delete-tipo-ambiente']]);
     });
 
-    //TODO: mudar as permissões
     Route::group(['prefix' => 'dispositivos'], function()
     {
-        Route::get   ('/'    , ['uses' => 'OAuthClientController@listar' , 'permissions' => ['list-ambientes']]);
-        Route::post  ('/'    , ['uses' => 'OAuthClientController@salvar' , 'permissions' => ['create-ambiente']]);
-        Route::get   ('/{did}', ['uses' => 'OAuthClientController@mostrar', 'permissions' => ['view-ambiente']]);
-        Route::put   ('/{did}', ['uses' => 'OAuthClientController@editar' , 'permissions' => ['edit-ambiente']]);
-        Route::put   ('/{did}/ambiente', ['uses' => 'OAuthClientController@editarAmbiente' , 'permissions' => ['edit-ambiente']]);
-        Route::delete('/{did}', ['uses' => 'OAuthClientController@deletar', 'permissions' => ['delete-ambiente']]);
+        Route::get   ('/'              , ['uses' => 'OAuthClientController@listar'         , 'permissions' => ['list-dispositivos']]);
+        Route::post  ('/'              , ['uses' => 'OAuthClientController@salvar'         , 'permissions' => ['create-dispositivo']]);
+        Route::get   ('/{did}'         , ['uses' => 'OAuthClientController@mostrar'        , 'permissions' => ['view-dispositivo']]);
+        Route::put   ('/{did}'         , ['uses' => 'OAuthClientController@editar'         , 'permissions' => ['edit-dispositivo']]);
+        Route::put   ('/{did}/ambiente', ['uses' => 'OAuthClientController@editarAmbiente' , 'permissions' => ['edit-dispositivo']]);
+        Route::delete('/{did}'         , ['uses' => 'OAuthClientController@deletar'        , 'permissions' => ['delete-dispositivo']]);
     });
 
     Route::group(['prefix' => 'tipos_dispositivo'], function()
     {
-        Route::get   ('/'    , ['uses' => 'TipoDispositivoController@listar' , 'permissions' => ['list-tipos-ambiente']]);
-        Route::post  ('/'    , ['uses' => 'TipoDispositivoController@salvar' , 'permissions' => ['create-tipo-ambiente']]);
-        Route::get   ('/{id}', ['uses' => 'TipoDispositivoController@mostrar', 'permissions' => ['view-tipo-ambiente']]);
-        Route::put   ('/{id}', ['uses' => 'TipoDispositivoController@editar' , 'permissions' => ['edit-tipo-ambiente']]);
-        Route::delete('/{id}', ['uses' => 'TipoDispositivoController@deletar', 'permissions' => ['delete-tipo-ambiente']]);
+        Route::get   ('/'    , ['uses' => 'TipoDispositivoController@listar' , 'permissions' => ['list-tipos-dispositivo']]);
+        Route::post  ('/'    , ['uses' => 'TipoDispositivoController@salvar' , 'permissions' => ['create-tipo-dispositivo']]);
+        Route::get   ('/{id}', ['uses' => 'TipoDispositivoController@mostrar', 'permissions' => ['view-tipo-dispositivo']]);
+        Route::put   ('/{id}', ['uses' => 'TipoDispositivoController@editar' , 'permissions' => ['edit-tipo-dispositivo']]);
+        Route::delete('/{id}', ['uses' => 'TipoDispositivoController@deletar', 'permissions' => ['delete-tipo-dispositivo']]);
     });
 
     // Cursos

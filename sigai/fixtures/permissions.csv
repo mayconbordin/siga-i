@@ -76,3 +76,14 @@ edit-tipo-ambiente,admin
 delete-tipo-ambiente,admin
 view-tipo-ambiente,"admin,coordenador,professor"
 list-tipos-ambiente,"admin,coordenador,professor"
+create-dispositivo,admin
+edit-dispositivo,admin
+delete-dispositivo,admin
+view-dispositivo,admin
+list-dispositivos,admin
+view-dispositivos-page,admin
+create-tipo-dispositivo,admin
+edit-tipo-dispositivo,admin
+delete-tipo-dispositivo,admin
+view-tipo-dispositivo,admin
+list-tipos-dispositivo,admin

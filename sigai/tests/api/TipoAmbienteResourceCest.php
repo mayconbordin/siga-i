@@ -2,115 +2,113 @@
 
 include_once __DIR__.'/BaseResourceCest.php';
 
-class AmbienteResourceCest extends BaseResourceCest
+class TipoAmbienteResourceCest extends BaseResourceCest
 {
-    protected $endpoint = '/api/ambientes';
+    protected $endpoint = '/api/tipos_ambiente';
 
-    public function getAllAmbientes(ApiTester $I)
+    public function getAllTiposAmbiente(ApiTester $I)
     {
         $this->authenticate($I);
 
-        $I->wantTo("Get a list of all ambientes");
+        $I->wantTo("Get a list of all tipos de ambiente");
         $I->haveHttpHeader('Accept', 'application/json');
         $I->sendGET($this->endpoint);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        $I->expect('at least these two ambientes in the response');
-        $I->seeResponseContainsJson([['id' => 1, 'tipo' => ['id' => 1]], ['id' => 2]]);
-        $I->seeResponseJsonArrayHasAtLeast(16);
+        $I->expect('at least these two tipos de ambiente in the response');
+        $I->seeResponseContainsJson([['id' => 1], ['id' => 2]]);
+        $I->seeResponseJsonArrayHasAtLeast(2);
     }
 
-    public function getAmbientesWithQuery(ApiTester $I)
+    public function getTiposAmbienteWithQuery(ApiTester $I)
     {
         $this->authenticate($I);
 
-        $I->wantTo("Get a list of all ambientes with name starting with 'sala'");
+        $I->wantTo("Get a list of all tipos de ambiente with name starting with 'sala'");
         $I->haveHttpHeader('Accept', 'application/json');
         $I->sendGET($this->endpoint, ['query' => 'sala']);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        $I->expect('at least these two ambientes in the response');
-        $I->seeResponseContainsJson([['id' => 1], ['id' => 1]]);
-        $I->seeResponseJsonArrayHasAtLeast(10);
+        $I->expect('at least one tipos de ambiente in the response');
+        $I->seeResponseContainsJson([['id' => 1]]);
+        $I->seeResponseJsonArrayHasAtLeast(1);
     }
 
-    public function getAmbiente(ApiTester $I)
+    public function getTipoAmbiente(ApiTester $I)
     {
         $this->authenticate($I);
 
-        $id = 2;
+        $id = 1;
 
-        $I->wantTo("Get a single ambiente");
+        $I->wantTo("Get a single tipo de ambiente");
         $I->haveHttpHeader('Accept', 'application/json');
         $I->sendGET($this->endpoint."/$id");
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        $I->expect('to see the information about the ambiente in the response');
-        $I->seeResponseContainsJson(['id' => $id, 'nome' => 'sala 102']);
+        $I->expect('to see the information about the tipo de ambiente in the response');
+        $I->seeResponseContainsJson(['id' => $id, 'nome' => 'sala de aula']);
     }
 
-    public function createAmbiente(ApiTester $I)
+    public function createTipoAmbiente(ApiTester $I)
     {
         $this->authenticate($I);
 
         $data = [
-            'nome'             => 'SALA-01',
-            'tipo_ambiente_id' => 1
+            'nome' => 'Escritório'
         ];
 
-        $I->wantTo("Create a ambiente");
+        $I->wantTo("Create a tipo de ambiente");
         $I->haveHttpHeader('Accept', 'application/json');
         $I->sendPOST($this->endpoint, $data);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        $I->expect('to see the information about the ambiente in the response');
-        $I->seeResponseContainsJson(['nome' => $data['nome'], 'tipo' => ['id' => $data['tipo_ambiente_id']]]);
+        $I->expect('to see the information about the tipo de ambiente in the response');
+        $I->seeResponseContainsJson(['nome' => $data['nome']]);
 
         $I->sendGET($this->endpoint);
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        $I->expect('to see the new ambiente in the list of ambientes');
+        $I->expect('to see the new tipo de ambiente in the list of tipos de ambiente');
         $I->seeResponseContainsJson([['nome' => $data['nome']]]);
     }
 
-    public function editAmbiente(ApiTester $I)
+    public function editTipoAmbiente(ApiTester $I)
     {
         $this->authenticate($I);
 
-        $id = 2;
+        $id = 1;
 
         $data = [
-            'nome'             => 'SALA-101',
-            'tipo_ambiente_id' => 1
+            'nome' => 'SALA DE AULA'
         ];
 
-        $I->wantTo("Update a ambiente");
+        $I->wantTo("Update a tipo de ambiente");
         $I->haveHttpHeader('Accept', 'application/json');
         $I->sendPUT($this->endpoint."/$id", $data);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        $I->expect('to see the information about the ambiente in the response');
+        $I->expect('to see the information about the tipo de ambiente in the response');
         $I->seeResponseContainsJson(['id' => $id, 'nome' => $data['nome']]);
     }
 
-    public function deleteAmbiente(ApiTester $I)
+    public function deleteTipoAmbiente(ApiTester $I)
     {
         $this->authenticate($I);
 
-        $id = 2;
+        $id = 1;
 
-        $I->wantTo("Delete a ambiente");
+        $I->wantTo("Delete a tipo de ambiente");
         $I->haveHttpHeader('Accept', 'application/json');
         $I->sendDELETE($this->endpoint."/$id");
 
@@ -121,7 +119,7 @@ class AmbienteResourceCest extends BaseResourceCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        $I->expect('NOT to see the deleted ambiente in the list of ambientes');
+        $I->expect('NOT to see the deleted tipo de ambiente in the list of tipos de ambiente');
         $I->dontSeeResponseContainsJson([['id' => $id]]);
     }
 }
