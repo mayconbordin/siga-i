@@ -183,7 +183,7 @@ class ChamadaRepository extends BaseRepository implements ChamadaRepositoryContr
             ->join('usuarios as u', 'u.id', '=', 'a.id')
             ->join('cursos as cr', 'cr.id', '=', 'atu.curso_origem_id')
             
-            ->join('chamadas as c', function($join) {
+            ->leftJoin('chamadas as c', function($join) {
                 $join->on('c.aluno_id', '=', 'a.id')
                      ->on('c.aula_id', '=', 'au.id');
             })
@@ -200,7 +200,7 @@ class ChamadaRepository extends BaseRepository implements ChamadaRepositoryContr
 
         $result = new ChamadaPerDayResult;
         $result->addRows($rows);
-        
+
         return $result;
     }
 }

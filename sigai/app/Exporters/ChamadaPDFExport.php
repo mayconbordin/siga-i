@@ -1,5 +1,6 @@
 <?php namespace App\Exporters;
 
+use App\Models\Aluno;
 use \TCPDF;
 use \Lang;
 
@@ -53,6 +54,14 @@ class ChamadaPDFExport extends TCPDF
             'align' => 'C',
             'header_align' => 'C'
         ]
+    ];
+
+    private $statusLetter = [
+        Aluno::STATUS_CANCELADO => 'C',
+        Aluno::STATUS_DISPENSADO => 'D',
+        Aluno::STATUS_ENSINO_DISTANCIA => 'ED',
+        Aluno::STATUS_TRANSFERIDO => 'TR',
+        Aluno::STATUS_TRANCAMENTO_MATRICULA => 'TC'
     ];
     
     public function init()
@@ -293,7 +302,6 @@ class ChamadaPDFExport extends TCPDF
     protected function setTableData($chamadas)
     {
         $index = 0;
-        
         foreach ($chamadas as $chamada) {
             foreach ($this->headers as $name => $header) {
                 $num = isset($header['repeat']) ? $header['repeat'] : 1;
@@ -313,7 +321,29 @@ class ChamadaPDFExport extends TCPDF
                     foreach ($chamada->faltas as $f) {
                         // itera cada período da aula
                         foreach ($f->periods as $p) {
-                            $value = ($p == 1) ? '.' : 'F';
+                            //$value = ($p == 1) ? '.' : (($chamada->status == 'normal') ? 'F' : 'C');
+                            //$value = ($p == NULL) ? $this->statusLetter[$chamada->status] : (($p == 1) ? '.' : 'F');
+                            //$value = ($p == '1' || $p == '0') ? (($p == '1') ? '.' : 'F') : 'C';
+
+                            // Caso normal, existe a chamada
+                            if ($p == '1' || $p == '0') {
+                                $value = ($p == '1') ? '.' : 'F';
+                            }
+
+                            // Caso não exista a chamada
+                            else if ($p == null) {
+                                // Se status é normal = a chamada ainda não foi feita
+                                // Por enquanto dá presença
+                                if ($chamada->status == 'normal') {
+                                    $value = '.';
+                                }
+
+                                // Caso contrário, imprime letra do status
+                                else {
+                                    $value = $this->statusLetter[$chamada->status];
+                                }
+                            }
+
                             $this->Cell($header['width'], $this->lineHeight, $value, 1, 0, $header['align'], 1);
                             $i++;
                         }

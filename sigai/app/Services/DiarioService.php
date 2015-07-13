@@ -131,7 +131,7 @@ class DiarioService implements DiarioServiceContract
 	    $data  = $this->chamadaRepository->findFaltasByTurmaPerPeriod($turmaId, $month);
 
 	    $pdf = new ChamadaPDFExport('L');
-	    
+
 	    foreach ($data->cursos as $curso) {
 	        
 	        $coordenador = $this->usuarioRepository->findById($curso->coordenador_id);
