@@ -91,7 +91,7 @@
                     @if (isset($professores))
                     @foreach ($professores as $professor)
                         <option value="{{ $professor->id }}"
-                                {{ (Input::old('professor_id', $aula->professor->id) == $professor->id) ? 'selected="selected"' : '' }}
+                                {{ (Input::old('professor_id', ((isset($aula) && isset($aula->professor)) ? $aula->professor->id : null)) == $professor->id) ? 'selected="selected"' : '' }}
                         >
                             {{ $professor->usuario->nome }}
                         </option>
