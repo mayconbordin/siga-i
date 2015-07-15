@@ -10,7 +10,8 @@ class Aula extends Model {
     
     protected $transformer = 'App\Transformers\AulaTransformer';
 	protected $table = 'aulas';
-	protected $fillable = ['data', 'status', 'conteudo', 'horario_inicio', 'horario_fim'];
+	protected $fillable = ['data', 'status', 'conteudo', 'obs', 'ensino_a_distancia', 'horario_inicio', 'horario_fim',
+                           'ambiente_id', 'professor_id'];
 	
 	public function getDataAttribute($value)
     {
@@ -49,5 +50,10 @@ class Aula extends Model {
     public function ambiente()
     {
         return $this->belongsTo('App\Models\Ambiente', 'ambiente_id');
+    }
+
+    public function professor()
+    {
+        return $this->belongsTo('App\Models\Professor', 'professor_id');
     }
 }

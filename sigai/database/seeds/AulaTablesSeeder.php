@@ -23,8 +23,13 @@ class AulaTablesSeeder extends Seeder {
             $aula->status = trim($row['status_aula']);
             $aula->ensino_a_distancia = ($row['ensino_a_distancia'] == 0) ? false : true;
 
-            $turma = Turma::where('nome', trim($row['nome_turma']))->first();
+            $turma = Turma::with('professores')->where('nome', trim($row['nome_turma']))->first();
             $aula->turma()->associate($turma);
+
+            $professor = $turma->professores[0];
+            if ($professor != null) {
+                $aula->professor()->associate($professor);
+            }
 
             $aula->horario_inicio = $turma->horario_inicio;
             $aula->horario_fim    = $turma->horario_fim;

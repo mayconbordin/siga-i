@@ -80,6 +80,28 @@
                 {!!$errors->first('ambiente_id', '<label class="control-label">:message</label>')!!}
             </div>
         </div>
+
+        {{-- Professor --}}
+        <div class="form-group {{{ $errors->has('professor_id') ? 'has-error' : '' }}}">
+            <label for="aulaProfessor" class="col-sm-2 control-label">
+                @choice('professores.title', 1)
+            </label>
+            <div class="col-sm-6">
+                <select class="form-control" id="aulaProfessor" name="professor_id">
+                    @if (isset($professores))
+                    @foreach ($professores as $professor)
+                        <option value="{{ $professor->id }}"
+                                {{ (Input::old('professor_id', $aula->professor->id) == $professor->id) ? 'selected="selected"' : '' }}
+                        >
+                            {{ $professor->usuario->nome }}
+                        </option>
+                    @endforeach
+                        @endif
+                </select>
+
+                {!!$errors->first('professor_id', '<label class="control-label">:message</label>')!!}
+            </div>
+        </div>
         
         {{-- Conteúdo --}}
         <div class="form-group {{{ $errors->has('conteudo') ? 'has-error' : '' }}}">

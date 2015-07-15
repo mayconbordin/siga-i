@@ -4,7 +4,7 @@ use App\Exceptions\NotFoundError;
 
 use Carbon\Carbon;
 
-use \DB;
+//use \DB;
 
 class AulaRepositoryTest extends TestCase
 {
@@ -227,7 +227,8 @@ class AulaRepositoryTest extends TestCase
             'data'           => Carbon::createFromFormat('Y-m-d', '2014-08-06'),
             'conteudo'       => 'teste',
             'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
-            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00')
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00'),
+            'professor'      => \App\Models\Professor::find(49)
         ];
 
         $aula = $this->aulaRepository->insert($data, $turma);
@@ -237,6 +238,7 @@ class AulaRepositoryTest extends TestCase
         $this->assertEquals($data['conteudo'], $aula->conteudo);
         $this->assertEquals($data['horario_inicio']->format('H:i:s'), $aula->horario_inicio->format('H:i:s'));
         $this->assertEquals($data['horario_fim']->format('H:i:s'), $aula->horario_fim->format('H:i:s'));
+        $this->assertEquals($data['professor']->id, $aula->professor->id);
 
         $this->aulaRepository->findById($aula->id, $turmaId, $ucId);
     }
@@ -252,7 +254,8 @@ class AulaRepositoryTest extends TestCase
             'conteudo'       => 'teste',
             'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
             'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00'),
-            'ambiente'       => \App\Models\Ambiente::find(1)
+            'ambiente'       => \App\Models\Ambiente::find(1),
+            'professor'      => \App\Models\Professor::find(49)
         ];
 
         $aula = $this->aulaRepository->insert($data, $turma);
@@ -263,6 +266,7 @@ class AulaRepositoryTest extends TestCase
         $this->assertEquals($data['horario_inicio']->format('H:i:s'), $aula->horario_inicio->format('H:i:s'));
         $this->assertEquals($data['horario_fim']->format('H:i:s'), $aula->horario_fim->format('H:i:s'));
         $this->assertEquals($data['ambiente']->id, $aula->ambiente->id);
+        $this->assertEquals($data['professor']->id, $aula->professor->id);
 
         $this->aulaRepository->findById($aula->id, $turmaId, $ucId);
     }
@@ -277,7 +281,8 @@ class AulaRepositoryTest extends TestCase
             'data'           => Carbon::createFromFormat('Y-m-d', '2014-08-05'),
             'conteudo'       => 'teste',
             'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
-            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00')
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00'),
+            'professor'      => \App\Models\Professor::find(49)
         ];
 
         try {
@@ -299,7 +304,8 @@ class AulaRepositoryTest extends TestCase
             'data'           => Carbon::createFromFormat('Y-m-d', '2015-08-05'),
             'conteudo'       => 'teste',
             'horario_inicio' => Carbon::createFromFormat('H:i:s', '18:30:00'),
-            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00')
+            'horario_fim'    => Carbon::createFromFormat('H:i:s', '22:30:00'),
+            'professor'      => \App\Models\Professor::find(49)
         ];
 
         try {

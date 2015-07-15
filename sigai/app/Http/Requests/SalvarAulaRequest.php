@@ -30,7 +30,8 @@ class SalvarAulaRequest extends Request {
 			'obs'                => 'string',
             'horario_inicio'     => 'required|date_format:H:i:s',
             'horario_fim'        => 'required|date_format:H:i:s',
-            'ambiente_id'        => 'integer|exists:ambientes,id'
+            'ambiente_id'        => 'integer|exists:ambientes,id',
+            'professor_id'       => 'required|integer|exists:professores,id'
 		];
 	}
 

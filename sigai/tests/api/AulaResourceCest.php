@@ -47,7 +47,8 @@ class AulaResourceCest extends BaseResourceCest
             'data'           => '06/08/2014',
             'horario_inicio' => '18:30:00',
             'horario_fim'    => '22:30:00',
-            'conteudo'       => 'Conteudo aqui ...'
+            'conteudo'       => 'Conteudo aqui ...',
+            'professor_id'   => 49
         ];
 
         $I->wantTo("Create a new aula");
@@ -68,10 +69,11 @@ class AulaResourceCest extends BaseResourceCest
         $date = '2014-08-05';
 
         $data = [
-            'data'     => '06/08/2014',
-            'conteudo' => 'Conteudo aqui ...',
+            'data'           => '06/08/2014',
+            'conteudo'       => 'Conteudo aqui ...',
             'horario_inicio' => '18:30:00',
-            'horario_fim'    => '22:30:00'
+            'horario_fim'    => '22:30:00',
+            'professor_id'   => 49
         ];
 
         $I->wantTo("Edit an aula");

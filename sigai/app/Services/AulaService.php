@@ -4,6 +4,7 @@ use App\Repositories\Contracts\AlunoRepositoryContract;
 use App\Repositories\Contracts\AmbienteRepositoryContract;
 use App\Repositories\Contracts\AulaRepositoryContract;
 use App\Repositories\Contracts\ChamadaRepositoryContract;
+use App\Repositories\Contracts\ProfessorRepositoryContract;
 use App\Repositories\Contracts\TurmaRepositoryContract;
 use App\Services\Contracts\AulaServiceContract;
 
@@ -17,16 +18,18 @@ class AulaService implements AulaServiceContract
     protected $chamadaRepository;
     protected $alunoRepository;
     protected $ambienteRepository;
+    protected $professorRepository;
 
     public function __construct(AulaRepositoryContract $repository, TurmaRepositoryContract $turmaRepository,
                                 ChamadaRepositoryContract $chamadaRepository, AlunoRepositoryContract $alunoRepository,
-                                AmbienteRepositoryContract $ambienteRepository)
+                                AmbienteRepositoryContract $ambienteRepository, ProfessorRepositoryContract $professorRepository)
     {
-        $this->repository         = $repository;
-        $this->turmaRepository    = $turmaRepository;
-        $this->chamadaRepository  = $chamadaRepository;
-        $this->alunoRepository    = $alunoRepository;
-        $this->ambienteRepository = $ambienteRepository;
+        $this->repository          = $repository;
+        $this->turmaRepository     = $turmaRepository;
+        $this->chamadaRepository   = $chamadaRepository;
+        $this->alunoRepository     = $alunoRepository;
+        $this->ambienteRepository  = $ambienteRepository;
+        $this->professorRepository = $professorRepository;
     }
 
     public function listAll($ucId, $turmaId, array $parameters)
@@ -74,12 +77,7 @@ class AulaService implements AulaServiceContract
     public function edit(array $data, $ucId, $turmaId, $date)
     {
         $date = DateUtils::parseDate($date);
-
-        $this->parseAulaDates($data);
-
-        if (isset($data['ambiente_id']) && strlen($data['ambiente_id']) > 0) {
-            $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
-        }
+        $this->parseData($data);
 
         $aula = $this->repository->update($data, $ucId, $turmaId, $date);
 
@@ -88,11 +86,7 @@ class AulaService implements AulaServiceContract
 
     public function save(array $data, $ucId, $turmaId)
     {
-        $this->parseAulaDates($data);
-
-        if (isset($data['ambiente_id']) && strlen($data['ambiente_id']) > 0) {
-            $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
-        }
+        $this->parseData($data);
 
         $turma = $this->turmaRepository->findById($turmaId, $ucId);
         $aula  = $this->repository->insert($data, $turma);
@@ -125,10 +119,18 @@ class AulaService implements AulaServiceContract
         $this->chamadaRepository->insertOrUpdateAll($chamadas, $aula);
     }
 
-    protected function parseAulaDates(array &$data)
+    protected function parseData(array &$data)
     {
         $data['data']           = DateUtils::parseDate($data['data']);
         $data['horario_inicio'] = Carbon::createFromFormat('H:i:s', $data['horario_inicio']);
         $data['horario_fim']    = Carbon::createFromFormat('H:i:s', $data['horario_fim']);
+
+        if (isset($data['ambiente_id']) && strlen($data['ambiente_id']) > 0) {
+            $data['ambiente'] = $this->ambienteRepository->findById($data['ambiente_id']);
+        }
+
+        if (isset($data['professor_id']) && strlen($data['professor_id']) > 0) {
+            $data['professor'] = $this->professorRepository->findById($data['professor_id']);
+        }
     }
 }

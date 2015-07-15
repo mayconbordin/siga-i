@@ -2,6 +2,7 @@
 
 use App\Models\Ambiente;
 use App\Models\Aula;
+use App\Models\Professor;
 use App\Models\Turma;
 
 use App\Repositories\Contracts\AulaRepositoryContract;
@@ -77,8 +78,8 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
     public function findByDataWithAll(Carbon $data, $turmaId, $unidadeCurricularId)
     {
         $aula = Aula::where('data', $data->format('Y-m-d'))->where('turma_id', $turmaId)
-	                ->with('turma', 'turma.unidadeCurricular', 'chamadas',
-	                       'chamadas.aluno', 'chamadas.aluno.usuario')->first();
+	                ->with('turma', 'turma.unidadeCurricular', 'turma.professores', 'chamadas',
+	                       'chamadas.aluno', 'chamadas.aluno.usuario', 'professor')->first();
 	    
 	    if ($aula == null) {
 	        throw new NotFoundError(Lang::get('aulas.not_found'));
@@ -192,6 +193,10 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
         if (isset($data['ambiente']) && $data['ambiente'] instanceof Ambiente) {
             $aula->ambiente()->associate($data['ambiente']);
         }
+
+        if (isset($data['professor']) && $data['professor'] instanceof Professor) {
+            $aula->professor()->associate($data['professor']);
+        }
         
         $aula->turma()->associate($turma);
         
@@ -238,6 +243,10 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
 
         if (isset($data['ambiente']) && $data['ambiente'] instanceof Ambiente) {
             $aula->ambiente()->associate($data['ambiente']);
+        }
+
+        if (isset($data['professor']) && $data['professor'] instanceof Professor) {
+            $aula->professor()->associate($data['professor']);
         }
         
         if (!$aula->save()) {

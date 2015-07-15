@@ -33,7 +33,8 @@ class AulaController extends Controller
 
             return view('aulas.criar_mostrar', [
 		        'aula'     => $data['aula'],
-		        'chamadas' => $data['alunos']
+		        'chamadas' => $data['alunos'],
+                'professores'   => $data['aula']->turma->professores
 		    ]);
         } catch (NotFoundError $e) {
             return redirect()->action('TurmaController@mostrar', [$turmaId])
