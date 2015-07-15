@@ -49,6 +49,7 @@ class AppServiceProvider extends ServiceProvider {
         $this->app->bind('App\Services\Contracts\ImportServiceContract', 'App\Services\ImportService');
         $this->app->bind('App\Services\Contracts\OAuthClientServiceContract', 'App\Services\OAuthClientService');
         $this->app->bind('App\Services\Contracts\OAuthScopeServiceContract', 'App\Services\OAuthScopeService');
+        $this->app->bind('App\Services\Contracts\HeartbeatDispositivoServiceContract', 'App\Services\HeartbeatDispositivoService');
 
         $this->app->bind('App\Services\Contracts\OwnershipResolverContract', 'App\Services\OwnershipResolver');
 	}

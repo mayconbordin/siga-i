@@ -1,5 +1,7 @@
 <?php namespace App\Exceptions;
 
+use Illuminate\Validation\Validator;
+
 class ValidationError extends RepositoryException
 {
     protected $errors;
@@ -30,5 +32,10 @@ class ValidationError extends RepositoryException
     public static function withSingleError($field, $message)
     {
         return new ValidationError([$field => [$message]]);
+    }
+
+    public static function fromValidator(Validator $validator)
+    {
+        return new ValidationError($validator->errors()->toArray());
     }
 }

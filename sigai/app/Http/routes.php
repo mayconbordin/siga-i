@@ -207,6 +207,8 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         Route::put   ('/{did}'         , ['uses' => 'OAuthClientController@editar'         , 'permissions' => ['edit-dispositivo']]);
         Route::put   ('/{did}/ambiente', ['uses' => 'OAuthClientController@editarAmbiente' , 'permissions' => ['edit-dispositivo']]);
         Route::delete('/{did}'         , ['uses' => 'OAuthClientController@deletar'        , 'permissions' => ['delete-dispositivo']]);
+
+        Route::get('/{did}/heartbeats' , ['uses' => 'HeartbeatDispositivoController@listar'/*, 'permissions' => ['list-dispositivos']*/]);
     });
 
     Route::group(['prefix' => 'tipos_dispositivo'], function()

@@ -53,6 +53,17 @@ var Dispositivo = (function() {
                 error(xhr.responseJSON, xhr);
             });
         },
+
+        getHeartbeats: function(id, success, error) {
+            $.ajax({
+                url: Router.get('base') + "/" + id + "/heartbeats",
+                method: 'GET'
+            }).done(function(result) {
+                success(result);
+            }).fail(function(xhr) {
+                error(xhr.responseJSON, xhr);
+            });
+        },
     
         createDispositivo: function(data, success, error) {
             $.ajax({
@@ -203,6 +214,16 @@ var Dispositivo = (function() {
             }
         },
 
+        addHeartbeatsToTable: function(heartbeats) {
+            var html = '';
+
+            for (var i=0; i<heartbeats.length; i++) {
+                html += '<tr><th scope="row">'+heartbeats[i].id+'</th><td>'+heartbeats[i].created_at+'</td></tr>';
+            }
+
+            $("#statusDispositivo table>tbody").html(html);
+        },
+
         // eventos -------------------------------------------------------------
         onOpenNewDispositivoModal: function() {
             isEdit = false;
@@ -334,7 +355,15 @@ var Dispositivo = (function() {
         },
 
         onStatusDispositivoClick: function() {
-            $('#statusDispositivo').modal('show');
+            var row = $($(this).parent().parent());
+            var id = row.data('id');
+
+            Model.getHeartbeats(id, function(result) {
+                Dispositivo.addHeartbeatsToTable(result);
+                $('#statusDispositivo').modal('show');
+            }, function(json) {
+                Modal.error(json.errors.join('<br>'));
+            });
         },
 
         onDetachPermissaoClick: function() {

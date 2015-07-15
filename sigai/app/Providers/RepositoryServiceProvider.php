@@ -6,7 +6,7 @@ class RepositoryServiceProvider extends ServiceProvider
 {
     protected $entities = [
         "Aluno", "Aula", "Chamada", "Curso", "DiarioEnvio", "Diario", "Professor", "Turma", "UnidadeCurricular", "Usuario",
-        "Ambiente", "TipoAmbiente", "OAuthClient", "TipoDispositivo", "DispositivoAluno", "OAuthScope"
+        "Ambiente", "TipoAmbiente", "OAuthClient", "TipoDispositivo", "DispositivoAluno", "OAuthScope", "HeartbeatDispositivo"
     ];
 
     public function register()

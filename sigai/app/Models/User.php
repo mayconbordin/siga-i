@@ -35,6 +35,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
+    public static $rules = [
+        'matricula' => 'required|max:255',
+        'nome'      => 'required|max:255',
+    ];
+
 
     public function cursos()
     {

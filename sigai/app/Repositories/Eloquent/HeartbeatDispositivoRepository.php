@@ -13,9 +13,9 @@ use \Lang;
 use \Log;
 use \App;
 
-class HeartbeatDispositivoRepository extends BaseRepository implements HeartbeatDispositivoRepositoryContract
+class HeartbeatDispositivoRepository extends App\Repositories\Test\BaseRepository implements HeartbeatDispositivoRepositoryContract
 {
-    public function findById($id)
+    /*public function findById($id)
     {
         $heartbeat = HeartbeatDispositivo::with('dispositivo')->where('id', $id)->first();
 	    
@@ -70,5 +70,20 @@ class HeartbeatDispositivoRepository extends BaseRepository implements Heartbeat
         }
 
         DB::commit();
+    }*/
+    /**
+     * @return string
+     */
+    public function model()
+    {
+        return 'App\Models\HeartbeatDispositivo';
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
+    {
+        return Lang::choice('heartbeats.title', 1);
     }
 }

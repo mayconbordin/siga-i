@@ -10,6 +10,7 @@ use App\Models\HeartbeatDispositivo;
 use Carbon\Carbon;
 
 use \DB;
+use \App;
 
 class HeartbeatDispositivoRepositoryTest extends TestCase
 {
@@ -17,32 +18,56 @@ class HeartbeatDispositivoRepositoryTest extends TestCase
 
     function __construct()
     {
-        $this->repository = new HeartbeatDispositivoRepository();
+        $this->repository = new HeartbeatDispositivoRepository(App::getInstance());
     }
 
     public function testFindById()
     {
-        $heartbeat = $this->repository->findById(1);
+        $heartbeat = $this->repository->find(1);
         $this->assertEquals("client1id", $heartbeat->dispositivo->id);
     }
 
     public function testFindByIdNotFound()
     {
         try {
-            $this->repository->findById(1000);
+            $this->repository->find(1000);
             $this->fail("Deveria ter retornado erro, heartbeat procurado não existe.");
         } catch (NotFoundError $e) {}
     }
 
+    public function testFindByDispositivo()
+    {
+        //$heartbeats = $this->repository->orderBy('created_at', 'desc')->findAllByField('oauth_client_id', "client1id");
+        //$this->repository->findAllByInId([49, 50, 51]);
+
+        $heartbeats = $this->repository->findAllByOauthClientIdOrderByCreatedAtLimit('client1id', 'desc', 10);
+        $this->assertEquals(10, sizeof($heartbeats));
+
+        $copy = array_merge([], $heartbeats->all());
+        usort($copy, function($a, $b) {
+            return $b['created_at']->getTimestamp() - $a['created_at']->getTimestamp();
+        });
+
+        $copyDates = array_map(function($item) {
+            return $item->created_at->format('Y-m-d');
+        }, $copy);
+
+        $originalDates = array_map(function($item) {
+            return $item->created_at->format('Y-m-d');
+        }, $heartbeats->all());
+
+        $this->assertEquals($copyDates, $originalDates);
+    }
+
     public function testListAll()
     {
-        $heartbeats = $this->repository->listAll();
+        $heartbeats = $this->repository->all();
         $this->assertEquals(160, sizeof($heartbeats));
     }
 
     public function testPaginate()
     {
-        $heartbeats = $this->repository->paginate('id', 10);
+        $heartbeats = $this->repository->paginate(10);
         $this->assertEquals(10, sizeof($heartbeats));
         $this->assertEquals(1, $heartbeats->currentPage());
         $this->assertEquals(10, $heartbeats->perPage());
@@ -54,7 +79,7 @@ class HeartbeatDispositivoRepositoryTest extends TestCase
             return 2;
         });
 
-        $heartbeats = $this->repository->paginate('id', 10);
+        $heartbeats = $this->repository->paginate(10);
         $this->assertEquals(10, sizeof($heartbeats));
         $this->assertEquals(2, $heartbeats->currentPage());
         $this->assertEquals(10, $heartbeats->perPage());
@@ -65,7 +90,7 @@ class HeartbeatDispositivoRepositoryTest extends TestCase
         $dispositivo = \App\Models\OAuthClient::find('client1id');
 
         $now = Carbon::now();
-        $heartbeat = $this->repository->insert($dispositivo);
+        $heartbeat = $this->repository->create(['oauth_client_id' => $dispositivo->id]);
 
         $this->assertNotNull($heartbeat->id);
         $this->assertEquals($dispositivo->id, $heartbeat->dispositivo->id);
@@ -77,10 +102,10 @@ class HeartbeatDispositivoRepositoryTest extends TestCase
 
     public function testDeleteById()
     {
-        $this->repository->deleteById(1);
+        $this->repository->delete(1);
 
         try {
-            $this->repository->deleteById(1);
+            $this->repository->delete(1);
             $this->fail("Deveria ter ocorrido falha, este heartbeat não existe.");
         } catch (NotFoundError $e) {}
     }
@@ -88,7 +113,7 @@ class HeartbeatDispositivoRepositoryTest extends TestCase
     public function testDeleteByIdNotFound()
     {
         try {
-            $this->repository->deleteById(1000);
+            $this->repository->delete(1000);
             $this->fail("Deveria ter ocorrido falha, este heartbeat não existe.");
         } catch (NotFoundError $e) {}
     }

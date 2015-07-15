@@ -9,6 +9,16 @@
             </div>
             <div class="modal-body">
 
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>@lang('heartbeats.data')</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">@lang('general.close')</button>

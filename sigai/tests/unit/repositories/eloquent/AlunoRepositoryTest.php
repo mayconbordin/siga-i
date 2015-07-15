@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Pagination\Paginator;
-use \DB;
-use \Hash;
+//use \DB;
+//use \Hash;
 
 class AlunoRepositoryTest extends TestCase
 {

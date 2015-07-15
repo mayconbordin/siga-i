@@ -47,7 +47,7 @@ close-diario,"admin,coordenador"
 export-own-diario,professor
 send-own-diario,professor
 close-own-diario,professor
-import-excel,"coordenador,professor"
+import-excel,"admin,coordenador,professor"
 create-curso,"admin,coordenador"
 edit-curso,"admin,coordenador"
 view-curso,"admin,coordenador"
@@ -88,3 +88,8 @@ delete-tipo-dispositivo,admin
 view-tipo-dispositivo,admin
 list-tipos-dispositivo,admin
 list-escopos,admin
+create-heartbeats,admin
+edit-heartbeats,admin
+delete-heartbeats,admin
+view-heartbeats,admin
+list-heartbeats,admin
