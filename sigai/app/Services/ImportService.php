@@ -126,6 +126,7 @@ class ImportService implements ImportServiceContract
         foreach ($aulas as $aula) {
             $aula['horario_inicio'] = $this->defaultHorarioInicio;
             $aula['horario_fim']    = $this->defaultHorarioFim;
+            $aula['professor_id']   = $this->usuario->id;
 
             try {
                 $this->aulas[$aula['data']] = $this->aulaService->show($this->uc->id, $this->turma->id, $aula['data']);
