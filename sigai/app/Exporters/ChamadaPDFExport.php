@@ -206,7 +206,9 @@ class ChamadaPDFExport extends TCPDF
     {
         $this->SetFont('helvetica', '', 9);
 
+
         foreach ($aulas as $aula) {
+            $this->setColor('text', 0, 0, 0);
             $h = $this->getStringHeight($this->contentHeaders['conteudo']['width'], $aula->conteudo);
         
             $this->MultiCell($this->contentHeaders['dias']['width'], $h, $aula->data->format('d/m/Y'),
@@ -214,12 +216,19 @@ class ChamadaPDFExport extends TCPDF
         
             $this->MultiCell($this->contentHeaders['conteudo']['width'], $h, $aula->conteudo,
                             1, $this->contentHeaders['conteudo']['align'], 1, 0, '', '', true, 0, false, true, 0);
+
+            $parts = preg_split('/\s+/', $aula->professor->usuario->nome);
+            $name = $parts[0];
+
+            $this->setColor('text', 174, 174, 174);
         
-            $this->MultiCell($this->contentHeaders['professor']['width'], $h, "",
+            $this->MultiCell($this->contentHeaders['professor']['width'], $h, $name,
                             1, $this->contentHeaders['professor']['align'], 1, 0, '', '', true, 0, false, true, 0);
         
             $this->Ln();
         }
+
+        $this->setColor('text', 0, 0, 0);
     }
     
     protected function setConteudoInformation($info)
