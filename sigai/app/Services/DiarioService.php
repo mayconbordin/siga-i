@@ -139,11 +139,11 @@ class DiarioService implements DiarioServiceContract
 	        foreach ($curso->chamada as $period => $faltas) {
 	            $date = explode('-', $period);
 	            $aulas = $this->aulaRepository->findByTurmaInMonth($turmaId, $date[1]);
-	        
+
 	            $pdf->init();
                 $pdf->setTitle("CURSO SUPERIOR DE TECNOLOGIA EM " . $curso->nome);
                 $pdf->setInformation($turma);
-                $pdf->setTable($faltas, $data->dates[$period]);
+                $pdf->setTable($faltas, $data->dates[$period], $aulas);
             
                 $pdf->init();
                 $pdf->setConteudoTable($aulas, [

@@ -137,9 +137,10 @@ class ChamadaPDFExport extends TCPDF
         $this->Ln();
     }
     
-    public function setTable($chamada, $datas)
+    public function setTable($chamada, $datas, $aulas)
     {
-        $this->Ln(6);
+        //$this->Ln(6);
+
         
         // Colors, line width and bold font
         $this->SetFillColor(255,255,255);
@@ -148,6 +149,16 @@ class ChamadaPDFExport extends TCPDF
         $this->SetLineWidth(0.1);
         
         $this->SetFont('helvetica', '', 7.000);
+        
+        //$this->Ln(-2);
+        $oldY = $this->GetY();
+        $this->SetY($oldY - 1);
+        
+        $this->createTableProfessorHeader($aulas);
+        
+        $this->SetY($oldY);
+        $this->Ln(6);
+        
         $this->createTableDateHeader($datas);
         
         $this->SetFont('helvetica', 'B', 7.000);
@@ -279,6 +290,23 @@ class ChamadaPDFExport extends TCPDF
         }
 
         $this->Ln();
+    }
+    
+    protected function createTableProfessorHeader($aulas)
+    {
+        $this->SetX(95);
+
+        foreach ($aulas as $aula) {
+            $parts = preg_split('/\s+/', $aula->professor->usuario->nome);
+            $name = $parts[0];
+
+            while (($width = $this->GetStringWidth($name)) > 16) {
+                $name = substr($name, 0, -1);
+            }
+
+            $this->Cell(16, 4, $name, 0, 0, 'C', 0);
+        }
+        
     }
     
     protected function createTableDateHeader($dates)

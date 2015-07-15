@@ -36,7 +36,7 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
     
     public function findByTurmaInMonth($turmaId, $month)
     {
-        $query = Aula::where('turma_id', $turmaId)
+        $query = Aula::with('professor', 'professor.usuario')->where('turma_id', $turmaId)
                      ->whereRaw("MONTH(data) = $month")
                      ->orderBy(DB::raw('MONTH(data)'));
                      
