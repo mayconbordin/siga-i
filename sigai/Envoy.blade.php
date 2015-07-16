@@ -29,6 +29,17 @@
     php artisan migrate
 @endtask
 
+@task('update:db-full', ['on' => 'web'])
+    cd {{ $app_dir }};
+    php artisan down
+    php artisan db:drop --auto
+    php artisan db:create
+    php artisan migrate
+    php artisan migrate
+    php artisan db:seed
+    php artisan up
+@endtask
+
 @task('merge:db', ['on' => 'web'])
     cd {{ $app_dir }};
     php artisan down
