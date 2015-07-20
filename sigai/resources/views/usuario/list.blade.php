@@ -361,7 +361,7 @@ $(document).ready(function($) {
     </table>
     
     <div class="pagination-container text-center">
-        <?php echo $usuarios->render(); ?>
+        <?php echo $usuarios->appends(['role' => Request::input('role', null)])->render(); ?>
     </div>
 </div>
 @endsection
