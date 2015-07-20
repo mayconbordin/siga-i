@@ -50,7 +50,12 @@ class UserRepositoryTest extends TestCase
 
     public function testDelete()
     {
-        //$this->repository->delete(49);
+        $this->repository->delete(49);
+
+        try {
+            $user = $this->repository->find(49);
+            $this->fail("Deveria ter gerado uma exception, usuário com esta ID não existe");
+        } catch (App\Exceptions\NotFoundError $e){}
     }
 
     public function testCreate()

@@ -40,6 +40,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'nome'      => 'required|max:255',
     ];
 
+    public static $rules_update = [
+        'matricula' => 'max:255',
+        'nome'      => 'max:255',
+    ];
+
 
     public function cursos()
     {

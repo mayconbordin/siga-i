@@ -55,6 +55,22 @@ class DispositivoResourceCest extends BaseResourceCest
         $I->seeResponseContainsJson(['id' => $id, 'name' => 'client1']);
     }
 
+    public function getHeartbeatsDispositivo(ApiTester $I)
+    {
+        $this->authenticate($I);
+
+        $id = 'client1id';
+
+        $I->wantTo("Get a single dispositivo");
+        $I->haveHttpHeader('Accept', 'application/json');
+        $I->sendGET($this->endpoint."/$id/heartbeats");
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseIsJson();
+
+        $I->seeResponseJsonArrayHasAtLeast(5);
+    }
+
     public function createDispositivo(ApiTester $I)
     {
         $this->authenticate($I);

@@ -93,3 +93,15 @@ edit-heartbeats,admin
 delete-heartbeats,admin
 view-heartbeats,admin
 list-heartbeats,admin
+create-usuario,admin
+edit-usuario,admin
+delete-usuario,admin
+view-usuario,admin
+list-usuarios,admin
+view-usuarios-page,admin
+create-tipo-usuario,admin
+edit-tipo-usuario,admin
+delete-tipo-usuario,admin
+view-tipo-usuario,admin
+list-tipos-usuario,admin
+view-tipos-usuario-page,admin

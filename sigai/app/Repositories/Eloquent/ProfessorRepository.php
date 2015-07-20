@@ -155,7 +155,7 @@ class ProfessorRepository extends BaseRepository implements ProfessorRepositoryC
     public function deleteByMatricula($matricula)
     {
         $professor = Professor::join('usuarios', 'professores.id', '=', 'usuarios.id')
-            ->with('usuario.cursos')
+            ->with('usuario.cursos', 'aulas')
             ->where('usuarios.matricula', $matricula)->first();
 
         if ($professor == null) {
@@ -168,6 +168,11 @@ class ProfessorRepository extends BaseRepository implements ProfessorRepositoryC
             foreach ($professor->usuario->cursos as $curso) {
                 $curso->coordenador()->dissociate();
                 $curso->save();
+            }
+
+            foreach ($professor->aulas as $aula) {
+                $aula->professor()->dissociate();
+                $aula->save();
             }
 
 	        $professor->statusDiarios()->delete();

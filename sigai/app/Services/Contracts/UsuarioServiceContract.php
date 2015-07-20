@@ -2,7 +2,9 @@
 
 use App\Models\User;
 
-interface UsuarioServiceContract {
+interface UsuarioServiceContract extends CrudServiceContract {
+    //public function listAll(array $parameters = null);
+
     /**
      * Verifica se a senha informada é válida para o usuário.
      *
@@ -19,7 +21,7 @@ interface UsuarioServiceContract {
      * @param  array $data
      * @return void
      */
-    public function save(User $usuario, array $data);
+    //public function save(User $usuario, array $data);
 
     /**
      * Recupera o usuário pela matrícula e verifica se a senha informada bate com a do usuário.

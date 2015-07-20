@@ -29,6 +29,11 @@ class Professor extends Model {
         return $this->belongsToMany('App\Models\Turma', 'professores_turmas',
                                     'professor_id', 'turma_id');
     }
+
+    public function aulas()
+    {
+        return $this->hasMany('App\Models\Aula', 'professor_id');
+    }
     
     
     public function getMatriculaAttribute()

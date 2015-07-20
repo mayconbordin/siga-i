@@ -19,9 +19,11 @@ interface BaseRepositoryContract {
 
     /**
      * @param array $columns
+     * @param string|null $orderCol
+     * @param string $orderDir
      * @return mixed
      */
-    public function all($columns = array('*'));
+    public function all($columns = array('*'), $orderCol = null, $orderDir = 'asc');
 
     /**
      * @param mixed $id
@@ -31,7 +33,7 @@ interface BaseRepositoryContract {
 
     /**
      * Find data by id
-     * @param $id
+     * @param mixed $id
      * @param array $columns
      * @return Model
      * @throws NotFoundError
@@ -79,12 +81,36 @@ interface BaseRepositoryContract {
     public function findAllWhere(array $where , $columns = array('*'));
 
     /**
-     * Retrieve all data of repository, paginated
-     * @param int   $limit
+     * Find data by field and value with pagination.
+     *
+     * @param string $field
+     * @param mixed  $value
+     * @param string $operator
+     * @param int    $perPage
+     * @param array  $columns
+     * @return mixed
+     */
+    public function findAllByFieldPaginated($field, $value = null, $operator = '=', $perPage = 15, $columns = array('*'));
+
+    /**
+     * Find data by multiple fields with pagination.
+     *
+     * @param array $where
+     * @param int   $perPage
      * @param array $columns
      * @return mixed
      */
-    public function paginate($limit = 15, $columns = array('*'));
+    public function findAllWherePaginated(array $where, $perPage = 15, $columns = array('*'));
+
+    /**
+     * Retrieve all data of repository, paginated
+     * @param int $limit
+     * @param array $columns
+     * @param string|null $orderCol
+     * @param string $orderDir
+     * @return mixed
+     */
+    public function paginate($limit = 15, $columns = array('*'), $orderCol = null, $orderDir = 'asc');
 
     /**
      * @return mixed

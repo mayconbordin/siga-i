@@ -15,13 +15,11 @@ class UsuarioTransformer extends Transformer
         ];
 
         if (in_array('roles', $options)) {
-            $roles = [];
+            $opts = $this->getSubOptions('roles', $options);
 
-            foreach ($this->roles as $role) {
-                $roles[] = ['id' => $role->id, 'name' => $role->name];
-            }
-
-            $data['roles'] = $roles;
+            $data['roles'] = array_map(function($e) use ($opts) {
+                return $e->transform($opts);
+            }, $this->roles->all());
         }
         
         return $data;

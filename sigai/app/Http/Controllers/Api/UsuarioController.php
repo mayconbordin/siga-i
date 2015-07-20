@@ -3,6 +3,8 @@
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\GetUsuarioRequest;
+use App\Http\Requests\SaveUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Services\Contracts\UsuarioServiceContract;
 
 use \DB;
@@ -29,4 +31,45 @@ class UsuarioController extends Controller
             return response()->json(['errors' => ['Unauthorized']], 401);
         }
 	}
+
+    public function listar()
+    {
+        $roles = $this->service->listAll();
+        return $this->jsonResponse($roles);
+    }
+
+    public function mostrar($id)
+    {
+        $role = $this->service->show($id);
+        return $this->jsonResponse($role, ['roles']);
+    }
+
+    public function editar(UpdateUserRequest $request, $id)
+    {
+        $role = $this->service->edit($request->all(), $id);
+
+        return $this->jsonResponse([
+            'message'     => Lang::get('tipos_usuario.saved'),
+            'usuario' => $role
+        ], ['roles']);
+    }
+
+    public function salvar(SaveUserRequest $request)
+    {
+        $role = $this->service->save($request->all());
+
+        return $this->jsonResponse([
+            'message'     => Lang::get('tipos_usuario.saved'),
+            'usuario' => $role
+        ], ['roles']);
+    }
+
+    public function deletar($id)
+    {
+        $this->service->delete($id);
+
+        return $this->jsonResponse([
+            'message' => Lang::get('tipos_usuario.remove_success')
+        ]);
+    }
 }

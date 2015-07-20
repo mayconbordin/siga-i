@@ -12,6 +12,9 @@ return [
     'matricula'  => 'Matrícula',
     'nome'       => 'Nome',
     'email'      => 'Email',
+    'roles'      => 'Tipo',
+    'add_role'   => 'Adicionar Tipo de Usuário',
+    'new'        => 'Novo Usuário',
     
     'save_success' => 'Conta salva com sucesso',
     'save_error'   => 'Erro ao salvar a conta',

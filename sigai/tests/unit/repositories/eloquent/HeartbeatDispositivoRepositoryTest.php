@@ -37,9 +37,6 @@ class HeartbeatDispositivoRepositoryTest extends TestCase
 
     public function testFindByDispositivo()
     {
-        //$heartbeats = $this->repository->orderBy('created_at', 'desc')->findAllByField('oauth_client_id', "client1id");
-        //$this->repository->findAllByInId([49, 50, 51]);
-
         $heartbeats = $this->repository->findAllByOauthClientIdOrderByCreatedAtLimit('client1id', 'desc', 10);
         $this->assertEquals(10, sizeof($heartbeats));
 

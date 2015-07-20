@@ -26,6 +26,13 @@ Route::group(['prefix' => 'importar', 'permissions' => ['import-excel']], functi
     Route::post('/', 'ImportController@processar');
 });
 
+// Usuários
+// -----------------------------------------------------------------------------
+Route::group(['prefix' => 'usuarios'], function()
+{
+    Route::get('/', ['uses' => 'UsuarioController@listar', 'permissions' => ['view-usuarios-page']]);
+});
+
 // Alunos
 // -----------------------------------------------------------------------------
 Route::group(['prefix' => 'alunos'], function()
@@ -66,6 +73,13 @@ Route::group(['prefix' => 'ambientes'], function()
 Route::group(['prefix' => 'dispositivos'], function()
 {
     Route::get('/', ['uses' => 'OAuthClientController@listar', 'permissions' => ['view-dispositivos-page']]);
+});
+
+// Tipos de Usuário
+// -----------------------------------------------------------------------------
+Route::group(['prefix' => 'tipos_usuario'], function()
+{
+    Route::get('/', ['uses' => 'TipoUsuarioController@listar', 'permissions' => ['view-tipos-usuario-page']]);
 });
 
 
@@ -208,7 +222,7 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         Route::put   ('/{did}/ambiente', ['uses' => 'OAuthClientController@editarAmbiente' , 'permissions' => ['edit-dispositivo']]);
         Route::delete('/{did}'         , ['uses' => 'OAuthClientController@deletar'        , 'permissions' => ['delete-dispositivo']]);
 
-        Route::get('/{did}/heartbeats' , ['uses' => 'HeartbeatDispositivoController@listar'/*, 'permissions' => ['list-dispositivos']*/]);
+        Route::get('/{did}/heartbeats' , ['uses' => 'HeartbeatDispositivoController@listar', 'permissions' => ['list-heartbeats']]);
     });
 
     Route::group(['prefix' => 'tipos_dispositivo'], function()
@@ -248,9 +262,27 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         Route::delete('/{matricula}', ['uses' => 'ProfessorController@deletar', 'permissions' => ['delete-professor']]);
     });
 
+    Route::group(['prefix' => 'usuarios'], function()
+    {
+        Route::get   ('/'    , ['uses' => 'UsuarioController@listar' , 'permissions' => ['list-usuarios']]);
+        Route::post  ('/'    , ['uses' => 'UsuarioController@salvar' , 'permissions' => ['create-usuario']]);
+        Route::get   ('/{id}', ['uses' => 'UsuarioController@mostrar', 'permissions' => ['view-usuario']]);
+        Route::put   ('/{id}', ['uses' => 'UsuarioController@editar' , 'permissions' => ['edit-usuario']]);
+        Route::delete('/{id}', ['uses' => 'UsuarioController@deletar', 'permissions' => ['delete-usuario']]);
+    });
+
     Route::group(['prefix' => 'escopos'], function()
     {
         Route::get('/', ['uses' => 'OAuthScopeController@listar', 'permissions' => ['list-escopos']]);
+    });
+
+    Route::group(['prefix' => 'tipos_usuario'], function()
+    {
+        Route::get   ('/'    , ['uses' => 'TipoUsuarioController@listar' , 'permissions' => ['list-tipos-usuario']]);
+        Route::post  ('/'    , ['uses' => 'TipoUsuarioController@salvar' , 'permissions' => ['create-tipo-usuario']]);
+        Route::get   ('/{id}', ['uses' => 'TipoUsuarioController@mostrar', 'permissions' => ['view-tipo-usuario']]);
+        Route::put   ('/{id}', ['uses' => 'TipoUsuarioController@editar' , 'permissions' => ['edit-tipo-usuario']]);
+        Route::delete('/{id}', ['uses' => 'TipoUsuarioController@deletar', 'permissions' => ['delete-tipo-usuario']]);
     });
 
 

@@ -3,42 +3,62 @@
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\RepositoryException;
+use App\Exceptions\ServerError;
 use App\Exceptions\ValidationError;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Factory;
 use Illuminate\Foundation\Application;
 
 use \DB;
+use \Log;
 use \Lang;
 
-abstract class BaseRepository implements BaseRepositoryContract {
+abstract class BaseRepository implements BaseRepositoryContract
+{
+    const ACTION_CREATE = 'create';
+    const ACTION_UPDATE = 'update';
+
     /**
      * The Eloquent Model
      *
      * @var \Illuminate\Database\Eloquent\Model
      */
-    private $model;
+    protected $model;
 
     /**
      * The validator factory instance.
      *
      * @var \Illuminate\Validation\Factory
      */
-    private $validator;
+    protected $validator;
 
     /**
      * @var Application
      */
-    private $application;
+    protected $application;
 
     /**
      * The models for with.
      *
+     * @var array
      */
     protected $with = array();
 
+    /**
+     * @var int
+     */
     protected $defaultLimit = 15;
+
+    /**
+     * List of relation names, used when removing an object.
+     * @var array
+     */
+    protected $relations = array();
 
     /**
      * @param Application $application
@@ -66,6 +86,9 @@ abstract class BaseRepository implements BaseRepositoryContract {
         return $this->model = $model;
     }
 
+    /**
+     * Get an instance of the validator.
+     */
     protected function makeValidator()
     {
         $this->validator = $this->application->make('validator');
@@ -84,6 +107,8 @@ abstract class BaseRepository implements BaseRepositoryContract {
             throw ValidationError::fromValidator($validator);
         }
 
+        $attributes = $this->transformAttributes($attributes);
+
         $model = $this->model->newInstance($attributes);
         $model->save();
 
@@ -94,11 +119,13 @@ abstract class BaseRepository implements BaseRepositoryContract {
 
     public function update(array $attributes, $id)
     {
-        $validator = $this->validate($attributes);
+        $validator = $this->validate($attributes, self::ACTION_UPDATE);
 
         if ($validator->fails()) {
             throw ValidationError::fromValidator($validator);
         }
+
+        $attributes = $this->transformAttributes($attributes);
 
         $model = $this->find($id);
         $model->fill($attributes);
@@ -109,13 +136,17 @@ abstract class BaseRepository implements BaseRepositoryContract {
         return $this->parserResult($model);
     }
 
-    /**
-     * @param array $columns
-     * @return mixed
-     */
-    public function all($columns = array('*'))
+    public function all($columns = array('*'), $orderCol = null, $orderDir = 'asc')
     {
-        $model = $this->model->all($columns);
+        $columns = is_array($columns) ? $columns : is_null($columns) ? ['*'] : [$columns];
+        $query = $this->model;
+
+        if ($orderCol != null) {
+            $query = $query->orderBy($orderCol, $orderDir);
+        }
+
+        $model = $query->get($columns);
+
         $this->resetModel();
 
         return $this->parserResult($model);
@@ -200,7 +231,7 @@ abstract class BaseRepository implements BaseRepositoryContract {
      * @param array $columns
      * @return mixed
      */
-    public function findAllWhere(array $where , $columns = array('*'))
+    public function findAllWhere(array $where, $columns = array('*'))
     {
         $model = $this->createQuery($where)->get($columns);
         $this->resetModel();
@@ -208,13 +239,53 @@ abstract class BaseRepository implements BaseRepositoryContract {
     }
 
     /**
-     * Retrieve all data of repository, paginated
-     * @param int   $limit
+     * Find data by field and value with pagination.
+     *
+     * @param string $field
+     * @param mixed  $value
+     * @param string $operator
+     * @param int    $perPage
+     * @param array  $columns
+     * @return mixed
+     */
+    public function findAllByFieldPaginated($field, $value = null, $operator = '=', $perPage = 15, $columns = array('*'))
+    {
+        $model = $this->model->where($field, $operator, $value)->paginate($perPage, $columns);
+        $this->resetModel();
+        return $this->parserResult($model);
+    }
+
+    /**
+     * Find data by multiple fields
+     *
+     * @param array $where
+     * @param int   $perPage
      * @param array $columns
      * @return mixed
      */
-    public function paginate($limit = 15, $columns = array('*'))
+    public function findAllWherePaginated(array $where, $perPage = 15, $columns = array('*'))
     {
+        $model = $this->createQuery($where)->paginate($perPage, $columns);
+        $this->resetModel();
+        return $this->parserResult($model);
+    }
+
+    /**
+     * Retrieve all data of repository, paginated
+     * @param int $limit
+     * @param array $columns
+     * @param string|null $orderCol
+     * @param string $orderDir
+     * @return mixed
+     */
+    public function paginate($limit = 15, $columns = array('*'), $orderCol = null, $orderDir = 'asc')
+    {
+        $query = $this->model;
+
+        if ($orderCol != null) {
+            $query = $query->orderBy($orderCol, $orderDir);
+        }
+
         $results = $this->model->paginate($limit, $columns);
         $this->resetModel();
         return $this->parserResult($results);
@@ -231,7 +302,28 @@ abstract class BaseRepository implements BaseRepositoryContract {
     public function delete($id)
     {
         $model = $this->find($id);
-        return $model->delete();
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($this->relations as $relation) {
+                $rel = $model->$relation();
+
+                if ($rel instanceof HasOneOrMany) {
+                    $rel->delete();
+                } else if ($rel instanceof BelongsToMany) {
+                    $rel->detach();
+                }
+            }
+
+            $model->delete();
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
+            throw new ServerError($this->getMessage('remove_error'));
+        }
+
+        DB::commit();
     }
 
     /**
@@ -272,14 +364,17 @@ abstract class BaseRepository implements BaseRepositoryContract {
 
     /**
      * @param null $query
+     * @param string $action
      * @return array
      */
-    public function rules($query = null)
+    public function rules($query = null, $action)
     {
         $model = $this->model;
 
         // get rules from the model if set
-        if (isset($model::$rules)) {
+        if ($action == self::ACTION_UPDATE && isset($model::$rules_update)) {
+            $rules = $model::$rules_update;
+        } else if (isset($model::$rules)) {
             $rules = $model::$rules;
         } else {
             $rules = [];
@@ -302,22 +397,55 @@ abstract class BaseRepository implements BaseRepositoryContract {
 
     /**
      * @param array $data
+     * @param string $action
      * @param null $rules
      * @param bool $custom
      * @return \Illuminate\Validation\Validator
      */
-    public function validate(array $data, $rules = null, $custom = false)
+    public function validate(array $data, $action = self::ACTION_CREATE, $rules = null, $custom = false)
     {
         if (!$custom) {
-            $rules = $this->rules($rules);
+            $rules = $this->rules($rules, $action);
         }
 
         return $this->validator->make($data, $rules);
     }
 
+    /**
+     * Parse a single object.
+     *
+     * @param Model|null $result
+     * @return mixed
+     * @throws NotFoundError
+     */
     public function parserResult($result)
     {
+        if ($result == null) {
+            throw new NotFoundError($this->getMessage('not_found'));
+        }
+
         return $result;
+    }
+
+    /**
+     * Parse a collection of objects.
+     *
+     * @param array|Collection|Paginator $results
+     * @return mixed
+     */
+    public function parserResults($results)
+    {
+        return $results;
+    }
+
+    /**
+     * Transform the array of attributes for the create and update methods.
+     * @param array $attributes
+     * @return array
+     */
+    public function transformAttributes(array $attributes)
+    {
+        return $attributes;
     }
 
     /**
