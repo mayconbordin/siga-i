@@ -142,7 +142,7 @@ class ChamadaRepositoryTest extends TestCase
         $turmaId = 2;
         $result = $this->chamadaRepository->findFaltasByTurmaPerPeriod($turmaId);
 
-        $dates = ['2014-8' => 4, '2014-9' => 5, '2014-10' => 2];
+        $dates = ['2014-8' => 4, '2014-9' => 5, '2014-10' => 4, '2014-11' => 4, '2014-12' => 3];
 
         // verifica se as datas existem
         $this->assertEquals(array_keys($dates), array_keys($result->dates));
@@ -157,7 +157,7 @@ class ChamadaRepositoryTest extends TestCase
 
         // verifica se cada curso tem o número correto de períodos
         foreach ($result->cursos as $curso) {
-            $this->assertEquals(3, sizeof($curso->chamada));
+            $this->assertEquals(5, sizeof($curso->chamada));
         }
     }
 }

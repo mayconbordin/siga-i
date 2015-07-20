@@ -42,7 +42,7 @@ class PermissionRepositoryTest extends TestCase
     public function testListAll()
     {
         $permissions = $this->repository->all();
-        $this->assertEquals(94, sizeof($permissions));
+        $this->assertGreaterThanOrEqual(106, sizeof($permissions));
     }
 
     public function testPaginate()

@@ -198,7 +198,7 @@ class OAuthClientRepositoryTest extends TestCase
         // verifica estado antes de remoção
         $this->assertEquals(1, sizeof($cliente->ambientes));
         $this->assertEquals(1, sizeof($cliente->scopes));
-        $this->assertEquals(8, sizeof($cliente->heartbeats));
+        $this->assertGreaterThanOrEqual(48,sizeof($cliente->heartbeats));
 
         // remove o cliente
         $this->repository->deleteById($id);
