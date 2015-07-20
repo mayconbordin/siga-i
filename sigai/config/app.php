@@ -166,6 +166,8 @@ return [
 
         'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
         'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+
+        'Mayconbordin\L5StompQueue\StompServiceProvider',
 	],
 
 	/*

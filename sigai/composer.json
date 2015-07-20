@@ -11,7 +11,8 @@
 		"phpoffice/phpexcel": "1.8.*",
 		"doctrine/dbal": "^2.5",
         "proai/laravel-handlebars": "~1.0@dev",
-        "lucadegasperi/oauth2-server-laravel": "dev-develop"
+        "lucadegasperi/oauth2-server-laravel": "dev-develop",
+        "mayconbordin/l5-stomp-queue": "~1.0"
 	},
 	"require-dev": {
 		"phpspec/phpspec": "~2.1",
