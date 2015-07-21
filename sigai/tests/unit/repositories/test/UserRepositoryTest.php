@@ -81,6 +81,30 @@ class UserRepositoryTest extends TestCase
         $this->assertNotNull($user->id);
     }
 
+    public function testCreateWithRoles()
+    {
+        $data = [
+            'matricula' => '1115588848',
+            'nome'      => 'José da Silva Pereira',
+            'email'     => 'jose.silva.pereira@gmail.com',
+            'password'  => '12345',
+            'roles'     => [2, 3]
+        ];
+
+        $user = $this->repository->create($data);
+
+        $this->assertNotNull($user->id);
+        $this->assertEquals($data['nome'], $user->nome);
+        $this->assertEquals($data['email'], $user->email);
+        $this->assertEquals(sizeof($data['roles']), sizeof($user->roles));
+
+        $roles = array_map(function($role) {
+            return $role->id;
+        }, $user->roles->all());
+
+        $this->assertEquals($data['roles'], $roles);
+;    }
+
     public function testUpdate()
     {
         $data = [
@@ -92,5 +116,26 @@ class UserRepositoryTest extends TestCase
 
         $this->assertNotNull($user->id);
         $this->assertEquals($data['nome'], $user->nome);
+    }
+
+    public function testUpdateWithRoles()
+    {
+        $data = [
+            'matricula' => '1234',
+            'nome'      => 'José da Silva Pereira',
+            'roles'     => [1]
+        ];
+
+        $user = $this->repository->update($data, 49);
+
+        $this->assertNotNull($user->id);
+        $this->assertEquals($data['nome'], $user->nome);
+        $this->assertEquals(sizeof($data['roles']), sizeof($user->roles));
+
+        $roles = array_map(function($role) {
+            return $role->id;
+        }, $user->roles->all());
+
+        $this->assertEquals($data['roles'], $roles);
     }
 }

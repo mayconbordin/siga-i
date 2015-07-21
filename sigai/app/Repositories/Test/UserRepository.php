@@ -7,6 +7,7 @@ use App\Exceptions\NotFoundError;
 
 use App\Repositories\Contracts\UserRepositoryContract;
 use \DB;
+use Illuminate\Database\Eloquent\Model;
 use \Log;
 use \Lang;
 use \Hash;
@@ -15,6 +16,8 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
 {
     protected $alunoRepository;
     protected $professorRepository;
+
+    protected $relations = ['roles', 'dispositivos'];
 
     public function model()
     {
@@ -65,61 +68,17 @@ class UserRepository extends BaseRepository implements UserRepositoryContract
         return $attributes;
     }
 
-
-    public function create(array $attributes)
+    protected function deleteRelated(Model $model)
     {
-        $roles = array_pull($attributes, 'roles', []);
-        $model = parent::create($attributes);
-
-        if (!is_array($roles) || array_filter($roles, 'is_numeric') !== $roles) {
-            throw ValidationError::withSingleError('roles', Lang::get('tipos_usuario.not_array'));
-        }
-
-        $model->roles()->attach($roles);
-
-        return $model;
-    }
-
-    public function update(array $attributes, $id)
-    {
-        $roles = array_pull($attributes, 'roles', []);
-        $model = parent::update($attributes, $id);
-
-        if (!is_array($roles) || array_filter($roles, 'is_numeric') !== $roles) {
-            throw ValidationError::withSingleError('roles', Lang::get('tipos_usuario.not_array'));
-        }
-
-        $model->roles()->detach();
-        $model->roles()->attach($roles);
-
-        return $model;
-    }
-
-    public function delete($id)
-    {
-        $user = $this->find($id);
-
-        DB::beginTransaction();
+        try {
+            $this->getAlunoRepository()->deleteByMatricula($model->matricula);
+        } catch (NotFoundError $e) {}
 
         try {
-            try {
-                $this->getAlunoRepository()->deleteByMatricula($user->matricula);
-            } catch (NotFoundError $e) {}
+            $this->getProfessorRepository()->deleteByMatricula($model->matricula);
+        } catch (NotFoundError $e) {}
 
-            try {
-                $this->getProfessorRepository()->deleteByMatricula($user->matricula);
-            } catch (NotFoundError $e) {}
-
-            $user->dispositivos()->delete();
-            $user->roles()->detach();
-            $user->delete();
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);
-            throw new ServerError($this->getMessage('remove_error'));
-        }
-
-        DB::commit();
+        parent::deleteRelated($model);
     }
 
     /**
