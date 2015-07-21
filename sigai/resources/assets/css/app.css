@@ -259,6 +259,9 @@ li.navbar-green:hover {
     padding: 0 8px 0 8px;
 }
 
+.label-role {
+    background-color: #777;
+}
 
 .label-role-admin {
     background-color: #d9534f;
