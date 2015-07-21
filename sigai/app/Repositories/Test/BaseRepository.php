@@ -8,6 +8,7 @@ use App\Exceptions\ValidationError;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Support\Collection;
@@ -72,29 +73,6 @@ abstract class BaseRepository implements BaseRepositoryContract
     }
 
     /**
-     * @return Model
-     * @throws RepositoryException
-     */
-    protected function makeModel()
-    {
-        $model = $this->application->make($this->model());
-
-        if (!$model instanceof Model) {
-            throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
-        }
-
-        return $this->model = $model;
-    }
-
-    /**
-     * Get an instance of the validator.
-     */
-    protected function makeValidator()
-    {
-        $this->validator = $this->application->make('validator');
-    }
-
-    /**
      * @param array $attributes
      * @return mixed
      * @throws ValidationError
@@ -107,10 +85,12 @@ abstract class BaseRepository implements BaseRepositoryContract
             throw ValidationError::fromValidator($validator);
         }
 
+        $related    = $this->fetchRelatedAttributes($attributes);
         $attributes = $this->transformAttributes($attributes);
 
         $model = $this->model->newInstance($attributes);
-        $model->save();
+
+        $this->saveModel($model, $related);
 
         $this->resetModel();
 
@@ -125,11 +105,13 @@ abstract class BaseRepository implements BaseRepositoryContract
             throw ValidationError::fromValidator($validator);
         }
 
+        $related    = $this->fetchRelatedAttributes($attributes);
         $attributes = $this->transformAttributes($attributes);
 
         $model = $this->find($id);
         $model->fill($attributes);
-        $model->save();
+        //$model->save();
+        $this->saveModel($model, $related, self::ACTION_UPDATE);
 
         $this->resetModel();
 
@@ -306,16 +288,7 @@ abstract class BaseRepository implements BaseRepositoryContract
         DB::beginTransaction();
 
         try {
-            foreach ($this->relations as $relation) {
-                $rel = $model->$relation();
-
-                if ($rel instanceof HasOneOrMany) {
-                    $rel->delete();
-                } else if ($rel instanceof BelongsToMany) {
-                    $rel->detach();
-                }
-            }
-
+            $this->deleteRelated($model);
             $model->delete();
         } catch (\Exception $e) {
             DB::rollback();
@@ -466,6 +439,107 @@ abstract class BaseRepository implements BaseRepositoryContract
     protected function getMessage($key)
     {
         return Lang::get('repository.'.$key, ['entity' => $this->name()]);
+    }
+
+    /**
+     * @return Model
+     * @throws RepositoryException
+     */
+    protected function makeModel()
+    {
+        $model = $this->application->make($this->model());
+
+        if (!$model instanceof Model) {
+            throw new RepositoryException("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
+        }
+
+        return $this->model = $model;
+    }
+
+    /**
+     * Get an instance of the validator.
+     */
+    protected function makeValidator()
+    {
+        $this->validator = $this->application->make('validator');
+    }
+
+    /**
+     * Extracts the related attributes into an associative array.
+     *
+     * @param array $attributes The list of attributes received on create or update.
+     * @return array
+     */
+    protected function fetchRelatedAttributes(array $attributes)
+    {
+        $related = [];
+
+        foreach ($this->relations as $relation) {
+            if (array_key_exists($relation, $attributes) === true) {
+                $value = array_pull($attributes, $relation, null);
+                if ($value != null) {
+                    $related[$relation] = $value;
+                }
+            }
+        }
+
+        return $related;
+    }
+
+    /**
+     * Saves the relations of a model.
+     *
+     * @param Model  $model   The model to be saved
+     * @param array  $related List of relations fetched from attributes
+     * @param string $cls     The class name of the relation being saved.
+     * @param string $action  (Default: 'create') The type of action being performed: 'create' or 'update'.
+     */
+    protected function saveRelated(Model $model, array $related, $cls, $action = self::ACTION_CREATE)
+    {
+        foreach ($related as $relation => $value) {
+            $rel = $model->$relation();
+
+            if ($cls === BelongsTo::class && $rel instanceof BelongsTo) {
+                $rel->associate($value);
+            } else if ($cls === BelongsToMany::class && $rel instanceof BelongsToMany) {
+                if ($action == self::ACTION_UPDATE) {
+                    $rel->detach();
+                }
+                $rel->attach($value);
+            }
+        }
+    }
+
+    protected function deleteRelated(Model $model)
+    {
+        foreach ($this->relations as $relation) {
+            $rel = $model->$relation();
+
+            if ($rel instanceof HasOneOrMany) {
+                $rel->delete();
+            } else if ($rel instanceof BelongsToMany) {
+                $rel->detach();
+            }
+        }
+    }
+
+    /**
+     * Save the model and its relations.
+     *
+     * @param Model  $model   The model to be saved
+     * @param array  $related List of relations fetched from attributes
+     * @param string $action  (Default: 'create') The type of action being performed: 'create' or 'update'.
+     */
+    protected function saveModel(Model $model, $related = [], $action = self::ACTION_CREATE)
+    {
+        // Make the associations
+        $this->saveRelated($model, $related, BelongsTo::class, $action);
+
+        // Save the model
+        $model->save();
+
+        // Save the m:n relations
+        $this->saveRelated($model, $related, BelongsToMany::class, $action);
     }
 
 
