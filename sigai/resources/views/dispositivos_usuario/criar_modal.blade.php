@@ -25,6 +25,7 @@
                             <input type="hidden" id="formDispositivoUsuarioId">
                             <input type="text" class="form-control" id="formDispositivoUsuario" placeholder="@choice('usuarios.title', 1)">
                             <label class="control-label hidden"></label>
+                            <p class="help-block">@lang('dispositivos_usuario.usuario_help')</p>
                         </div>
                     </div>
 

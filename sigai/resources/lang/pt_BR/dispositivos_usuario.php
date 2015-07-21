@@ -8,6 +8,7 @@ return [
     'add'        => 'Adicionar Dispositivo',
     'new'        => 'Novo Dispositivo',
     'create'     => 'Criar Dispositivo',
+    'usuario_help' => 'Digite o nome do usuário ao qual o dispositivo pertence.',
 
     'not_found'  => 'Dispositivo não foi encontrado',
     'saved'      => 'Dispositivo salvo com sucesso',

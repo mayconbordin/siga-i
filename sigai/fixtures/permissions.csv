@@ -105,3 +105,9 @@ delete-tipo-usuario,admin
 view-tipo-usuario,admin
 list-tipos-usuario,admin
 view-tipos-usuario-page,admin
+create-dispositivo-usuario,admin
+edit-dispositivo-usuario,admin
+delete-dispositivo-usuario,admin
+view-dispositivo-usuario,admin
+list-dispositivos-usuario,admin
+view-dispositivos-usuario-page,admin

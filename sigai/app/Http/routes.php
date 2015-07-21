@@ -79,7 +79,7 @@ Route::group(['prefix' => 'dispositivos'], function()
 // -----------------------------------------------------------------------------
 Route::group(['prefix' => 'dispositivos_usuario'], function()
 {
-    Route::get('/', ['uses' => 'DispositivoController@listar'/*, 'permissions' => ['view-dispositivos-page']*/]);
+    Route::get('/', ['uses' => 'DispositivoController@listar', 'permissions' => ['view-dispositivos-usuario-page']]);
 });
 
 // Tipos de Usuário
@@ -294,11 +294,11 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
 
     Route::group(['prefix' => 'dispositivos_usuario'], function()
     {
-        Route::get   ('/'    , ['uses' => 'DispositivoController@listar' /*, 'permissions' => ['list-dispositivos']*/]);
-        Route::post  ('/'    , ['uses' => 'DispositivoController@salvar' /*, 'permissions' => ['create-dispositivo']*/]);
-        Route::get   ('/{id}', ['uses' => 'DispositivoController@mostrar'/*, 'permissions' => ['view-dispositivo']*/]);
-        Route::put   ('/{id}', ['uses' => 'DispositivoController@editar' /*, 'permissions' => ['edit-dispositivo']*/]);
-        Route::delete('/{id}', ['uses' => 'DispositivoController@deletar'/*, 'permissions' => ['delete-dispositivo']*/]);
+        Route::get   ('/'    , ['uses' => 'DispositivoController@listar' , 'permissions' => ['list-dispositivos-usuario']]);
+        Route::post  ('/'    , ['uses' => 'DispositivoController@salvar' , 'permissions' => ['create-dispositivo-usuario']]);
+        Route::get   ('/{id}', ['uses' => 'DispositivoController@mostrar', 'permissions' => ['view-dispositivo-usuario']]);
+        Route::put   ('/{id}', ['uses' => 'DispositivoController@editar' , 'permissions' => ['edit-dispositivo-usuario']]);
+        Route::delete('/{id}', ['uses' => 'DispositivoController@deletar', 'permissions' => ['delete-dispositivo-usuario']]);
     });
 
 
