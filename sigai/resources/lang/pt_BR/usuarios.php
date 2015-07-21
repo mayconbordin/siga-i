@@ -24,4 +24,8 @@ return [
     'current_password'    => 'Senha Atual',
     'new_password'        => 'Nova Senha',
     'new_password_repeat' => 'Repetir',
+
+    'remove_message' => 'Deseja realmente remover este usuário?',
+    'remove_error'   => 'Ocorreu um erro ao remover o usuário',
+    'remove_success' => 'Usuário removido com sucesso'
 ];
