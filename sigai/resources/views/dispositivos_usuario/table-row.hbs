@@ -1,0 +1,16 @@
+<tr data-id="{{dispositivo.id}}">
+    <th scope="row">{{dispositivo.codigo}}</th>
+
+    <td class="text-center">{{dispositivo.tipo.nome}}</td>
+    <td>{{dispositivo.usuario.nome}}</td>
+
+    <td class="text-center">
+        <button class="btn btn-default btn-xs edit">
+            <i class="fa fa-pencil-square-o"></i> {{lang 'general.edit'}}
+        </button>
+
+        <button class="btn btn-danger btn-xs remove">
+            <i class="fa fa-remove"></i> {{lang 'general.remove'}}
+        </button>
+    </td>
+</tr>

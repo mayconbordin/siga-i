@@ -23,11 +23,12 @@ abstract class CrudService extends BaseService implements CrudServiceContract
     public function listAll(array $parameters = null)
     {
         $query = array_get($parameters, 'query');
+        $field = array_get($parameters, 'field', $this->searchField);
 
-        if ($query == null || $this->searchField == null) {
+        if ($query == null || $field == null) {
             $results = $this->repository->with($this->with)->all(['*'], $this->orderBy);
         } else {
-            $results = $this->repository->with($this->with)->findAllByField($this->searchField, $query.'%', 'LIKE');
+            $results = $this->repository->with($this->with)->findAllByField($field, $query.'%', 'LIKE');
         }
 
         return $results;

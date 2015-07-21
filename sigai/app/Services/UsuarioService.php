@@ -41,6 +41,19 @@ class UsuarioService extends CrudService implements UsuarioServiceContract
         return $users;
     }
 
+    public function all(array $parameters = null)
+    {
+        $query = array_get($parameters, 'query', null);
+
+        if ($query == null) {
+            $users = $this->repository->all(['*'], 'nome');
+        } else {
+            $users = $this->repository->findAllByField('nome', $query.'%', 'LIKE');
+        }
+
+        return $users;
+    }
+
     public function isPasswordValid(User $usuario, $password)
     {
         return Hash::check($password, $usuario->password);

@@ -4,8 +4,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Transformers\Base\TransformableTrait;
 
 class Dispositivo extends Model {
+    use TransformableTrait;
+
+    protected $transformer = 'App\Transformers\DispositivoTransformer';
 	protected $table = 'dispositivos';
-	protected $fillable = ['codigo'];
+	protected $fillable = ['codigo', 'usuario_id', 'tipo_dispositivo_id'];
 
     public function usuario()
     {

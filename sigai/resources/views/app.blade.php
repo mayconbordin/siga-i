@@ -102,7 +102,7 @@
                                 <li class="{{ (Request::is('ambientes*')) ? 'active' : '' }}">
                                     <a href="{{ url('/ambientes') }}">@choice('ambientes.title', 2)</a>
                                 </li>
-                                <li class="{{ (Request::is('dispositivos*')) ? 'active' : '' }}">
+                                <li class="{{ (Request::is('dispositivos')) ? 'active' : '' }}">
                                     <a href="{{ url('/dispositivos') }}">@choice('dispositivos.title', 2)</a>
                                 </li>
                                 <li class="{{ (Request::is('usuarios*')) ? 'active' : '' }}">
@@ -110,6 +110,9 @@
                                 </li>
                                 <li class="{{ (Request::is('tipos_usuario*')) ? 'active' : '' }}">
                                     <a href="{{ url('/tipos_usuario') }}">@choice('tipos_usuario.title', 2)</a>
+                                </li>
+                                <li class="{{ (Request::is('dispositivos_usuario*')) ? 'active' : '' }}">
+                                    <a href="{{ url('/dispositivos_usuario') }}">@choice('dispositivos_usuario.title', 2)</a>
                                 </li>
                             </ul>
                         </li>

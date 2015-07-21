@@ -4,6 +4,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\GetUsuarioRequest;
 use App\Http\Requests\SaveUserRequest;
+use App\Http\Requests\SearchUsuariosRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Services\Contracts\UsuarioServiceContract;
 
@@ -32,9 +33,9 @@ class UsuarioController extends Controller
         }
 	}
 
-    public function listar()
+    public function listar(SearchUsuariosRequest $request)
     {
-        $roles = $this->service->listAll();
+        $roles = $this->service->all($request->all());
         return $this->jsonResponse($roles);
     }
 
