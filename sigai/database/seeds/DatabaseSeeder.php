@@ -37,8 +37,8 @@ class DatabaseSeeder extends Seeder {
 		$this->call('AlunoTablesSeeder');
 		$this->command->info('Tabela alunos populada!');
 
-        $this->call('DispositivosAlunoTableSeeder');
-        $this->command->info('Tabela dispositivos_aluno populada!');
+        $this->call('DispositivosTableSeeder');
+        $this->command->info('Tabela dispositivos populada!');
 
 		$this->call('UsuarioTablesSeeder');
 		$this->command->info('Tabela usuários (professores) populada!');

@@ -6,7 +6,7 @@ class RepositoryServiceProvider extends ServiceProvider
 {
     protected $entities = [
         "Aluno", "Aula", "Chamada", "Curso", "DiarioEnvio", "Diario", "Professor", "Turma", "UnidadeCurricular", "Usuario",
-        "Ambiente", "TipoAmbiente", "OAuthClient", "TipoDispositivo", "DispositivoAluno", "OAuthScope", "HeartbeatDispositivo",
+        "Ambiente", "TipoAmbiente", "OAuthClient", "TipoDispositivo", "Dispositivo", "OAuthScope", "HeartbeatDispositivo",
         "Role", "Permission"
     ];
 
@@ -18,5 +18,7 @@ class RepositoryServiceProvider extends ServiceProvider
                 'App\Repositories\Eloquent\\'.$entity.'Repository'
             );
         }
+
+        $this->app->bind('App\Repositories\Contracts\UserRepositoryContract', 'App\Repositories\Test\UserRepository');
     }
 }

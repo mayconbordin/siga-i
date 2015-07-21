@@ -2,18 +2,18 @@
 
 use Illuminate\Database\Seeder;
 use App\Utils\CsvReader;
-use App\Models\DispositivoAluno;
+use App\Models\Dispositivo;
 use App\Models\TipoDispositivo;
-use App\Models\Aluno;
+use App\Models\User;
 
 use Carbon\Carbon;
 
-class DispositivosAlunoTableSeeder extends Seeder {
+class DispositivosTableSeeder extends Seeder {
     public function run()
     {
-        DB::table('dispositivos_aluno')->truncate();
+        DB::table('dispositivos')->truncate();
 
-        $csv = new CsvReader(base_path() . "/fixtures/dispositivos_aluno.csv", true, ',');
+        $csv = new CsvReader(base_path() . "/fixtures/dispositivos.csv", true, ',');
 
         while (($row = $csv->nextRow()) !== NULL) {
             $tipo = TipoDispositivo::where('nome', trim($row['tipo']))->first();
@@ -24,12 +24,12 @@ class DispositivosAlunoTableSeeder extends Seeder {
                 $tipo->save();
             }
 
-            $aluno = Aluno::find(trim($row['aluno']));
+            $usuario = User::find(trim($row['usuario']));
 
-            $dispositivo = new DispositivoAluno;
+            $dispositivo = new Dispositivo;
             $dispositivo->codigo = trim($row['codigo']);
             $dispositivo->tipo()->associate($tipo);
-            $dispositivo->aluno()->associate($aluno);
+            $dispositivo->usuario()->associate($usuario);
             $dispositivo->save();
         }
     }

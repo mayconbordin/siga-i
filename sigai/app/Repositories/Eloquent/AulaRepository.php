@@ -314,7 +314,7 @@ class AulaRepository extends BaseRepository implements AulaRepositoryContract
         $aulas = Aula::select('aulas.*')
             ->join('turmas AS t', 't.id', '=', 'aulas.turma_id')
             ->join('alunos_turmas AS aut', 'aut.turma_id', '=', 'aulas.turma_id')
-            ->join('dispositivos_aluno AS da', 'da.aluno_id', '=', 'aut.aluno_id')
+            ->join('dispositivos AS da', 'da.usuario_id', '=', 'aut.aluno_id')
 
             ->leftJoin('ambientes AS amb', function($join) {
                 $join->on('amb.id', '=', 'aulas.ambiente_id')

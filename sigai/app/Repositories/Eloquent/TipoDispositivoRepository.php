@@ -7,7 +7,7 @@ use App\Exceptions\ServerError;
 
 use App\Repositories\Contracts\TipoDispositivoRepositoryContract;
 use App\Repositories\Contracts\OAuthClientRepositoryContract;
-use App\Repositories\Contracts\DispositivoAlunoRepositoryContract;
+use App\Repositories\Contracts\DispositivoRepositoryContract;
 
 use \DB;
 use \Lang;
@@ -17,7 +17,7 @@ use \App;
 class TipoDispositivoRepository extends BaseRepository implements TipoDispositivoRepositoryContract
 {
     protected $oauthClientRepository;
-    protected $dispositivoAlunoRepository;
+    protected $dispositivoRepository;
 
     public function findById($id)
     {
@@ -99,7 +99,7 @@ class TipoDispositivoRepository extends BaseRepository implements TipoDispositiv
             }
 
             foreach ($tipo->dispositivos as $d) {
-                $this->getDispositivoAlunoRepository()->deleteById($d->id);
+                $this->getDispositivoRepository()->deleteById($d->id);
             }
 
             $tipo->delete();
@@ -132,22 +132,22 @@ class TipoDispositivoRepository extends BaseRepository implements TipoDispositiv
     }
 
     /**
-     * @return DispositivoAlunoRepositoryContract
+     * @return DispositivoRepositoryContract
      */
-    public function getDispositivoAlunoRepository()
+    public function getDispositivoRepository()
     {
-        if ($this->dispositivoAlunoRepository == null) {
-            $this->dispositivoAlunoRepository = App::getInstance()->make('App\Repositories\Contracts\DispositivoAlunoRepositoryContract');
+        if ($this->dispositivoRepository == null) {
+            $this->dispositivoRepository = App::getInstance()->make('App\Repositories\Contracts\DispositivoRepositoryContract');
         }
-        return $this->dispositivoAlunoRepository;
+        return $this->dispositivoRepository;
     }
 
     /**
-     * @param DispositivoAlunoRepositoryContract $dispositivoAlunoRepository
+     * @param DispositivoRepositoryContract $dispositivoRepository
      */
-    public function setDispositivoAlunoRepository($dispositivoAlunoRepository)
+    public function setDispositivoRepository($dispositivoRepository)
     {
-        $this->dispositivoAlunoRepository = $dispositivoAlunoRepository;
+        $this->dispositivoRepository = $dispositivoRepository;
     }
 
 

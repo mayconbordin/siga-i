@@ -41,12 +41,6 @@ class Aluno extends Model {
                     ->withPivot('status', 'curso_origem_id');
     }
 
-    public function dispositivos()
-    {
-        return $this->hasMany('App\Models\DispositivoAluno', 'aluno_id');
-    }
-    
-    
     public function getIsNormalAttribute()
     {
         if (isset($this['status'])) {

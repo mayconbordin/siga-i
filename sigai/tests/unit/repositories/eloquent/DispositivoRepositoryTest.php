@@ -1,21 +1,21 @@
 <?php
 
 use App\Exceptions\NotFoundError;
-use App\Repositories\Eloquent\DispositivoAlunoRepository;
+use App\Repositories\Eloquent\DispositivoRepository;
 
-use App\Models\DispositivoAluno;
+use App\Models\Dispositivo;
 
 use Carbon\Carbon;
 
 use \DB;
 
-class DispositivoAlunoRepositoryTest extends TestCase
+class DispositivoRepositoryTest extends TestCase
 {
     protected $repository;
 
     function __construct()
     {
-        $this->repository = new DispositivoAlunoRepository();
+        $this->repository = new DispositivoRepository();
     }
 
     public function testFindById()
@@ -77,7 +77,7 @@ class DispositivoAlunoRepositoryTest extends TestCase
     {
         $data = [
             'codigo' => '6d9s5ds9a5d9sa4ds4ad',
-            'aluno'  => \App\Models\Aluno::find(12),
+            'usuario'  => \App\Models\User::find(12),
             'tipo'   => \App\Models\TipoDispositivo::find(3)
         ];
 
@@ -90,7 +90,7 @@ class DispositivoAlunoRepositoryTest extends TestCase
     {
         $data = [
             'codigo' => '10-AD-4A-E8-52-EA',
-            'aluno'  => \App\Models\Aluno::find(12),
+            'usuario'  => \App\Models\User::find(12),
             'tipo'   => \App\Models\TipoDispositivo::find(3)
         ];
 
@@ -98,7 +98,7 @@ class DispositivoAlunoRepositoryTest extends TestCase
 
         $this->assertNotNull($dispositivo->id);
         $this->assertEquals($data['codigo'], $dispositivo->codigo);
-        $this->assertEquals($data['aluno']->id, $dispositivo->aluno->id);
+        $this->assertEquals($data['usuario']->id, $dispositivo->usuario->id);
         $this->assertEquals($data['tipo']->id, $dispositivo->tipo->id);
     }
 
@@ -108,7 +108,7 @@ class DispositivoAlunoRepositoryTest extends TestCase
 
         $this->repository->deleteById($id);
 
-        $dispositivo = DispositivoAluno::where('id', $id)->first();
+        $dispositivo = Dispositivo::where('id', $id)->first();
 
         $this->assertNull($dispositivo);
     }

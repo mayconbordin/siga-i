@@ -12,7 +12,7 @@ class TipoDispositivo extends Model {
 
     public function dispositivos()
     {
-        return $this->hasMany('App\Models\DispositivoAluno', 'tipo_dispositivo_id');
+        return $this->hasMany('App\Models\Dispositivo', 'tipo_dispositivo_id');
     }
 
     public function oauthClients()

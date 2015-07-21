@@ -5,12 +5,13 @@ use App\Repositories\Contracts\ProfessorRepositoryContract;
 use App\Repositories\Contracts\AlunoRepositoryContract;
 use App\Exceptions\NotFoundError;
 
+use App\Repositories\Contracts\UserRepositoryContract;
 use \DB;
 use \Log;
 use \Lang;
 use \Hash;
 
-class UserRepository extends BaseRepository
+class UserRepository extends BaseRepository implements UserRepositoryContract
 {
     protected $alunoRepository;
     protected $professorRepository;
@@ -37,6 +38,20 @@ class UserRepository extends BaseRepository
         $this->resetModel();
 
         return $this->parserResult($users);
+    }
+
+    public function findByDispositivo($codigo)
+    {
+        $model = $this->model->select('usuarios.*')
+            ->join('dispositivos AS d', 'd.usuario_id', '=', 'usuarios.id')
+            ->where('d.codigo', $codigo)
+            ->first();
+
+        if ($model == null) {
+            throw new NotFoundError($this->getMessage('not_found'));
+        }
+
+        return $model;
     }
 
     public function transformAttributes(array $attributes)
@@ -95,6 +110,7 @@ class UserRepository extends BaseRepository
                 $this->getProfessorRepository()->deleteByMatricula($user->matricula);
             } catch (NotFoundError $e) {}
 
+            $user->dispositivos()->delete();
             $user->roles()->detach();
             $user->delete();
         } catch (\Exception $e) {

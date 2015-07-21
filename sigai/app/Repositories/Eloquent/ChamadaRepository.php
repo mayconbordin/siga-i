@@ -48,15 +48,9 @@ class ChamadaRepository extends BaseRepository implements ChamadaRepositoryContr
             throw new ValidationError(['periods' => [Lang::get('chamadas.period_size')]]);
         }
 
-        $periods = array_map(function($item) {
-            return is_bool($item) ? $item : ($item === 0 || $item === 1) ? ($item == 1) : $item;
+        $periods = array_map(function($value) {
+            return filter_var($value, FILTER_VALIDATE_BOOLEAN);
         }, $periods);
-
-        $sum = array_sum(array_map(function($item) { return is_bool($item) ? 1 : 0; }, $periods));
-
-        if ($sum != 4) {
-            throw new ValidationError(['periods' => [Lang::get('chamadas.boolean_values')]]);
-        }
 
         try {
             $chamada = self::findByAulaAndAluno($aula->id, $aluno->id);

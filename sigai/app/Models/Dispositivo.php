@@ -3,13 +3,13 @@
 use Illuminate\Database\Eloquent\Model;
 use App\Transformers\Base\TransformableTrait;
 
-class DispositivoAluno extends Model {
-	protected $table = 'dispositivos_aluno';
+class Dispositivo extends Model {
+	protected $table = 'dispositivos';
 	protected $fillable = ['codigo'];
 
-    public function aluno()
+    public function usuario()
     {
-        return $this->belongsTo('App\Models\Aluno', 'aluno_id');
+        return $this->belongsTo('App\Models\User', 'usuario_id');
     }
     
     public function tipo()

@@ -29,20 +29,6 @@ class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
         return $aluno;
     }
 
-    public static function findByDispositivo($codigo)
-    {
-        $aluno = Aluno::join('usuarios', 'alunos.id', '=', 'usuarios.id')
-            ->join('dispositivos_aluno AS da', 'da.aluno_id', '=', 'alunos.id')
-            ->where('da.codigo', $codigo)
-            ->first();
-
-        if ($aluno == null) {
-            throw new NotFoundError(Lang::get('alunos.not_found'));
-        }
-
-        return $aluno;
-    }
-    
     public static function findByMatriculaWith($matricula, array $relations)
     {
         $aluno = Aluno::join('usuarios', 'alunos.id', '=', 'usuarios.id')
@@ -172,18 +158,15 @@ class AlunoRepository extends BaseRepository implements AlunoRepositoryContract
     
     public static function deleteByMatricula($matricula)
     {
-        $aluno   = self::findByMatricula($matricula);
-        $usuario = $aluno->usuario;
-        
+        $aluno = self::findByMatricula($matricula);
+
         DB::beginTransaction();
 	    
 	    try {
 	        $aluno->cursos()->detach();
 	        $aluno->turmas()->detach();
 	        $aluno->chamadas()->delete();
-            $aluno->dispositivos()->delete();
 	        $aluno->delete();
-	        $usuario->delete();
 	    } catch (\Exception $e) {
 	        DB::rollback();
             Log::error($e->getMessage(), ['trace' => $e->getTrace(), 'exception' => $e]);

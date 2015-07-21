@@ -6,6 +6,7 @@ use App\Models\Aula;
 use App\Repositories\Contracts\AlunoRepositoryContract;
 use App\Repositories\Contracts\AulaRepositoryContract;
 use App\Repositories\Contracts\ChamadaRepositoryContract;
+use App\Repositories\Contracts\UserRepositoryContract;
 use App\Services\Contracts\ChamadaServiceContract;
 
 use Carbon\Carbon;
@@ -17,15 +18,17 @@ class ChamadaService implements ChamadaServiceContract
     protected $repository;
     protected $aulaRepository;
     protected $alunoRepository;
+    protected $userRepository;
 
     protected $tolerance = 20;
 
     public function __construct(ChamadaRepositoryContract $repository, AulaRepositoryContract $aulaRepository,
-                                AlunoRepositoryContract $alunoRepository)
+                                AlunoRepositoryContract $alunoRepository, UserRepositoryContract $userRepository)
     {
         $this->repository      = $repository;
         $this->aulaRepository  = $aulaRepository;
         $this->alunoRepository = $alunoRepository;
+        $this->userRepository  = $userRepository;
     }
 
     public function saveSingleChamada(array $data)
@@ -75,8 +78,14 @@ class ChamadaService implements ChamadaServiceContract
         Log::info("Entre " . ($durationPeriodo * 2 + $this->tolerance) . " e " . ($durationPeriodo * 2 - $this->tolerance) . " = 3 e 4");
         Log::info("Entre " . ($durationPeriodo * 2 - $this->tolerance) . " e " . ($durationPeriodo - $this->tolerance)     . " = 4");
 
+        $usuario = $this->userRepository->findByDispositivo($cardId);
+        $aluno   = $this->alunoRepository->findByMatricula($usuario->matricula);
 
-        $aluno = $this->alunoRepository->findByDispositivo($cardId);
+        if ($aluno == null) {
+            return false;
+        }
+
+        //$aluno = $this->alunoRepository->findByDispositivo($cardId);
         $periods = [false, false, false, false];
 
         try {

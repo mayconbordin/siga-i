@@ -26,6 +26,7 @@ class ChamadaServiceTest extends TestCase
     {
         $aula  = $this->mockAula();
         $aluno = $this->mockAluno();
+        $usuario = $this->mockUsuario();
 
         $chamadaRepository = m::mock('App\Repositories\Contracts\ChamadaRepositoryContract');
         $chamadaRepository->shouldReceive('findByAulaAndAluno')
@@ -37,11 +38,15 @@ class ChamadaServiceTest extends TestCase
                        ->once()->with($this->data['device_id'], $this->data['card_id'], m::type(Carbon::class))->andReturn([$aula]);
 
         $alunoRepository = m::mock('App\Repositories\Contracts\AlunoRepositoryContract');
-        $alunoRepository->shouldReceive('findByDispositivo')
-                        ->once()->with($this->data['card_id'])->andReturn($aluno);
+        $alunoRepository->shouldReceive('findByMatricula')
+                        ->once()->with($usuario->matricula)->andReturn($aluno);
+
+        $userRepository = m::mock('App\Repositories\Contracts\UserRepositoryContract');
+        $userRepository->shouldReceive('findByDispositivo')
+            ->once()->with($this->data['card_id'])->andReturn($usuario);
 
 
-        $service = new ChamadaService($chamadaRepository, $aulaRepository, $alunoRepository);
+        $service = new ChamadaService($chamadaRepository, $aulaRepository, $alunoRepository, $userRepository);
         $service->saveSingleChamada($this->data);
     }
 
@@ -68,5 +73,18 @@ class ChamadaServiceTest extends TestCase
             ->andReturn(1);
 
         return $aluno;
+    }
+
+    protected function mockUsuario()
+    {
+        $usuario = m::mock('App\Models\User');
+        $usuario->shouldReceive('getAttribute')
+            ->with('id')
+            ->andReturn(1);
+        $usuario->shouldReceive('getAttribute')
+            ->with('matricula')
+            ->andReturn('15726');
+
+        return $usuario;
     }
 }

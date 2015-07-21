@@ -48,6 +48,15 @@ class UserRepositoryTest extends TestCase
         $this->assertEquals(3, sizeof($users));
     }
 
+    public function testFindByDispositivo()
+    {
+        $usuario = $this->repository->findByDispositivo('111111');
+
+        $this->assertEquals($usuario->id, 1);
+        $this->assertEquals($usuario->nome, 'ABNER BORDA FONSECA');
+        $this->assertEquals($usuario->matricula, '15726');
+    }
+
     public function testDelete()
     {
         $this->repository->delete(49);

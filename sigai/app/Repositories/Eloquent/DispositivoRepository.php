@@ -1,22 +1,23 @@
 <?php namespace App\Repositories\Eloquent;
 
-use App\Models\Aluno;
-use App\Models\DispositivoAluno;
+use App\Models\Dispositivo;
 
 use App\Exceptions\NotFoundError;
 use App\Exceptions\ServerError;
 
 use App\Models\TipoDispositivo;
-use App\Repositories\Contracts\DispositivoAlunoRepositoryContract;
+use App\Models\User;
+use App\Repositories\Contracts\DispositivoRepositoryContract;
+
 use \DB;
 use \Lang;
 use \Log;
 
-class DispositivoAlunoRepository extends BaseRepository implements DispositivoAlunoRepositoryContract
+class DispositivoRepository extends BaseRepository implements DispositivoRepositoryContract
 {
     public function findById($id)
     {
-        $dispositivo = DispositivoAluno::with('tipo', 'aluno')->where('id', $id)->first();
+        $dispositivo = Dispositivo::with('tipo', 'usuario')->where('id', $id)->first();
 	    
 	    if ($dispositivo == null) {
 	        throw new NotFoundError(Lang::get('dispositivos.not_found'));
@@ -27,7 +28,7 @@ class DispositivoAlunoRepository extends BaseRepository implements DispositivoAl
 
     public function findByCodigo($codigo)
     {
-        $dispositivo = DispositivoAluno::where('codigo', $codigo)->first();
+        $dispositivo = Dispositivo::where('codigo', $codigo)->first();
 
 	    if ($dispositivo == null) {
 	        throw new NotFoundError(Lang::get('dispositivos.not_found'));
@@ -38,19 +39,19 @@ class DispositivoAlunoRepository extends BaseRepository implements DispositivoAl
 
     public function searchByCodigo($query)
     {
-        $dispositivos = DispositivoAluno::where('codigo', 'LIKE', $query.'%')->get();
+        $dispositivos = Dispositivo::where('codigo', 'LIKE', $query.'%')->get();
         return $dispositivos;
     }
     
     public function listAll()
     {
-        $dispositivos = DispositivoAluno::all();
+        $dispositivos = Dispositivo::all();
         return $dispositivos;
     }
     
     public function paginate($orderBy = 'id', $perPage = 10)
     {
-        $dispositivos = DispositivoAluno::with('tipo', 'aluno')->orderBy($orderBy)->paginate($perPage);
+        $dispositivos = Dispositivo::with('tipo', 'usuario')->orderBy($orderBy)->paginate($perPage);
 	    return $dispositivos;
     }
 
@@ -70,14 +71,14 @@ class DispositivoAlunoRepository extends BaseRepository implements DispositivoAl
             $dispositivo->tipo()->associate($tipo);
         }
 
-        $aluno = array_get($data, 'aluno', $dispositivo->aluno);
+        $usuario = array_get($data, 'usuario', $dispositivo->usuario);
 
-        if ($aluno != null) {
-            if (!($aluno instanceof Aluno)) {
-                throw new \InvalidArgumentException("Tipo deve ser do tipo TipoDispositivo");
+        if ($usuario != null) {
+            if (!($usuario instanceof User)) {
+                throw new \InvalidArgumentException("Usuário deve ser do tipo App\\Models\\User");
             }
 
-            $dispositivo->aluno()->associate($aluno);
+            $dispositivo->usuario()->associate($usuario);
         }
 
 	    if (!$dispositivo->save()) {
@@ -89,11 +90,11 @@ class DispositivoAlunoRepository extends BaseRepository implements DispositivoAl
     
     public function insert(array $data)
     {
-        $dispositivo = new DispositivoAluno;
+        $dispositivo = new Dispositivo;
         $dispositivo->codigo = array_get($data, 'codigo');
 
         $tipo  = array_get($data, 'tipo');
-        $aluno = array_get($data, 'aluno');
+        $usuario = array_get($data, 'usuario');
 
         if (!($tipo instanceof TipoDispositivo)) {
             throw new \InvalidArgumentException("Tipo deve ser do tipo TipoDispositivo");
@@ -101,11 +102,11 @@ class DispositivoAlunoRepository extends BaseRepository implements DispositivoAl
 
         $dispositivo->tipo()->associate($tipo);
 
-        if (!($aluno instanceof Aluno)) {
-            throw new \InvalidArgumentException("Tipo deve ser do tipo TipoDispositivo");
+        if (!($usuario instanceof User)) {
+            throw new \InvalidArgumentException("Usuário deve ser do tipo App\\Models\\User");
         }
 
-        $dispositivo->aluno()->associate($aluno);
+        $dispositivo->usuario()->associate($usuario);
 
 	    if (!$dispositivo->save()) {
             throw new ServerError(Lang::get('dispositivos.create_error'));

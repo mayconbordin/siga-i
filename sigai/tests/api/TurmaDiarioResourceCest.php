@@ -8,7 +8,7 @@ class TurmaDiarioResourceCest extends BaseResourceCest
 
     public function closeDiario(ApiTester $I)
     {
-        $this->authenticate($I);
+        $this->authenticate($I, '1234');
 
         $month = 8;
 
@@ -25,7 +25,7 @@ class TurmaDiarioResourceCest extends BaseResourceCest
 
     public function sendDiario(ApiTester $I)
     {
-        $this->authenticate($I);
+        $this->authenticate($I, '1234');
 
         $month = 8;
 

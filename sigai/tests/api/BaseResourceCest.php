@@ -1,11 +1,11 @@
 <?php
 
 abstract class BaseResourceCest {
-    protected function authenticate(ApiTester $I)
+    protected function authenticate(ApiTester $I, $email = '0000', $password = '12345')
     {
         $I->haveHttpHeader('Accept', 'application/json');
         $I->haveHttpHeader('Content-Type', 'application/x-www-form-urlencoded');
-        $I->sendPOST('auth/login', ['email' => '0000', 'password' => '12345']);
+        $I->sendPOST('auth/login', ['email' => $email, 'password' => $password]);
     }
 
     protected function authenticateOAuth(ApiTester $I, $scope, $client = 'client1id', $secret = 'client1secret')

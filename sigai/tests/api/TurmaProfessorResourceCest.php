@@ -26,7 +26,7 @@ class TurmaProfessorResourceCest extends BaseResourceCest
     {
         $this->authenticate($I);
 
-        $matricula = '2345';
+        $matricula = '31019';
 
         $I->wantTo("Attach an professor to the turma");
         $I->haveHttpHeader('Accept', 'application/json');

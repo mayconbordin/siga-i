@@ -76,7 +76,7 @@ class ChamadaRepositoryTest extends TestCase
         $aula  = \App\Models\Aula::where('id', 113)->first();
         $aluno = \App\Models\Aluno::where('id', 1)->first();
 
-        $periods = [true, "one", false, "three"];
+        $periods = [true, false];
 
         try {
             $chamada = $this->chamadaRepository->insertOrUpdate($aluno, $periods, $aula);

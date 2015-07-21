@@ -14,7 +14,7 @@ class ArduinoCest extends BaseResourceCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
-        dd($I->grabResponse());
+        //dd($I->grabResponse());
 
         /*$I->expect('at least these two alunos in the response');
         $I->seeResponseJsonArrayHasKey('access_token');

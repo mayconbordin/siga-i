@@ -14,11 +14,11 @@ class TipoDispositivoRepositoryTest extends TestCase
     function __construct()
     {
         $oauthClientRepo = new \App\Repositories\Eloquent\OAuthClientRepository();
-        $devAlunoRepository = new \App\Repositories\Eloquent\DispositivoAlunoRepository();
+        $devAlunoRepository = new \App\Repositories\Eloquent\DispositivoRepository();
 
         $this->repository = new \App\Repositories\Eloquent\TipoDispositivoRepository();
         $this->repository->setOAuthClientRepository($oauthClientRepo);
-        $this->repository->setDispositivoAlunoRepository($devAlunoRepository);
+        $this->repository->setDispositivoRepository($devAlunoRepository);
     }
 
     public function testFindById()
@@ -132,7 +132,7 @@ class TipoDispositivoRepositoryTest extends TestCase
         $this->repository->deleteById($id);
 
         // pesquisa o banco de dados novamente
-        $dispositivos = DB::table('dispositivos_aluno')->where('tipo_dispositivo_id', $id)->get();
+        $dispositivos = DB::table('dispositivos')->where('tipo_dispositivo_id', $id)->get();
 
         // verifica se o tipo de dispositivo foi removido completamente
         $this->assertEquals(0, sizeof($dispositivos));

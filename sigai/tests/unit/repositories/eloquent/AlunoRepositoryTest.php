@@ -29,15 +29,6 @@ class AlunoRepositoryTest extends TestCase
         }
     }
 
-    public function testFindByDispositivo()
-    {
-        $usuario = $this->alunoRepository->findByDispositivo('111111');
-
-        $this->assertEquals($usuario->id, 1);
-        $this->assertEquals($usuario->nome, 'ABNER BORDA FONSECA');
-        $this->assertEquals($usuario->matricula, '15726');
-    }
-
     public function testFindByMatriculaWith()
     {
         $usuario = $this->alunoRepository->findByMatriculaWith('15726', ['usuario', 'chamadas', 'cursos']);

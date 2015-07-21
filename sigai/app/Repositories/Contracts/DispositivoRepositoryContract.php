@@ -1,12 +1,12 @@
 <?php namespace App\Repositories\Contracts;
 
-use App\Models\DispositivoAluno;
+use App\Models\Dispositivo;
 
-interface DispositivoAlunoRepositoryContract {
+interface DispositivoRepositoryContract {
     /**
      * Retorna o dispositivo com a id informada.
      * @param int $id
-     * @return DispositivoAluno
+     * @return Dispositivo
      * @throws NotFoundError Caso não encontre o dispositivo
      */
     public function findById($id);
@@ -14,7 +14,7 @@ interface DispositivoAlunoRepositoryContract {
     /**
      * Retorna o dispositivo com o código exatamente igual ao informado.
      * @param string $codigo
-     * @return DispositivoAluno
+     * @return Dispositivo
      * @throws NotFoundError Caso não encontre o dispositivo
      */
     public function findByCodigo($codigo);
@@ -44,7 +44,7 @@ interface DispositivoAlunoRepositoryContract {
      * Atualiza o dispositivo com a id informada com os dados passados pelo array de dados.
      * @param array $data
      * @param int   $id
-     * @return DispositivoAluno
+     * @return Dispositivo
      * @throws ServerError Caso não consiga salvar os dados do dispositivo
      */
     public function update(array $data, $id);
@@ -52,7 +52,7 @@ interface DispositivoAlunoRepositoryContract {
     /**
      * Insere um novo dispositivo com os dados informados pelo array.
      * @param array $data
-     * @return DispositivoAluno
+     * @return Dispositivo
      * @throws ServerError Caso não consiga salvar os dados do dispositivo
      */
     public function insert(array $data);
