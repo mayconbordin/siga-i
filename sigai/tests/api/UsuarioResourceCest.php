@@ -9,7 +9,7 @@ class UsuarioResourceCest extends BaseResourceCest
 {
     protected $endpoint = '/api/usuarios';
 
-    public function authUser(ApiTester $I)
+    /*public function authUser(ApiTester $I)
     {
         //$this->authenticateOAuth($I, 'write-chamada');
 
@@ -51,7 +51,7 @@ class UsuarioResourceCest extends BaseResourceCest
 
         $I->seeResponseCodeIs(404);
         $I->seeResponseIsJson();
-    }
+    }*/
 
     public function getAllUsuarios(ApiTester $I)
     {

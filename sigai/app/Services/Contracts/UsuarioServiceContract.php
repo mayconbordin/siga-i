@@ -22,4 +22,6 @@ interface UsuarioServiceContract extends CrudServiceContract {
      * @return null|User Retorna o usuário se a senha for válida, caso contrário retorna null.
      */
     public function getByMatriculaAndAuthenticate($matricula, $password);
+
+    public function getByMatricula($matricula);
 }

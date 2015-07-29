@@ -7,6 +7,7 @@ use App\Http\Requests\SaveUserRequest;
 use App\Http\Requests\SearchUsuariosRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Services\Contracts\UsuarioServiceContract;
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 use \DB;
 use \Lang;
@@ -37,6 +38,13 @@ class UsuarioController extends Controller
     {
         $roles = $this->service->all($request->all());
         return $this->jsonResponse($roles);
+    }
+
+    public function mostrarOAuthUser()
+    {
+        $id   = Authorizer::getResourceOwnerId();
+        $user = $this->service->show($id);
+        return $this->jsonResponse($user, ['roles']);
     }
 
     public function mostrar($id)

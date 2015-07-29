@@ -80,4 +80,10 @@ class UsuarioService extends CrudService implements UsuarioServiceContract
 
         return $this->isPasswordValid($user, $password) ? $user : null;
     }
+
+    public function getByMatricula($matricula)
+    {
+        $user = $this->repository->findByMatricula($matricula);
+        return $user;
+    }
 }

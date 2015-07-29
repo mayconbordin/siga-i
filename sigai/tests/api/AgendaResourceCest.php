@@ -20,6 +20,8 @@ class AgendaResourceCest extends BaseResourceCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseIsJson();
 
+        dd($I->grabResponse());
+
         $date = Carbon::create(2014, 8, 1);
         $json = json_decode($I->grabResponse(), true);
 
