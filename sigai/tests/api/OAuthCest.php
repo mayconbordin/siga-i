@@ -112,4 +112,29 @@ class OAuthCest extends BaseResourceCest
         $I->seeResponseCodeIs(401);
         $I->seeResponseIsJson();
     }
+
+    public function testAccessTokenWithPasswordGrantWrongToken(ApiTester $I)
+    {
+        $I->wantTo("Get an OAuth access token with a password grant");
+        $I->haveHttpHeader('Accept', 'application/json');
+        $I->sendPOST('/api/oauth/access_token', [
+            'client_id'     => 'client2id',
+            'client_secret' => 'client2secret',
+            'grant_type'    => 'password',
+            'scope'         => 'read-usuarios',
+            'username'      => '1234',
+            'password'      => '12345'
+        ]);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseIsJson();
+
+        $json = json_decode($I->grabResponse());
+
+        $I->haveHttpHeader('Authorization', 'Bearer '.$json->access_token.'-junktext');
+        $I->sendGET('/api/usuario');
+
+        $I->seeResponseCodeIs(401);
+        $I->seeResponseIsJson();
+    }
 }
