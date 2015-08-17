@@ -318,6 +318,22 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
         Route::get('test', ['middleware' => 'oauth:write-chamada', function() {
             return Response::json(['message' => 'OK']);
         }]);
+
+        Route::post('verify', ['middleware' => 'oauth:verify-token', function() {
+            $accessToken = Input::get('access_token');
+            $isValid = Authorizer::validateAccessToken(false, $accessToken);
+
+            return Response::json([
+                'access_token' => $accessToken,
+                'valid' => $isValid,
+                'resource_owner' => [
+                    'id' => Authorizer::getResourceOwnerId(),
+                    'type' => Authorizer::getResourceOwnerType()
+                ],
+                'scopes' => Authorizer::getScopes()
+            ]);
+
+        }]);
     });
 
 
