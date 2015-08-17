@@ -5,3 +5,4 @@ client4id,client4secret,client4,write-chamada,arduino
 client2id,client2secret,client2,"read-agenda,read-usuarios",sistema
 adrian-sistema,572c9941648956d684ca433b7782013f33d88738,adrian-sistema,"read-usuarios",sistema
 ubipri,163a53cf0ed6f83b564cbe3497eb95436229e1c0,ubipri,"verify-token",sistema
+ubipri-android,d86654a991a8558b7ae5350fdb84457b763ad042,UbiPri Android,,sistema
