@@ -311,7 +311,7 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
     Route::group(['prefix' => 'oauth'], function()
     {
         Route::post('access_token', ['uses' => 'OAuthController@issueAccessToken']);
-        Route::post('verify', ['uses' => 'OAuthController@verifyAccessToken']);
+        Route::get('verify', ['uses' => 'OAuthController@verifyAccessToken']);
     });
 
     // Arduino
