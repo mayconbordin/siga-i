@@ -26,15 +26,23 @@ class OAuthController extends Controller
 
     public function verifyAccessToken()
     {
-        $accessToken = Input::get('access_token');
-        $isValid = Authorizer::validateAccessToken(false, $accessToken);
-        $user = $this->service->show(Authorizer::getResourceOwnerId());
+        $accessToken = Input::get('token');
 
-        return $this->jsonResponse([
-            'access_token' => $accessToken,
-            'valid' => $isValid,
-            'user' => $user,
-            'scopes' => Authorizer::getScopes()
-        ]);
+        try {
+            $isValid = Authorizer::validateAccessToken(false, $accessToken);
+            $user = $this->service->show(Authorizer::getResourceOwnerId());
+
+            return $this->jsonResponse([
+                'access_token' => $accessToken,
+                'valid' => $isValid,
+                'user' => $user,
+                'scopes' => Authorizer::getScopes()
+            ]);
+        } catch (\Exception $e) {
+            return $this->jsonResponse([
+                'access_token' => $accessToken,
+                'valid' => false,
+            ]);
+        }
     }
 }
