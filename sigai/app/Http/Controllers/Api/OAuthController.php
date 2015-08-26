@@ -37,7 +37,7 @@ class OAuthController extends Controller
                 'valid' => $isValid,
                 'user' => $user,
                 'scopes' => Authorizer::getScopes()
-            ]);
+            ], ['roles']);
         } catch (\Exception $e) {
             return $this->jsonResponse([
                 'access_token' => $accessToken,
