@@ -303,39 +303,16 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
 
 
     Route::post('/chamada', ['uses' => 'ChamadaController@salvar', 'middleware' => 'oauth:write-chamada']);
-    Route::get ('/agenda', ['uses' => 'AgendaController@mostrar'/*, 'middleware' => 'oauth:read-agenda'*/]);
-    //Route::post('/usuarios/{matricula}/auth', ['uses' => 'UsuarioController@autenticar'/*, 'middleware' => 'oauth:read-usuarios'*/]);
+    Route::get ('/agenda', ['uses' => 'AgendaController@mostrar', 'middleware' => 'oauth:read-agenda']);
     Route::get('/usuario', ['uses' => 'UsuarioController@mostrarOAuthUser', 'middleware' => ['oauth:read-usuarios', 'oauth-owner:user']]);
 
     // OAuth
     // -----------------------------------------------------------------------------
     Route::group(['prefix' => 'oauth'], function()
     {
-        Route::post('access_token', function() {
-            return Response::json(Authorizer::issueAccessToken());
-        });
-
-        Route::get('test', ['middleware' => 'oauth:write-chamada', function() {
-            return Response::json(['message' => 'OK']);
-        }]);
-
-        Route::post('verify', ['middleware' => 'oauth:verify-token', function() {
-            $accessToken = Input::get('access_token');
-            $isValid = Authorizer::validateAccessToken(false, $accessToken);
-
-            return Response::json([
-                'access_token' => $accessToken,
-                'valid' => $isValid,
-                'resource_owner' => [
-                    'id' => Authorizer::getResourceOwnerId(),
-                    'type' => Authorizer::getResourceOwnerType()
-                ],
-                'scopes' => Authorizer::getScopes()
-            ]);
-
-        }]);
+        Route::post('access_token', ['uses' => 'OAuthController@issueAccessToken']);
+        Route::post('verify', ['uses' => 'OAuthController@verifyAccessToken']);
     });
-
 
     // Arduino
     // -----------------------------------------------------------------------------
