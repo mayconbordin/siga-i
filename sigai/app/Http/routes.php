@@ -306,6 +306,13 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function()
     Route::get ('/agenda', ['uses' => 'AgendaController@mostrar', 'middleware' => 'oauth:read-agenda']);
     Route::get('/usuario', ['uses' => 'UsuarioController@mostrarOAuthUser', 'middleware' => ['oauth:read-usuarios', 'oauth-owner:user']]);
 
+    // Authentication: only registration
+    // -----------------------------------------------------------------------------
+    Route::group(['prefix' => 'auth'], function()
+    {
+        Route::post('register', ['uses' => 'AuthController@register']);
+    });
+
     // OAuth
     // -----------------------------------------------------------------------------
     Route::group(['prefix' => 'oauth'], function()

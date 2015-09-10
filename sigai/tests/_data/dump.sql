@@ -1009,7 +1009,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'aluno','Aluno',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08'),(2,'professor','Professor',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08'),(3,'coordenador','Coordenador',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08'),(4,'admin','Administrador',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08');
+INSERT INTO `roles` VALUES (1,'aluno','Aluno',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08'),(2,'professor','Professor',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08'),(3,'coordenador','Coordenador',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08'),(4,'admin','Administrador',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08'),(5,'visitante','Visitante',NULL,'2015-07-21 22:27:08','2015-07-21 22:27:08');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
