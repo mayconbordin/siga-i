@@ -46,6 +46,10 @@ module.exports = function(grunt) {
                         "js/bootstrap-timepicker.js"
                     ],
                     
+                    'pwstrength-bootstrap': [
+                        "dist/pwstrength-bootstrap-1.2.7.min.js"
+                    ],
+                    
                     'fullcalendar': [
                         "dist/fullcalendar.js",
                         "dist/lang/pt-br.js",
