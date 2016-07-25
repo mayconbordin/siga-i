@@ -1,7 +1,20 @@
 # SIGA-i
 
-Sistema Inteligente de Gerenciamento Acadêmico.
+Sistema Integrado de Gerenciamento Acadêmico Inteligente.
 
-## Wiki
+## Funcionalidades
 
-1. [Instalação](https://bitbucket.org/gppdi/siga-i/wiki/Instalação)
+ - Cadastro de Usuários
+    - Tipos de usuários: alunos, professores, administradores
+    - Permissões por tipo de usuário
+ - Cadastro de Unidades Curriculares
+ - Cadastro de Cursos
+ - Cadastro de Turmas
+    - Cadastro/Planejamento de Aulas
+    - Controle de Frequências
+    - Exportação de Diário de Turma
+ - Cadastro de Ambientes e Dispositivos do Ambiente
+    - Integração com Arduino para controle de chamadas via RFID
+ - API REST
+   - Fornece API para acesso externo com as principais funcionalidades do sistema
+   - Autenticação via OAuth2 com controle de permissões
