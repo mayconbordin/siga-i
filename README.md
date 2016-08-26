@@ -1,4 +1,4 @@
-# SIGA-i
+# <img alt="SIGAi" src="https://raw.githubusercontent.com/mayconbordin/siga-i/master/sigai-logo.png" width="300">
 
 Sistema Integrado de Gerenciamento Acadêmico Inteligente.
 
